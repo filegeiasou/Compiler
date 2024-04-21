@@ -1,0 +1,20 @@
+// String literals regex: "([^"\\]*(\\[\\ n \"][^"\\]*)*)"
+
+START=SZ
+SZ: "      -> S0
+    *      -> BAD
+
+S0: *      -> S1 
+    \\     -> S2
+    "      -> S3
+
+S1: \\     -> S2
+    "      -> S3
+    *      -> S1
+
+S2: \\ " n -> S1
+    *      -> BAD
+
+S3: \n     -> GOOD
+    *      -> BAD
+GOOD(OK):
