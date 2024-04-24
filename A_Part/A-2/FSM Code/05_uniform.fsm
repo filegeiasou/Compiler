@@ -1,0 +1,88 @@
+START=SZ
+SZ:        A-Z a-z _           -> S0_IDENT
+           "                   -> S0_STR
+           0                   -> S1_NUM
+           1-9                 -> S2_NUM
+           \* / \= ! < >       -> S1_OP
+           |                   -> S2_OP
+           +                   -> S3_OP
+           -                   -> S4_OP
+           &                   -> S5_OP 
+           %                   -> GOOD
+
+S0_IDENT:  a-z A-Z _ 0-9       -> S0_IDENT
+           \n                  -> GOOD
+           *                   -> BAD
+S0_STR:    *                   -> S1_STR 
+           \\                  -> S2_STR
+           "                   -> GOOD
+
+S1_STR:    \\                  -> S2_STR
+           "                   -> GOOD
+           *                   -> S1_STR 
+
+S2_STR:    \\ " n              -> S1_STR
+           *                   -> BAD
+
+S1_NUM:    .                   -> S3_NUM
+           e E                 -> S4_NUM
+           X x                 -> S6_NUM
+           0-7                 -> S7_NUM
+           \n                  -> GOOD
+           *                   -> BAD
+
+// Integer
+S2_NUM:   0-9                  -> S2_NUM
+          .                    -> S3_NUM
+          e E                  -> S4_NUM
+          \n	               -> GOOD
+          *                    -> BAD
+
+// Float
+S3_NUM:   0-9                  -> S10_NUM
+          e E                  -> S4_NUM     
+          *                    -> BAD
+
+S10_NUM:  0-9                  -> S10_NUM
+          e E                  -> S4_NUM
+          \n                   -> GOOD
+          *                    -> BAD
+
+// Exponential
+S4_NUM:   1-9                  -> S8_NUM
+          -                    -> S5_NUM
+          0                    -> GOOD
+          *                    -> BAD
+
+S5_NUM:   1-9                  -> S8_NUM
+          *                    -> BAD 
+
+// Hexadecimal
+S6_NUM:   A-F 0-9              -> S9_NUM
+          *                    -> BAD
+
+S9_NUM:   A-F 0-9              -> S9_NUM
+          \n                   -> GOOD
+          *                    -> BAD
+
+// Octal
+S7_NUM:   0-7                  -> S7_NUM
+          \n                   -> GOOD
+          *                    -> BAD
+
+S8_NUM:   0-9                  -> S8_NUM
+          \n                   -> GOOD
+           *                   -> BAD
+
+S1_OP:    \n \=                -> GOOD
+           *                   -> BAD  
+
+S2_OP:     |                   -> GOOD
+           *                   -> BAD
+
+S3_OP:     \n \+ \=            -> GOOD
+
+S4_OP:     \n \- \=            -> GOOD
+
+S5_OP:     \n &                -> GOOD
+GOOD(OK): \n -> GOOD
