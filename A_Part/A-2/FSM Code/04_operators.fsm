@@ -13,7 +13,7 @@ S1: \n \=         -> GOOD
 S2: |             -> GOOD
     *             -> BAD
 
-S3: \n \+ \=       -> GOOD
+S3: \n \+ \=      -> GOOD
     *             -> BAD
 
 S4: \n \- \=      -> GOOD
