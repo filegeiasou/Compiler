@@ -81,8 +81,11 @@ S2_OP:     |                   -> GOOD
            *                   -> BAD
 
 S3_OP:     \n \+ \=            -> GOOD
+           *                   -> BAD
 
 S4_OP:     \n \- \=            -> GOOD
+           *                   -> BAD
 
 S5_OP:     \n &                -> GOOD
+           *                   -> BAD
 GOOD(OK): \n -> GOOD
