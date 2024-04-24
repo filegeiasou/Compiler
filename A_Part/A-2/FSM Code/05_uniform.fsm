@@ -10,7 +10,8 @@ SZ:        A-Z a-z _           -> S0_IDENT
            -                   -> S4_OP
            &                   -> S5_OP 
            %                   -> GOOD
-           \n \s \t            -> SZ       
+           \n \s \t            -> SZ
+           *                   -> BAD
 // Identifiers
 S0_IDENT:  a-z A-Z _ 0-9       -> S0_IDENT
            \n                  -> GOOD
