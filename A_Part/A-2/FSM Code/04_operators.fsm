@@ -6,14 +6,14 @@ SZ: \* / \= ! < > -> S1
     &             -> S5 
     %             -> GOOD
     *             -> BAD
-    
+
 S1: \n \=         -> GOOD
     *             -> BAD   
 
 S2: |             -> GOOD
     *             -> BAD
 
-S3: \n + \=       -> GOOD
+S3: \n \+ \=       -> GOOD
     *             -> BAD
 
 S4: \n \- \=      -> GOOD
