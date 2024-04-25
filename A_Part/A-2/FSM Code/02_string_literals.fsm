@@ -6,15 +6,13 @@ SZ: "      -> S0
 
 S0: *      -> S1 
     \\     -> S2
-    "      -> S3
+    "      -> GOOD
 
 S1: \\     -> S2
-    "      -> S3
+    "      -> GOOD
     *      -> S1
 
 S2: \\ " n -> S1
     *      -> BAD
 
-S3: \n     -> GOOD
-    *      -> BAD
 GOOD(OK):

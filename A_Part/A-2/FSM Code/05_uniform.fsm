@@ -16,7 +16,7 @@ SZ:        A-Z a-z _           -> S0_IDENT
 S0_IDENT:  a-z A-Z _ 0-9       -> S0_IDENT
            \n                  -> GOOD
            *                   -> BAD
-// For₹comments and operator /
+// For comments and operator /
 S0_COMM_OP: /                   -> S1_COMM
             \*                  -> S2_COMM
             \= \n               -> GOOD
