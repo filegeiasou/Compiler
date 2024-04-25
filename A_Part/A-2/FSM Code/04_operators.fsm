@@ -4,18 +4,21 @@ SZ: \* / \= ! < > -> S1
     +             -> S3 
     -             -> S4 
     &             -> S5 
-    %             -> SG
-S1: \n            -> GOOD
-    \=            -> SG
+    %             -> GOOD
+    *             -> BAD
+
+S1: \n \=         -> GOOD
     *             -> BAD   
-S2: |             -> SG
+
+S2: |             -> GOOD
     *             -> BAD
-S3: \n            -> GOOD
-    + \=          -> SG
-S4: \n            -> GOOD
-    - \=          -> SG
-S5: \n            -> GOOD
-    &             -> SG
-SG: \n            -> GOOD
+
+S3: \n \+ \=      -> GOOD
     *             -> BAD
-GOOD(OK):
+
+S4: \n \- \=      -> GOOD
+    *             -> BAD
+
+S5: \n &          -> GOOD
+    *             -> BAD
+GOOD(OK): \n -> GOOD

@@ -1,18 +1,36 @@
 START=SZ
 SZ:        A-Z a-z _           -> S0_IDENT
+           /                   -> S0_COMM_OP
            "                   -> S0_STR
            0                   -> S1_NUM
            1-9                 -> S2_NUM
-           \* / \= ! < >       -> S1_OP
+           \* \= ! < >         -> S1_OP
            |                   -> S2_OP
            +                   -> S3_OP
            -                   -> S4_OP
            &                   -> S5_OP 
            %                   -> GOOD
-
+           \n \s \t            -> SZ
+           *                   -> BAD
+// Identifiers
 S0_IDENT:  a-z A-Z _ 0-9       -> S0_IDENT
            \n                  -> GOOD
            *                   -> BAD
+// For₹comments and operator /
+S0_COMM_OP: /                   -> S1_COMM
+            \*                  -> S2_COMM
+            \= \n               -> GOOD
+            *                   -> BAD
+
+S1_COMM:   *                   -> S1_COMM
+           \n                  -> GOOD
+
+S2_COMM:   *                   -> S2_COMM
+           \*                  -> S3_COMM
+
+S3_COMM:   /                   -> GOOD 
+           *                   -> BAD
+// For String literals
 S0_STR:    *                   -> S1_STR 
            \\                  -> S2_STR
            "                   -> GOOD
@@ -23,7 +41,7 @@ S1_STR:    \\                  -> S2_STR
 
 S2_STR:    \\ " n              -> S1_STR
            *                   -> BAD
-
+// For numerical literals
 S1_NUM:    .                   -> S3_NUM
            e E                 -> S4_NUM
            X x                 -> S6_NUM
@@ -73,7 +91,7 @@ S7_NUM:   0-7                  -> S7_NUM
 S8_NUM:   0-9                  -> S8_NUM
           \n                   -> GOOD
            *                   -> BAD
-
+// For operators
 S1_OP:    \n \=                -> GOOD
            *                   -> BAD  
 
@@ -81,8 +99,11 @@ S2_OP:     |                   -> GOOD
            *                   -> BAD
 
 S3_OP:     \n \+ \=            -> GOOD
+           *                   -> BAD
 
 S4_OP:     \n \- \=            -> GOOD
+           *                   -> BAD
 
 S5_OP:     \n &                -> GOOD
+           *                   -> BAD
 GOOD(OK): \n -> GOOD

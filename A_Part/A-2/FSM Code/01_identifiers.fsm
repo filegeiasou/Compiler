@@ -2,7 +2,7 @@
 
 START=SZ
 SZ: A-Z a-z _     -> S0
-    * -> BAD
+    *             -> BAD
 
 S0: a-z A-Z _ 0-9 -> S0
     \n            -> GOOD
