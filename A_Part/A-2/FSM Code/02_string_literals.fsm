@@ -1,18 +1,20 @@
 // String literals regex: "([^"\\]*(\\[\\ n \"][^"\\]*)*)"
 
 START=SZ
-SZ: "      -> S0
-    *      -> BAD
+SZ: "      -> S0 // string is opened
+    *      -> BAD // if its anything else it's not a string
 
-S0: *      -> S1 
-    \\     -> S2
-    "      -> GOOD
+// when we are in this state (S0) we are inside a string
 
-S1: \\     -> S2
-    "      -> GOOD
-    *      -> S1
+S0: *      -> S1 // anything inside the string is accepted, and we go to S1
+    \\     -> S2 // if its a slash go to S2 to check for \, " or n
+    "      -> GOOD // string is closed, go to GOOD (Accepting State)
 
-S2: \\ " n -> S1
-    *      -> BAD
+S1: \\     -> S2 // if there is a \ and then go to S2 to check for another one (\\ translates to \ in a string)
+    "      -> GOOD // in this case the string is closed, so we go to GOOD (Accepting State)
+    *      -> S1 // if you receive anything (inside the string) keep looping to S1
+
+S2: \\ " n -> S1 // check for a second \ (\), if the string closes ("), or if there is a new line character (\n)
+    *      -> BAD // anything else is not accepted
 
 GOOD(OK):
