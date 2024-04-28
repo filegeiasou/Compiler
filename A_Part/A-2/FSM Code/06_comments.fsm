@@ -1,0 +1,27 @@
+// Comments regex: \/\*(.|\n)*\*\/|\/\/.*
+
+START = SZ
+
+SZ:
+  "/" -> S0
+  * -> BAD
+
+S0:
+  "/" -> S1
+  \* -> S2
+  .  -> BAD
+
+S1:
+   \n -> GOOD
+   [0-9] [A-Z] [a-z] [\s] -> S1
+
+S2:
+  \* -> S3
+  [0-9] [A-Z] [a-z] [\s] [\n]  -> S2
+
+S3:
+  "/" -> GOOD
+  * -> S3
+  . -> S2
+
+GOOD(OK): \n ->GOOD
