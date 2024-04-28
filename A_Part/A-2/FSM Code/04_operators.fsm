@@ -1,24 +1,31 @@
+// Operators RegEx: ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|[&\+\-]{1,2}|(\|\|)
+
 START=SZ
-SZ: \* / \= ! < > -> S1
-    |             -> S2
-    +             -> S3 
-    -             -> S4 
-    &             -> S5 
-    %             -> GOOD
-    *             -> BAD
+SZ: \* / \= ! < > -> S1 // These operators can be written alone, or followed by an equal sign (=)
+    |             -> S2 // if | is written then it's about an OR logical operation, so we go to S2 to check for a second |
+    +             -> S3 // the plus sign, depending on the following sign, can mean 3 different opeartions.
+    -             -> S4 // the minus sign can also mean 3 different operations like the plus sign.
+    &             -> S5 // if & is written then it's about a logical AND operation. So we go to S5 to check for a second ampersand (&)
+    %             -> GOOD // 
+    *             -> BAD  // anything else is not accepted because it's not an operator
 
-S1: \n \=         -> GOOD
-    *             -> BAD   
+// state regarding * / = ! < >
+S1: \n \=         -> GOOD // here we check if its just a signle operator (* / ...), or followed by an equal sign (=)
+    *             -> BAD  // anything else is not accepted
 
-S2: |             -> GOOD
-    *             -> BAD
+// state regarding | sign
+S2: |             -> GOOD // check if there is another |. If there is then it's an OR operation (||)
+    *             -> BAD  // if it's only one | and anything else, then it's not valid
 
-S3: \n \+ \=      -> GOOD
-    *             -> BAD
+// state regarding plus sign(+)
+S3: \n \+ \=      -> GOOD // the operations can be addition (+), increment (++) or += which is addition again instead of doing x = x + 1
+    *             -> BAD  // if it's anything else after the plus sign then it's not accepted 
 
-S4: \n \- \=      -> GOOD
-    *             -> BAD
+// state regarding minus sign(-)
+S4: \n \- \=      -> GOOD // if it's only one minus (-) it's the difference, -- is decrement and -= is like += (x = x - 1)
+    *             -> BAD  // it it's just one minus and anything else after then it's not accepted.
 
-S5: \n &          -> GOOD
-    *             -> BAD
+//state regarding ampersand (&)
+S5: \n &          -> GOOD // if there is another & sign then it's a logical AND operation (&&)
+    *             -> BAD  // if it's only one & sign followed by anything else it's not valid
 GOOD(OK): \n -> GOOD
