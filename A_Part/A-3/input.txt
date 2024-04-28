@@ -1,0 +1,13 @@
+int main (int argc*, int argv**) {
+    /* The multiline comment
+    is this one 
+    right here */
+
+    // Single Line Comment
+
+    float metavliti = 4;
+    if ( metavliti == 12 ) {
+        printf("A string");
+    }
+    return 0;
+}
