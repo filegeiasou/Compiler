@@ -2,25 +2,20 @@
 
 START = SZ
 
-SZ:
-  "/" -> S0
-  * -> BAD
+SZ: /        -> S0   // comment is started
+    *        -> BAD  // if it's anything else is not a comment
 
-S0:
-  "/" -> S1
-  \* -> S2
-  *  -> BAD
+S0: /        -> S1   // if there is another bracket, then it's a one line comment
+    \*       -> S2   // if there is an asterisk followed, then it's about a multi-line comment
+    *        -> BAD  // if it's anything else then it's not valid
 
-S1:
-   \n -> GOOD
-   * -> S1
+S1: \n       -> GOOD // in this case we have a single line comment (//)
+    *        -> S1   // here we are inside the comment, so pretty much everything is accepted
 
-S2:
-  \* -> S3
-  * -> S2
+S2: \*       -> S3   // in this case we have /* which is a multi line comment and we check if there is an asterisk
+    *        -> S2   // everything else is not accepted
 
-S3:
-  "/" -> GOOD
-  * -> BAD
+S3: /        -> GOOD // if there is a slash (/) after the asterisk (from S2), the multi line comment closes
+    *        -> BAD  // anything else does not regard the comment
 
 GOOD(OK): \n ->GOOD
