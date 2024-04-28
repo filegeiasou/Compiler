@@ -92,7 +92,7 @@ OPERATORS       ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|[&\+\-]{1,2}|(\|\|)
 %%
 
 /* Pinakas me ola ta tokens se antistoixia me tous orismous sto token.h */
-char *tname[8] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","VARIABLE","COMMENTS","END-OF-FILE"};
+char *tname[9] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","VARIABLE","COMMENTS","EOF","KEYWORD"};
 
 
 /* H synarthsh main: O kwdikas autos tha topotheththei autousios sto
