@@ -12,3 +12,4 @@
 #define CLOSE_PARENTHESIS 13
 #define OPEN_BRACE 14
 #define CLOSE_BRACE 15
+#define WHITESPACE 16

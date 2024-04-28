@@ -42,7 +42,7 @@ int line = 1;
    Meta apo auto, mporei na ginei xrhsh twn onomatwn (aristera) anti twn,
    synhthws idiaiterws makroskelwn kai dysnohtwn, kanonikwn ekfrasewn */
 
-DELIMITER       [ \t;]+
+DELIMITER       ;
 SYMBOLS         [~!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:'",<>\?\.\/\\|`]	
 NUMBERS         (0[xX][\dA-F]+)|(0[0-7]+)|(([1-9]\d*|0)(\.\d+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS     [a-zA-Z_]+[a-zA-Z_0-9]*
@@ -56,6 +56,7 @@ OPEN_PARENTHESIS \(
 CLOSE_PARENTHESIS \)
 OPEN_BRACE      \[
 CLOSE_BRACE     \]
+WHITESPACE      [ \t]+
 
 
 /* Gia kathe pattern (aristera) pou tairiazei ekteleitai o antistoixos
@@ -68,6 +69,7 @@ CLOSE_BRACE     \]
 {NUMBERS}       { return NUMBERS; }
 {STRINGS}       { return STRINGS; }
 {COMMENTS}      { /* FILL ME */ }
+{WHITESPACE}    { /* FILL ME */ }
 {OPERATORS}     { return OPERATORS; }
 {IDENTIFIERS}   { 
                     if      ( !strcmp(yytext,"break"   ) )    return KEYWORD;
@@ -98,7 +100,7 @@ CLOSE_BRACE     \]
 {CLOSE_PARENTHESIS} { return CLOSE_PARENTHESIS; }
 {OPEN_BRACE}    { return OPEN_BRACE; }
 {CLOSE_BRACE}   { return CLOSE_BRACE; }
-{SYMBOLS}       { return OPERATORS; }
+{SYMBOLS}       { return SYMBOLS; }
 \n              { line++; printf("\n"); }
 .               { return NUMBERS; }
 <<EOF>>		{ printf("#END-OF-FILE#\n"); exit(0); }
@@ -106,7 +108,7 @@ CLOSE_BRACE     \]
 %%
 
 /* Pinakas me ola ta tokens se antistoixia me tous orismous sto token.h */
-char *tname[15] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","EOF","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE"};
+char *tname[16] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","EOF","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE"};
 
 
 /* H synarthsh main: O kwdikas autos tha topotheththei autousios sto
