@@ -42,13 +42,20 @@ int line = 1;
    Meta apo auto, mporei na ginei xrhsh twn onomatwn (aristera) anti twn,
    synhthws idiaiterws makroskelwn kai dysnohtwn, kanonikwn ekfrasewn */
 
-DELIMITER       [ \t]+
-VARIABLE	FILLME
+DELIMITER       [ \t;]+
+SYMBOLS         [~!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:'",<>\?\.\/\\|`]	
 NUMBERS         (0[xX][\dA-F]+)|(0[0-7]+)|(([1-9]\d*|0)(\.\d+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS     [a-zA-Z_]+[a-zA-Z_0-9]*
 STRINGS         \"([^"\\]*(\\[\\ n \"][^"\\]*)*)\"
 COMMENTS        \/\*(.|\n)*\*\/|\/\/.*
 OPERATORS       ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|[&\+\-]{1,2}|(\|\|)
+KEYWORD         FILLME
+OPEN_BRACKET    \{
+CLOSE_BRACKET   \}
+OPEN_PARENTHESIS \(
+CLOSE_PARENTHESIS \)
+OPEN_BRACE      \[
+CLOSE_BRACE     \]
 
 
 /* Gia kathe pattern (aristera) pou tairiazei ekteleitai o antistoixos
@@ -59,6 +66,9 @@ OPERATORS       ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|[&\+\-]{1,2}|(\|\|)
 
 {DELIMITER}     { return DELIMITER; }
 {NUMBERS}       { return NUMBERS; }
+{STRINGS}       { return STRINGS; }
+{COMMENTS}      { /* FILL ME */ }
+{OPERATORS}     { return OPERATORS; }
 {IDENTIFIERS}   { 
                     if      ( !strcmp(yytext,"break"   ) )    return KEYWORD;
                     else if ( !strcmp(yytext,"case"    ) )    return KEYWORD;
@@ -82,9 +92,13 @@ OPERATORS       ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|[&\+\-]{1,2}|(\|\|)
                     else if ( !strcmp(yytext,"while"   ) )    return KEYWORD;
                     else return IDENTIFIERS;
                 }
-{STRINGS}       { return STRINGS; }
-{COMMENTS}      { /* FILL ME */ }
-{OPERATORS}     { return OPERATORS; }
+{OPEN_BRACKET}  { return OPEN_BRACKET; }
+{CLOSE_BRACKET} { return CLOSE_BRACKET; }
+{OPEN_PARENTHESIS} { return OPEN_PARENTHESIS; }
+{CLOSE_PARENTHESIS} { return CLOSE_PARENTHESIS; }
+{OPEN_BRACE}    { return OPEN_BRACE; }
+{CLOSE_BRACE}   { return CLOSE_BRACE; }
+{SYMBOLS}       { return OPERATORS; }
 \n              { line++; printf("\n"); }
 .               { return NUMBERS; }
 <<EOF>>		{ printf("#END-OF-FILE#\n"); exit(0); }
@@ -92,7 +106,7 @@ OPERATORS       ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|[&\+\-]{1,2}|(\|\|)
 %%
 
 /* Pinakas me ola ta tokens se antistoixia me tous orismous sto token.h */
-char *tname[9] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","VARIABLE","COMMENTS","EOF","KEYWORD"};
+char *tname[15] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","EOF","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE"};
 
 
 /* H synarthsh main: O kwdikas autos tha topotheththei autousios sto
