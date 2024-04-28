@@ -1,12 +1,12 @@
 // Operators RegEx: ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|[&\+\-]{1,2}|(\|\|)
 
 START=SZ
-SZ: \* / \= ! < > -> S1 // These operators can be written alone, or followed by an equal sign (=)
-    |             -> S2 // if | is written then it's about an OR logical operation, so we go to S2 to check for a second |
-    +             -> S3 // the plus sign, depending on the following sign, can mean 3 different opeartions.
-    -             -> S4 // the minus sign can also mean 3 different operations like the plus sign.
-    &             -> S5 // if & is written then it's about a logical AND operation. So we go to S5 to check for a second ampersand (&)
-    %             -> GOOD // 
+SZ: \* / \= ! < > -> S1   // These operators can be written alone, or followed by an equal sign (=)
+    |             -> S2   // if | is written then it's about an OR logical operation, so we go to S2 to check for a second |
+    +             -> S3   // the plus sign, depending on the following sign, can mean 3 different opeartions.
+    -             -> S4   // the minus sign can also mean 3 different operations like the plus sign.
+    &             -> S5   // if & is written then it's about a logical AND operation. So we go to S5 to check for a second ampersand (&)
+    %             -> GOOD // this is the modulus operation which is only one percentage sign (%)
     *             -> BAD  // anything else is not accepted because it's not an operator
 
 // state regarding * / = ! < >
