@@ -4,10 +4,10 @@ START=SZ
 
 // the SZ state is the state that checks for the start of the identifier
 
-SZ: A-Z a-z _     -> S0 // if it starts with any letter, uppercase or lowercase, or _, go to S0
+SZ: A-Z a-z _     -> S0  // if it starts with any letter, uppercase or lowercase, or _, go to S0
     *             -> BAD // anything else like digits (0-9) for example is not accepted
 
-S0: a-z A-Z _ 0-9 -> S0 // if the start of the name is correct, check the rest of the identifer
+S0: A-Z a-z _ 0-9 -> S0   // if the start of the name is correct, check the rest of the identifer
     \n            -> GOOD // if its just a single letter, or just one underscore (_), its accetable
-    *             -> BAD // anything else is bad
+    *             -> BAD  // anything else is bad
 GOOD(OK):
