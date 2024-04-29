@@ -25,15 +25,17 @@
 
 %{
 
-        #include <stdio.h>
-        #include <string.h>
-        #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-        /* Header file pou periexei lista me ola ta tokens */
-        #include "token.h"
+/* Header file pou periexei lista me ola ta tokens */
+#include "token.h"
 
-        /* Orismos metrhth trexousas grammhs */
-        int line = 1;
+/* Orismos metrhth trexousas grammhs */
+int line = 1;
+int i=0;
+
 %}
 
 
@@ -42,8 +44,8 @@
    synhthws idiaiterws makroskelwn kai dysnohtwn, kanonikwn ekfrasewn */
 
 DELIMITER         ;
-SYMBOLS           [!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:'",<>\?\.\/\\|`]	
-NUMBERS           (0[xX][\dA-F]+)|(0[0-7]+)|(([1-9]\d*|0)(\.\d+)?([eE][-]?([1-9][0-9]*|0))?)
+SYMBOLS           [#$^@]	
+NUMBERS           (0[xX][0-9A-F]+)|(0[0-7]+)|(([1-9][0-9]*|0)(\.[0-9]+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS       [a-zA-Z_]+[a-zA-Z_0-9]*
 STRINGS           \"([^"\\]*(\\[\\n\"][^"\\]*)*)\"
 COMMENTS          \/\*(.|\n)*\*\/|\/\/.*
@@ -70,14 +72,16 @@ WHITESPACE        [ \t]+
 {COMMENTS}      { 
                         if(yytext[1]=='*') 
                         {       
-                                int i=0;
                                 while(yytext[i]!='\0')
                                 {
                                         if(yytext[i]=='\n')
+                                        {
                                                 line++;
+                                                
+                                        }
                                         i++;
                                 }
-                        } 
+                        }
                 }
 {WHITESPACE}    { /* FILL ME */ }
 {OPERATORS}     { return OPERATORS; }
@@ -112,13 +116,13 @@ WHITESPACE        [ \t]+
 {CLOSE_BRACE}   { return CLOSE_BRACE; }
 {SYMBOLS}       { return SYMBOLS; }
 \n              { line++; printf("\n"); }
-.               { return UNKNOWN_TOKEN; }
 <<EOF>>		{ printf("#END-OF-FILE#\n"); exit(0); }
+.               { return UNKNOWN_TOKEN; }
 
 %%
 
 /* Pinakas me ola ta tokens se antistoixia me tous orismous sto token.h */
-char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","EOF","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN_TOKEN"};
+char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","EOF","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN"};
 
 
 /* H synarthsh main: O kwdikas autos tha topotheththei autousios sto
