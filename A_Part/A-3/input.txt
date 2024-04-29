@@ -4,6 +4,7 @@ int main (int argc*, int argv**) {
     right here */
 
     // Single Line Comment
+    ~
 
     float metavliti = 4.1;
     if ( metavliti == 12 ) {

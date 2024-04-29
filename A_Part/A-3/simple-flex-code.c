@@ -389,7 +389,7 @@ static const YY_CHAR yy_ec[256] =
 
        31,   24,   24,   24,   24,   24,   24,   24,   24,   32,
        24,   24,   24,   24,   24,   24,   24,   24,   24,   25,
-       24,   24,   33,   34,   35,    7,    1,    1,    1,    1,
+       24,   24,   33,   34,   35,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -912,7 +912,7 @@ YY_RULE_SETUP
 case 16:
 YY_RULE_SETUP
 #line 105 "simple-flex-code.l"
-{ return NUMBERS; }
+{ return UNKNOWN_TOKEN; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 #line 106 "simple-flex-code.l"
@@ -1930,7 +1930,7 @@ void yyfree (void * ptr )
 
 
 /* Pinakas me ola ta tokens se antistoixia me tous orismous sto token.h */
-char *tname[16] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","EOF","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE"};
+char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","EOF","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN_TOKEN"};
 
 
 /* H synarthsh main: O kwdikas autos tha topotheththei autousios sto

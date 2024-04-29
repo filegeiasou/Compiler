@@ -43,7 +43,7 @@ int line = 1;
    synhthws idiaiterws makroskelwn kai dysnohtwn, kanonikwn ekfrasewn */
 
 DELIMITER       ;
-SYMBOLS         [~!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:'",<>\?\.\/\\|`]	
+SYMBOLS         [!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:'",<>\?\.\/\\|`]	
 NUMBERS         (0[xX][\dA-F]+)|(0[0-7]+)|(([1-9]\d*|0)(\.\d+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS     [a-zA-Z_]+[a-zA-Z_0-9]*
 STRINGS         \"([^"\\]*(\\[\\ n \"][^"\\]*)*)\"
@@ -102,13 +102,13 @@ WHITESPACE      [ \t]+
 {CLOSE_BRACE}   { return CLOSE_BRACE; }
 {SYMBOLS}       { return SYMBOLS; }
 \n              { line++; printf("\n"); }
-.               { return NUMBERS; }
+.               { return UNKNOWN_TOKEN; }
 <<EOF>>		{ printf("#END-OF-FILE#\n"); exit(0); }
 
 %%
 
 /* Pinakas me ola ta tokens se antistoixia me tous orismous sto token.h */
-char *tname[16] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","EOF","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE"};
+char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","EOF","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN_TOKEN"};
 
 
 /* H synarthsh main: O kwdikas autos tha topotheththei autousios sto

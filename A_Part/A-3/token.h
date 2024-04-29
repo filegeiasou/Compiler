@@ -13,3 +13,4 @@
 #define OPEN_BRACE 14
 #define CLOSE_BRACE 15
 #define WHITESPACE 16
+#define UNKNOWN_TOKEN 17
