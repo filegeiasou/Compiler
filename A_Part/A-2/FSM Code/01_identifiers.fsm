@@ -8,6 +8,6 @@ SZ: A-Z a-z _     -> S0 // if it starts with any letter, uppercase or lowercase,
     *             -> BAD // anything else like digits (0-9) for example is not accepted
 
 S0: a-z A-Z _ 0-9 -> S0 // if the start of the name is correct, check the rest of the identifer
-    \n            -> GOOD // if its just a single letter, or just one underscore (_), its accetable
+    \n            -> GOOD // if its just a single letter, or just one underscore (_), its acceptable
     *             -> BAD // anything else is bad
 GOOD(OK):
