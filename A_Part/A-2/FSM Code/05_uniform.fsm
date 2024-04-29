@@ -117,4 +117,5 @@ S4_OP:     \n \- \=            -> GOOD    // if it's only one minus (-) it's the
 
 S5_OP:     \n &                -> GOOD    // if there is another & sign then it's a logical AND operation (&&)
            *                   -> BAD     // if it's only one & sign followed by anything else it's not valid
+           
 GOOD(OK): \n -> GOOD
