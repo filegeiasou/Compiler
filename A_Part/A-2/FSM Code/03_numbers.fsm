@@ -1,57 +1,60 @@
-// (0[xX][\dA-F]+)|(0[0-7]+)|(([1-9]\d*|0)(\.\d+)?([eE][-]?([1-9][0-9]*|0))?)
+// RegEx for numbers: (0[xX][\dA-F]+)|(0[0-7]+)|(([1-9]\d*|0)(\.\d+)?([eE][-]?([1-9][0-9]*|0))?)
 
 START=S0
-S0:  0        -> S1
-     1-9      -> S2
-     *        -> BAD
+S0:  0        -> S1  // if it's a 0, then we have multiple options. Go to S1 to check for more
+     1-9      -> S2  // digits 1-9 are considered an integer. Go to S2 to check for more
+     *        -> BAD // anything else is not valid
 
-S1:  .        -> S3
-     e E      -> S4
-     X x      -> S6
-     0-7      -> S7
-     \n       -> GOOD
-     *        -> BAD
+S1:  .        -> S3   // this is the case where we have 0. which is a floating point number
+     e E      -> S4   // here we have the case of 0e which is the exponential (0e0 is allowed)
+     X x      -> S6   // 0x or 0X is about Hexadecimal.
+     0-7      -> S7   // any number starting with zero and followed by any digit 0-7 is Octal (covers the case of at least one digit after 0)
+     \n       -> GOOD // zero by itself
+     *        -> BAD  // everything else is not accepted
 
 // Integer
-S2:  0-9      -> S2
-     .        -> S3
-     e E      -> S4
-     \n	    -> GOOD
-     *        -> BAD
+S2:  0-9      -> S2   // if we have any digits 1-9, we check for more digits 0-9
+     .        -> S3   // here we have the left part of a decimal point number (for example 12.)
+     e E      -> S4   // in this case we have an integer followed by the exponential sign (power)
+     \n	    -> GOOD // in this case an integer has been formed
+     *        -> BAD  // everything else not valid
 
 // Float
-S3:  0-9      -> S10
-     *        -> BAD
+S3:  0-9      -> S10  // this regards the digits right of the decimal point
+     *        -> BAD  // everything else not valid
 
-S10: 0-9      -> S10
-     e E      -> S4
-     \n       -> GOOD
-     *        -> BAD
+// State regarding decimal point numbers and decimal point exponential numbers
+S10: 0-9      -> S10  // keep checking if there are more digits on the right side of the decimal point 
+     e E      -> S4   // here we have the left part of an exponential float (2.5e or 2.5E)
+     \n       -> GOOD // in this case a floating point number is formed
+     *        -> BAD  // everything else not valid
 
 // Exponential
-S4:  1-9      -> S8
-     -        -> S5
-     0        -> GOOD
-     *        -> BAD
+S4:  1-9      -> S8   // this regards the right part of the exponential after the e/E. Basically it's the power
+     -        -> S5   // this is the case of a negative exponential ([0-9]e-. Right part of minus is on S5)
+     0        -> GOOD // number raised to the power of 0
+     *        -> BAD  // anything else not valid
 
-S5:  1-9      -> S8
-     *        -> BAD
+// Negative Exponential
+S5:  1-9      -> S8   // check for digits in the negative exponential (5e-10 for example)
+     *        -> BAD  // anything else is not accepted
      
 // Hexadecimal
-S6: A-F 0-9   -> S9
-    *         -> BAD
+S6: A-F 0-9   -> S9   // this regards the right part of a hexadecimal number after the x/X. With this we ensure that there is at least one digit after the x/X
+    *         -> BAD  // anything else not accepted
 
-S9: A-F 0-9   -> S9
-    \n        -> GOOD
-    *         -> BAD
+S9: A-F 0-9   -> S9   // more than one hex digits after the x/X
+    \n        -> GOOD // combinations like 0xF and 0xFFFF for example are accepted
+    *         -> BAD  // anything else not accepted
 
 // Octal
-S7: 0-7       -> S7
-    \n        -> GOOD
-    *         -> BAD
-    
-S8: 0-9       -> S8
-     \n       -> GOOD
-     *        -> BAD
-     
+S7: 0-7       -> S7   // check for other octal digits
+    \n        -> GOOD // octal numbers like 0147, 063 etc. are accepted
+    *         -> BAD  // anything else not accepted
+
+
+S8:  0-9      -> S8   // this checks for a multiple digit power on the exponential
+     \n       -> GOOD //  any exponential that has one or more digits is accepted
+     *        -> BAD  // anything else not accepted
+
 GOOD(OK) : \n ->GOOD
