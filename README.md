@@ -1,5 +1,5 @@
 # Compiler
-##Project for Compilers Lab
+## Project for Compilers Lab
 
 - **A-2 Part:** Coding Finite-state automata via FSM
   - Regex
