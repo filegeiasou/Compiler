@@ -1,21 +1,16 @@
 int main (int argc*, int argv**) {
-    /* The multiline comment
-    is this one 
-    right here */
-
-    // Single Line Comment
-    // Single Line Comment
-
-    // Single Line Comment
-    ~
+    int a = 5;
+    int b = 6;
+    int c = a + b;
+    // The multi line comment
     /*
-    Multiline Comment
+    The multi line comment
     */
-
     ~
-    float metavliti = 4.1;
-    if ( metavliti == 12 ) {
+    float metavliti = 12.3e56;
+    if ( metavliti += 012 ) {
         printf("A string");
     }
     return 0;
+    // The single line comment
 }

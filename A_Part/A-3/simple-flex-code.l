@@ -34,6 +34,7 @@
 
 /* Orismos metrhth trexousas grammhs */
 int line = 1;
+int i=0;
 
 %}
 
@@ -43,10 +44,10 @@ int line = 1;
    synhthws idiaiterws makroskelwn kai dysnohtwn, kanonikwn ekfrasewn */
 
 DELIMITER         ;
-SYMBOLS           [!#\$%\^&\*\(\)_\+\-=\[\]\{\};:'",<>\?\.\/\\|`]	
-NUMBERS           (0[xX][\dA-F]+)|(0[0-7]+)|(([1-9]\d*|0)(\.\d+)?([eE][-]?([1-9][0-9]*|0))?)
+SYMBOLS           [#$^@]	
+NUMBERS           (0[xX][0-9A-F]+)|(0[0-7]+)|(([1-9][0-9]*|0)(\.[0-9]+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS       [a-zA-Z_]+[a-zA-Z_0-9]*
-STRINGS           \"([^"\\]*(\\[\\ n \"][^"\\]*)*)\"
+STRINGS           \"([^"\\]*(\\[\\n\"][^"\\]*)*)\"
 COMMENTS          \/\*(.|\n)*\*\/|\/\/.*
 OPERATORS         ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|[&\+\-]{1,2}|(\|\|)
 KEYWORD           FILLME
@@ -71,14 +72,16 @@ WHITESPACE        [ \t]+
 {COMMENTS}      { 
                         if(yytext[1]=='*') 
                         {       
-                                int i=0;
                                 while(yytext[i]!='\0')
                                 {
                                         if(yytext[i]=='\n')
+                                        {
                                                 line++;
+                                                
+                                        }
                                         i++;
                                 }
-                        } 
+                        }
                 }
 {WHITESPACE}    { /* FILL ME */ }
 {OPERATORS}     { return OPERATORS; }
@@ -113,8 +116,8 @@ WHITESPACE        [ \t]+
 {CLOSE_BRACE}   { return CLOSE_BRACE; }
 {SYMBOLS}       { return SYMBOLS; }
 \n              { line++; printf("\n"); }
-.               { return UNKNOWN_TOKEN; }
 <<EOF>>		{ printf("#END-OF-FILE#\n"); exit(0); }
+.               { return UNKNOWN_TOKEN; }
 
 %%
 

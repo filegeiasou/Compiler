@@ -5,7 +5,7 @@ int main (int argc*, int argv**) {
 
     // Single Line Comment
 
-    float metavliti = 4;
+    float metavliti = 4.1;
     metablhth += 8;
     if ( metavliti == 12 ) {
         printf("A string");
