@@ -829,21 +829,32 @@ case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
 #line 71 "simple-flex-code.l"
-{ /* FILL ME */ }
+{ 
+                        if(yytext[1]=='*') 
+                        {       
+                                int i=0;
+                                while(yytext[i]!='\0')
+                                {
+                                        if(yytext[i]=='\n')
+                                                line++;
+                                        i++;
+                                }
+                        } 
+                }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 72 "simple-flex-code.l"
+#line 83 "simple-flex-code.l"
 { /* FILL ME */ }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 73 "simple-flex-code.l"
+#line 84 "simple-flex-code.l"
 { return OPERATORS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 74 "simple-flex-code.l"
+#line 85 "simple-flex-code.l"
 { 
                     if      ( !strcmp(yytext,"break"   ) )    return KEYWORD;
                     else if ( !strcmp(yytext,"case"    ) )    return KEYWORD;
@@ -870,60 +881,60 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 97 "simple-flex-code.l"
+#line 108 "simple-flex-code.l"
 { return OPEN_BRACKET; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 98 "simple-flex-code.l"
+#line 109 "simple-flex-code.l"
 { return CLOSE_BRACKET; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 99 "simple-flex-code.l"
+#line 110 "simple-flex-code.l"
 { return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 100 "simple-flex-code.l"
+#line 111 "simple-flex-code.l"
 { return CLOSE_PARENTHESIS; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 101 "simple-flex-code.l"
+#line 112 "simple-flex-code.l"
 { return OPEN_BRACE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 102 "simple-flex-code.l"
+#line 113 "simple-flex-code.l"
 { return CLOSE_BRACE; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 103 "simple-flex-code.l"
+#line 114 "simple-flex-code.l"
 { return SYMBOLS; }
 	YY_BREAK
 case 15:
 /* rule 15 can match eol */
 YY_RULE_SETUP
-#line 104 "simple-flex-code.l"
+#line 115 "simple-flex-code.l"
 { line++; printf("\n"); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 105 "simple-flex-code.l"
+#line 116 "simple-flex-code.l"
 { return UNKNOWN_TOKEN; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 106 "simple-flex-code.l"
+#line 117 "simple-flex-code.l"
 { printf("#END-OF-FILE#\n"); exit(0); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 108 "simple-flex-code.l"
+#line 119 "simple-flex-code.l"
 ECHO;
 	YY_BREAK
-#line 927 "simple-flex-code.c"
+#line 938 "simple-flex-code.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1926,7 +1937,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 108 "simple-flex-code.l"
+#line 119 "simple-flex-code.l"
 
 
 /* Pinakas me ola ta tokens se antistoixia me tous orismous sto token.h */

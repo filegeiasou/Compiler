@@ -68,7 +68,18 @@ WHITESPACE      [ \t]+
 {DELIMITER}     { return DELIMITER; }
 {NUMBERS}       { return NUMBERS; }
 {STRINGS}       { return STRINGS; }
-{COMMENTS}      { /* FILL ME */ }
+{COMMENTS}      { 
+                        if(yytext[1]=='*') 
+                        {       
+                                int i=0;
+                                while(yytext[i]!='\0')
+                                {
+                                        if(yytext[i]=='\n')
+                                                line++;
+                                        i++;
+                                }
+                        } 
+                }
 {WHITESPACE}    { /* FILL ME */ }
 {OPERATORS}     { return OPERATORS; }
 {IDENTIFIERS}   { 
