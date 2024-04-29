@@ -4,15 +4,15 @@ int main (int argc*, int argv**) {
     right here */
 
     // Single Line Comment
+    // Single Line Comment
+
+    // Single Line Comment
     ~
-    // Single Line Comment
-
-    // Single Line Comment
-
     /*
     Multiline Comment
     */
 
+    ~
     float metavliti = 4.1;
     if ( metavliti == 12 ) {
         printf("A string");
