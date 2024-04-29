@@ -16,5 +16,5 @@ S1: \\     -> S2 // if there is a \ and then go to S2 to check for another one (
 
 S2: \\ " n -> S1 // check for a second \ (\), if the string closes ("), or if there is a new line character (\n)
     *      -> BAD // anything else is not accepted
+GOOD(OK): \n -> GOOD
 
-GOOD(OK):
