@@ -1,4 +1,4 @@
-// String literals regex: "([^"\\]*(\\[\\ n \"][^"\\]*)*)"
+// String literals regex: "([^"\\]*(\\[\\n\"][^"\\]*)*)"
 
 START=SZ
 SZ: "      -> S0 // string is opened
