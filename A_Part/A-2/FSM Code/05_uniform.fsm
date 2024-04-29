@@ -69,7 +69,6 @@ S2_NUM:   0-9                  -> S2_NUM
 
 // Float
 S3_NUM:   0-9                  -> S10_NUM
-          e E                  -> S4_NUM     
           *                    -> BAD
 
 S10_NUM:  0-9                  -> S10_NUM
