@@ -1,5 +1,5 @@
 
-// SZ is the startingn state that checks for the first input and
+// SZ is the starting state that checks for the first input and
 // transitions to the appropriate state accordingly.
 // So we basically have this starting state, and depending on the starting value
 // it transitions to the appropriate state that may have some code combined.
