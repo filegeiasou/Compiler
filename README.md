@@ -1,6 +1,9 @@
 # Compiler
-Project for Compilers lesson
+##Project for Compilers Lab
 
-A2 : FSM and RegEx
-
-A3 : Flex
+- **A-2 Part:** Coding Finite-state automata via FSM
+  - Regex
+  - FSM Code
+  - Transition Diagrams
+  - Transition Tables
+- **A-3 Part:** : FLEX model code completion 
