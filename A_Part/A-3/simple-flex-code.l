@@ -25,16 +25,15 @@
 
 %{
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+        #include <stdio.h>
+        #include <string.h>
+        #include <stdlib.h>
 
-/* Header file pou periexei lista me ola ta tokens */
-#include "token.h"
+        /* Header file pou periexei lista me ola ta tokens */
+        #include "token.h"
 
-/* Orismos metrhth trexousas grammhs */
-int line = 1;
-
+        /* Orismos metrhth trexousas grammhs */
+        int line = 1;
 %}
 
 
@@ -42,21 +41,21 @@ int line = 1;
    Meta apo auto, mporei na ginei xrhsh twn onomatwn (aristera) anti twn,
    synhthws idiaiterws makroskelwn kai dysnohtwn, kanonikwn ekfrasewn */
 
-DELIMITER       ;
-SYMBOLS         [!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:'",<>\?\.\/\\|`]	
-NUMBERS         (0[xX][\dA-F]+)|(0[0-7]+)|(([1-9]\d*|0)(\.\d+)?([eE][-]?([1-9][0-9]*|0))?)
-IDENTIFIERS     [a-zA-Z_]+[a-zA-Z_0-9]*
-STRINGS         \"([^"\\]*(\\[\\ n \"][^"\\]*)*)\"
-COMMENTS        \/\*(.|\n)*\*\/|\/\/.*
-OPERATORS       ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|[&\+\-]{1,2}|(\|\|)
-KEYWORD         FILLME
-OPEN_BRACKET    \{
-CLOSE_BRACKET   \}
-OPEN_PARENTHESIS \(
+DELIMITER         ;
+SYMBOLS           [!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:'",<>\?\.\/\\|`]	
+NUMBERS           (0[xX][\dA-F]+)|(0[0-7]+)|(([1-9]\d*|0)(\.\d+)?([eE][-]?([1-9][0-9]*|0))?)
+IDENTIFIERS       [a-zA-Z_]+[a-zA-Z_0-9]*
+STRINGS           \"([^"\\]*(\\[\\n\"][^"\\]*)*)\"
+COMMENTS          \/\*(.|\n)*\*\/|\/\/.*
+OPERATORS         ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|[&\+\-]{1,2}|(\|\|)
+KEYWORD           FILLME
+OPEN_BRACKET      \{
+CLOSE_BRACKET     \}
+OPEN_PARENTHESIS  \(
 CLOSE_PARENTHESIS \)
-OPEN_BRACE      \[
-CLOSE_BRACE     \]
-WHITESPACE      [ \t]+
+OPEN_BRACE        \[
+CLOSE_BRACE       \]
+WHITESPACE        [ \t]+
 
 
 /* Gia kathe pattern (aristera) pou tairiazei ekteleitai o antistoixos
