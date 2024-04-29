@@ -6,28 +6,28 @@
 
 START=SZ
 SZ:        A-Z a-z _           -> S0_IDENT   // transition to identifier code
-           /                   -> S0_COMM_OP // transition to comments as well as the division operation 
-           "                   -> S0_STR     // go to code regarding strings
-           0                   -> S1_NUM
-           1-9                 -> S2_NUM
-           \* \= ! < >         -> S1_OP
-           |                   -> S2_OP
-           +                   -> S3_OP
-           -                   -> S4_OP
-           &                   -> S5_OP 
-           %                   -> GOOD
-           \n \s \t            -> SZ
-           *                   -> BAD
+           /                   -> S0_COMM_OP // transition to comments as well as the division operator
+           "                   -> S0_STR     // transition to code regarding strings
+           0                   -> S1_NUM     // transition to one of two states regarding integers
+           1-9                 -> S2_NUM     // transition to second state regarding integers
+           \* \= ! < >         -> S1_OP      // transition to state regarding operators
+           |                   -> S2_OP      // transition to state regarding operators (OR Operation)
+           +                   -> S3_OP      // transition to state regarding operators (plus)
+           -                   -> S4_OP      // transition to state regarding operators (minus)
+           &                   -> S5_OP      // transition to state regarding operators (ampersand, either address or AND Operation)
+           %                   -> GOOD       // Modulus Operation (Accepted State)
+           \n \s \t            -> SZ         // Whitespaces just loop to SZ till another character is read
+           *                   -> BAD        // anything else is not accepted
 // Identifiers
 S0_IDENT:  a-z A-Z _ 0-9       -> S0_IDENT // if the start of the name is correct, check the rest of the identifer
            \n                  -> GOOD     // if it just starts with A-Z a-z or underscore (_) then it's accepted
            *                   -> BAD      // anything else is not valid
 
 // For comments and operator /
-S0_COMM_OP: /                   -> S1_COMM // single line comment (//)
-            \*                  -> S2_COMM // multiple line comment start (/*)
-            \= \n               -> GOOD    // just / or /= are accepted
-            *                   -> BAD     // anything else is invalid
+S0_COMM_OP: /                  -> S1_COMM // single line comment (//)
+            \*                 -> S2_COMM // multiple line comment start (/*)
+            \= \n              -> GOOD    // /= or / are accepted
+            *                  -> BAD     // anything else is invalid
 
 // State for signle line comment
 S1_COMM:   *                   -> S1_COMM // any text inside the single line comment
@@ -41,81 +41,80 @@ S3_COMM:   /                   -> GOOD    // in this case we have the combinatio
            *                   -> BAD     // anything else is not accepted
 
 // For String literals
-S0_STR:    *                   -> S1_STR 
-           \\                  -> S2_STR
-           "                   -> GOOD
+S0_STR:    *                   -> S1_STR  // if any text inside the string go to S1_STR
+           \\                  -> S2_STR  // check if there is a backslash in the string
+           "                   -> GOOD    // string is closed
 
-S1_STR:    \\                  -> S2_STR
-           "                   -> GOOD
-           *                   -> S1_STR 
+S1_STR:    \\                  -> S2_STR  // if there is \\ then we have a \ in printf
+           "                   -> GOOD    // string is closed
+           *                   -> S1_STR  // if you get any text, keep looping on S1
 
-S2_STR:    \\ " n              -> S1_STR
-           *                   -> BAD
+S2_STR:    \\ " n              -> S1_STR  // in case of another backslash (\), then that equals (\\) in printf, so a single \ on the screen output
+           *                   -> BAD     // anything else is not valid
 
-// For numerical literals
-S1_NUM:    .                   -> S3_NUM
-           e E                 -> S4_NUM
-           X x                 -> S6_NUM
-           0-7                 -> S7_NUM
-           \n                  -> GOOD
-           *                   -> BAD
+// For numerical literals (regarding zero)
+S1_NUM:    .                   -> S3_NUM  // left part of decimal point number including dot
+           e E                 -> S4_NUM  // base of the exponential number including e/E
+           X x                 -> S6_NUM  // with the x/X we identify start (0x or 0X) part of the hexadecimal number
+           0-7                 -> S7_NUM  // octal number (it has alread read a 0)
+           \n                  -> GOOD    // this covers the case of number 0 alone
+           *                   -> BAD     // anything else invalid
 
 // Integer
-S2_NUM:   0-9                  -> S2_NUM
-          .                    -> S3_NUM
-          e E                  -> S4_NUM
-          \n	               -> GOOD
-          *                    -> BAD
+S2_NUM:   0-9                  -> S2_NUM  // the machine has already read a digit 1-9, so this case covers multi digit numbers
+          .                    -> S3_NUM  // provided it has read a digit 1-9, check if there is a decimal point
+          e E                  -> S4_NUM  // given a digit 1-9 (base), check for character e/E
+          \n	               -> GOOD    // single digit integer
+          *                    -> BAD     // anything else invalid
 
 // Float
-S3_NUM:   0-9                  -> S10_NUM
-          e E                  -> S4_NUM     
-          *                    -> BAD
+S3_NUM:   0-9                  -> S10_NUM // in this case, numbers with a single digit on the fractional part are accepted
+          *                    -> BAD     // anything else not accepted
 
-S10_NUM:  0-9                  -> S10_NUM
-          e E                  -> S4_NUM
-          \n                   -> GOOD
-          *                    -> BAD
+S10_NUM:  0-9                  -> S10_NUM // float numbers with multiple digits on the fractional part are accepted in this case
+          e E                  -> S4_NUM  // exponential float number (e.g 1.5e10)
+          \n                   -> GOOD    // floating point number with at least one digit on fractional part
+          *                    -> BAD     // anything else invalid
 
 // Exponential
-S4_NUM:   1-9                  -> S8_NUM
-          -                    -> S5_NUM
-          0                    -> GOOD
-          *                    -> BAD
+S4_NUM:   1-9                  -> S8_NUM  // this is the power of the number that is expressed after the e/E
+          -                    -> S5_NUM  // in this case we have a negative power
+          0                    -> GOOD    // this allows 0e0 to be valid
+          *                    -> BAD     // anything else not accepted
 
-S5_NUM:   1-9                  -> S8_NUM
-          *                    -> BAD 
+S5_NUM:   1-9                  -> S8_NUM  // any digit is accepted (e.g 5e-5)
+          *                    -> BAD     // anything else not valid
+
+S8_NUM:   0-9                  -> S8_NUM  // in this case we have an integer as the power (multiple digits)
+          \n                   -> GOOD    // single digit integer power
+          *                    -> BAD     // anything else invalid
 
 // Hexadecimal
-S6_NUM:   A-F 0-9              -> S9_NUM
-          *                    -> BAD
+S6_NUM:   A-F 0-9              -> S9_NUM  // right part of hexadecimal number (After x/X. Also single digit)
+          *                    -> BAD     // anything else not valid
 
-S9_NUM:   A-F 0-9              -> S9_NUM
-          \n                   -> GOOD
-          *                    -> BAD
+S9_NUM:   A-F 0-9              -> S9_NUM  // covers multiple digits on the right part of hexadecimal number
+          \n                   -> GOOD    // hex numbers with at least one digit on the right part are accepted
+          *                    -> BAD     // anything else invalid
 
 // Octal
-S7_NUM:   0-7                  -> S7_NUM
-          \n                   -> GOOD
-          *                    -> BAD
-
-S8_NUM:   0-9                  -> S8_NUM
-          \n                   -> GOOD
-           *                   -> BAD
+S7_NUM:   0-7                  -> S7_NUM  // check for multiple octal digits
+          \n                   -> GOOD    // Numbers with multi octal digits are accepted in this case
+          *                    -> BAD     // anything else invalid
 
 // For operators
-S1_OP:    \n \=                -> GOOD
-           *                   -> BAD  
+S1_OP:    \n \=                -> GOOD    // here we check if its just a signle operator (* / ...), or followed by an equal sign (=)
+           *                   -> BAD     // anything else is not accepted
 
-S2_OP:     |                   -> GOOD
-           *                   -> BAD
+S2_OP:     |                   -> GOOD    // check if there is another |. If there is then it's an OR operation (||)
+           *                   -> BAD     // if it's only one | and anything else, then it's not valid
 
-S3_OP:     \n \+ \=            -> GOOD
-           *                   -> BAD
+S3_OP:     \n \+ \=            -> GOOD    // the operations can be addition (+), increment (++) or +=
+           *                   -> BAD     // if it's anything else after the plus sign then it's not accepted 
 
-S4_OP:     \n \- \=            -> GOOD
-           *                   -> BAD
+S4_OP:     \n \- \=            -> GOOD    // if it's only one minus (-) it's the difference, -- (decrement) and -=
+           *                   -> BAD     // it it's just one minus and anything else after then it's not accepted.
 
-S5_OP:     \n &                -> GOOD
-           *                   -> BAD
+S5_OP:     \n &                -> GOOD    // if there is another & sign then it's a logical AND operation (&&)
+           *                   -> BAD     // if it's only one & sign followed by anything else it's not valid
 GOOD(OK): \n -> GOOD
