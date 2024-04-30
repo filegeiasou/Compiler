@@ -1,0 +1,88 @@
+./fsm -trace 06_comments.fsm 
+// test text
+sz / -> s0 
+s0 / -> s1 
+s1 \s -> s1 
+s1 t -> s1 
+s1 e -> s1 
+s1 s -> s1 
+s1 t -> s1 
+s1 \s -> s1 
+s1 t -> s1 
+s1 e -> s1 
+s1 x -> s1 
+s1 t -> s1 
+s1 \n -> good 
+YES
+
+
+
+./fsm -trace 06_comments.fsm 
+/* test
+sz / -> s0 
+s0 * -> s2 
+s2 \s -> s2 
+s2 t -> s2 
+s2 e -> s2 
+s2 s -> s2 
+s2 t -> s2 
+s2 \n -> s2
+
+text */
+s2 t -> s2 
+s2 e -> s2 
+s2 x -> s2 
+s2 t -> s2 
+s2 \s -> s2 
+s2 * -> s3 
+s3 / -> good 
+good \n -> good 
+YES
+
+
+
+// not valid comment opening
+
+./fsm -trace 06_comments.fsm 
+/ test text
+sz / -> s0 
+s0 \s -> bad 
+fsm: in 06_comments.fsm, state 'bad' input t not accepted
+
+
+
+// test opening but not closing comment
+
+./fsm -trace 06_comments.fsm 
+/* test text
+sz / -> s0 
+s0 * -> s2 
+s2 \s -> s2 
+s2 t -> s2 
+s2 e -> s2 
+s2 s -> s2 
+s2 t -> s2 
+s2 \s -> s2 
+s2 t -> s2 
+s2 e -> s2 
+s2 x -> s2 
+s2 t -> s2 
+s2 \n -> s2 
+s2 EOF -> s2 
+NO
+
+
+
+// bad comment ending
+
+./fsm -trace 06_comments.fsm 
+test text */     
+sz t -> bad 
+fsm: in 06_comments.fsm, state 'bad' input e not accepted
+
+
+
+./fsm -trace 06_comments.fsm 
+comment //
+sz c -> bad 
+fsm: in 06_comments.fsm, state 'bad' input o not accepted
