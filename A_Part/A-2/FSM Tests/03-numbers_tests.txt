@@ -1,0 +1,87 @@
+./fsm -trace 03_numbers.fsm 
+1
+s0 1 -> s2 
+s2 \n -> good 
+YES
+
+
+
+./fsm -trace 03_numbers.fsm 
+213748
+s0 2 -> s2 
+s2 1 -> s2 
+s2 3 -> s2 
+s2 7 -> s2 
+s2 4 -> s2 
+s2 8 -> s2 
+s2 \n -> good 
+YES
+
+
+
+./fsm -trace 03_numbers.fsm 
+0XFF42
+s0 0 -> s1 
+s1 X -> s6 
+s6 F -> s9 
+s9 F -> s9 
+s9 4 -> s9 
+s9 2 -> s9 
+s9 \n -> good 
+YES
+
+
+
+./fsm -trace 03_numbers.fsm 
+063
+s0 0 -> s1 
+s1 6 -> s7 
+s7 3 -> s7 
+s7 \n -> good 
+YES
+
+
+./fsm -trace 03_numbers.fsm 
+3.14
+s0 3 -> s2 
+s2 . -> s3 
+s3 1 -> s10 
+s10 4 -> s10 
+s10 \n -> good 
+YES
+
+
+./fsm -trace 03_numbers.fsm 
+3.14e-10
+s0 3 -> s2 
+s2 . -> s3 
+s3 1 -> s10 
+s10 4 -> s10 
+s10 e -> s4 
+s4 - -> s5 
+s5 1 -> s8 
+s8 0 -> s8 
+s8 \n -> good 
+YES
+
+
+
+./fsm -trace 03_numbers.fsm 
+X01
+s0 X -> bad 
+fsm: in 03_numbers.fsm, state 'bad' input 0 not accepted
+
+
+./fsm -trace 03_numbers.fsm 
+09
+s0 0 -> s1 
+s1 9 -> bad 
+fsm: in 03_numbers.fsm, state 'bad' input \n not accepted
+
+
+
+./fsm -trace 03_numbers.fsm 
+.0129
+s0 . -> bad 
+fsm: in 03_numbers.fsm, state 'bad' input 0 not accepted
+
