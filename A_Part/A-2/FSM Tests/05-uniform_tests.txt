@@ -1,14 +1,9 @@
 ./fsm -trace 05_uniform.fsm 
-_variable_
+_var_
 sz _ -> s0_ident 
 s0_ident v -> s0_ident 
 s0_ident a -> s0_ident 
 s0_ident r -> s0_ident 
-s0_ident i -> s0_ident 
-s0_ident a -> s0_ident 
-s0_ident b -> s0_ident 
-s0_ident l -> s0_ident 
-s0_ident e -> s0_ident 
 s0_ident _ -> s0_ident 
 s0_ident \n -> good 
 YES
@@ -18,8 +13,6 @@ YES
 sz / -> s0_comm_op 
 s0_comm_op \n -> good 
 YES
-
-
 
 ./fsm -trace 05_uniform.fsm 
 // test
@@ -33,21 +26,17 @@ s1_comm t -> s1_comm
 s1_comm \n -> good 
 YES
 
-
-
 ./fsm -trace 05_uniform.fsm 
 0
 sz 0 -> s1_num 
 s1_num \n -> good 
 YES
 
-
 ./fsm -trace 05_uniform.fsm 
 5
 sz 5 -> s2_num 
 s2_num \n -> good 
 YES
-
 
 ./fsm -trace 05_uniform.fsm 
 !=
@@ -56,13 +45,11 @@ s1_op = -> good
 good \n -> good 
 YES
 
-
 ./fsm -trace 05_uniform.fsm 
 |
 sz | -> s2_op 
 s2_op \n -> bad 
 NO
-
 
 ./fsm -trace 05_uniform.fsm 
 ++
@@ -70,8 +57,6 @@ sz + -> s3_op
 s3_op + -> good 
 good \n -> good 
 YES
-
-
 
 ./fsm -trace 05_uniform.fsm 
 -
