@@ -56,3 +56,10 @@ YES
 1item
 sz 1 -> bad 
 fsm: in 01_identifiers.fsm, state 'bad' input i not accepted
+
+
+
+./fsm -trace 01_identifiers.fsm 
+1_item
+sz 1 -> bad 
+fsm: in 01_identifiers.fsm, state 'bad' input _ not accepted
