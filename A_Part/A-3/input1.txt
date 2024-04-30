@@ -1,4 +1,4 @@
-int main (int argc*, int argv**) {
+int main (int argc*, char argv**) {
     /* The multiline comment
     is this one 
     right here */
@@ -6,7 +6,8 @@ int main (int argc*, int argv**) {
     // Single Line Comment
     char *metavlhth = "Hello World\n \" \\ ";
     float metavliti = 4.1;
-
+    --
+    
     &-
     &&
     metablhth += 8;

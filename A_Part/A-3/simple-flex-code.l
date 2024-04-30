@@ -44,13 +44,13 @@ int i=0;
    synhthws idiaiterws makroskelwn kai dysnohtwn, kanonikwn ekfrasewn */
 
 DELIMITER         ;
-SYMBOLS           [#$^@]	
+SYMBOLS           [#$^@,:?]	
 NUMBERS           (0[xX][0-9A-F]+)|(0[0-7]+)|(([1-9][0-9]*|0)(\.[0-9]+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS       [a-zA-Z_]+[a-zA-Z_0-9]*
 STRINGS           \"([^"\\]*(\\[\\n\"][^"\\]*)*)\"
 COMMENTS          \/\*(.|\n)*\*\/|\/\/.*
 OPERATORS         ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|&{1,2}|\-{1,2}|\+{1,2}|(\|\|)
-KEYWORD           FILLME
+KEYWORDS           break|case|func|const|continue|do|double|else|float|for|if|int|long|return|short|sizeof|struct|switch|void|while
 OPEN_BRACKET      \{
 CLOSE_BRACKET     \}
 OPEN_PARENTHESIS  \(
@@ -70,44 +70,19 @@ WHITESPACE        [ \t]+
 {NUMBERS}       { return NUMBERS; }
 {STRINGS}       { return STRINGS; }
 {COMMENTS}      { 
-                        if(yytext[1]=='*') 
-                        {       
-                                while(yytext[i]!='\0')
-                                {
-                                        if(yytext[i]=='\n')
-                                        {
-                                                line++;
-                                                
+                        if (yytext[1] == '*') {
+                        int i = 2; // Start from the character after '*'
+                        while (yytext[i]) {
+                                if (yytext[i++] == '\n') {
+                                        line++;
                                         }
-                                        i++;
                                 }
                         }
                 }
-{WHITESPACE}    { /* FILL ME */ }
+{WHITESPACE}    { /* DONT RETURN SOMETHING */ }
 {OPERATORS}     { return OPERATORS; }
-{IDENTIFIERS}   { 
-                    if      ( !strcmp(yytext,"break"   ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"case"    ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"func"    ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"const"   ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"continue") )    return KEYWORD;
-                    else if ( !strcmp(yytext,"do"      ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"double"  ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"else"    ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"float"   ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"for"     ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"if"      ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"int"     ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"long"    ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"return"  ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"short"   ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"sizeof"  ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"struct"  ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"switch"  ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"void"    ) )    return KEYWORD;
-                    else if ( !strcmp(yytext,"while"   ) )    return KEYWORD;
-                    else return IDENTIFIERS;
-                }
+{KEYWORDS}      { return KEYWORD; }
+{IDENTIFIERS}   { return IDENTIFIERS; }
 {OPEN_BRACKET}  { return OPEN_BRACKET; }
 {CLOSE_BRACKET} { return CLOSE_BRACKET; }
 {OPEN_PARENTHESIS} { return OPEN_PARENTHESIS; }
