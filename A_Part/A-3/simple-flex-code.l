@@ -72,11 +72,9 @@ WHITESPACE        [ \t]+
 {COMMENTS}      { 
                         if (yytext[1] == '*') {
                         int i = 2; // Start from the character after '*'
-                        while (yytext[i]) {
-                                if (yytext[i++] == '\n') {
+                        while (yytext[i])
+                                if (yytext[i++] == '\n')
                                         line++;
-                                        }
-                                }
                         }
                 }
 {WHITESPACE}    { /* DONT RETURN SOMETHING */ }
