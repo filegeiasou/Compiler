@@ -1,0 +1,69 @@
+
+./fsm -trace 04_operators.fsm 
+*
+sz * -> s1 
+s1 \n -> good 
+YES
+
+
+./fsm -trace 04_operators.fsm 
++=
+sz + -> s3 
+s3 = -> good 
+good \n -> good 
+YES
+
+
+./fsm -trace 04_operators.fsm 
+++
+sz + -> s3 
+s3 + -> good 
+good \n -> good 
+YES
+
+
+
+./fsm -trace 04_operators.fsm 
+!
+sz ! -> s1 
+s1 \n -> good 
+YES
+
+
+
+./fsm -trace 04_operators.fsm 
+&
+sz & -> s5 
+s5 \n -> good 
+YES
+
+
+
+./fsm -trace 04_operators.fsm 
+&&
+sz & -> s5 
+s5 & -> good 
+good \n -> good 
+YES
+
+
+./fsm -trace 04_operators.fsm 
+-+
+sz - -> s4 
+s4 + -> bad 
+fsm: in 04_operators.fsm, state 'bad' input \n not accepted
+
+
+
+./fsm -trace 04_operators.fsm 
+|
+sz | -> s2 
+s2 \n -> bad 
+NO
+
+
+./fsm -trace 04_operators.fsm 
+>>
+sz > -> s1 
+s1 > -> bad 
+fsm: in 04_operators.fsm, state 'bad' input \n not accepted
