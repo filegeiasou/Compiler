@@ -4,8 +4,11 @@ int main (int argc*, int argv**) {
     right here */
 
     // Single Line Comment
-
+    char *metavlhth = "Hello World\n \" \\ ";
     float metavliti = 4.1;
+
+    &-
+    &&
     metablhth += 8;
     if ( metavliti == 12 ) {
         printf("A string");
