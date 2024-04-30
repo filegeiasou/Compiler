@@ -18,26 +18,15 @@ good \n -> good
 YES
 
 
-./fsm -trace 02_string_literals.fsm 
-"Mark said, \"Boo!\"\n"
+./fsm -trace 02_string_literals.fsm
+"\"Test\"\n"      
 sz " -> s0 
-s0 M -> s1 
-s1 a -> s1 
-s1 r -> s1 
-s1 k -> s1 
-s1 \s -> s1 
-s1 s -> s1 
-s1 a -> s1 
-s1 i -> s1 
-s1 d -> s1 
-s1 , -> s1 
-s1 \s -> s1 
-s1 \ -> s2 
+s0 \ -> s2 
 s2 " -> s1 
-s1 B -> s1 
-s1 o -> s1 
-s1 o -> s1 
-s1 ! -> s1 
+s1 T -> s1 
+s1 e -> s1 
+s1 s -> s1 
+s1 t -> s1 
 s1 \ -> s2 
 s2 " -> s1 
 s1 \ -> s2 
