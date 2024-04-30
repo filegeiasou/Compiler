@@ -1,6 +1,3 @@
-
-
-
 ./fsm -trace 05_uniform.fsm 
 _variable_
 sz _ -> s0_ident 
@@ -16,41 +13,17 @@ s0_ident _ -> s0_ident
 s0_ident \n -> good 
 YES
 
-
-
 ./fsm -trace 05_uniform.fsm 
 /
 sz / -> s0_comm_op 
 s0_comm_op \n -> good 
 YES
 
-
-
-./fsm -trace 05_uniform.fsm 
-/=
-sz / -> s0_comm_op 
-s0_comm_op = -> good 
-good \n -> good 
-YES
-
-
-
-./fsm -trace 05_uniform.fsm 
-//
-sz / -> s0_comm_op 
-s0_comm_op / -> s1_comm 
-s1_comm \n -> good 
-YES
-
-
-
-
 ./fsm -trace 05_uniform.fsm 
 0
 sz 0 -> s1_num 
 s1_num \n -> good 
 YES
-
 
 
 ./fsm -trace 05_uniform.fsm 
@@ -60,14 +33,6 @@ s2_num \n -> good
 YES
 
 
-
-
-/fsm -trace 05_uniform.fsm 
->
-sz > -> s1_op 
-s1_op \n -> good 
-YES
-
 ./fsm -trace 05_uniform.fsm 
 !=
 sz ! -> s1_op 
@@ -75,26 +40,11 @@ s1_op = -> good
 good \n -> good 
 YES
 
-
-
-
 ./fsm -trace 05_uniform.fsm 
 |
 sz | -> s2_op 
 s2_op \n -> bad 
 NO
-
-
-
-
-./fsm -trace 05_uniform.fsm 
-+
-sz + -> s3_op 
-s3_op \n -> good 
-YES
-
-
-
 
 ./fsm -trace 05_uniform.fsm 
 -
@@ -102,84 +52,14 @@ sz - -> s4_op
 s4_op \n -> good 
 YES
 
-
-
-
 ./fsm -trace 05_uniform.fsm 
 &
 sz & -> s5_op 
 s5_op \n -> good 
 YES
 
-
-
-
 ./fsm -trace 05_uniform.fsm 
 %
 sz % -> good 
 good \n -> good 
 YES
-
-
-
-./fsm -trace 05_uniform.fsm 
-
-sz \n -> sz 
-
-sz \n -> sz 
-
-sz \n -> sz 
-sz EOF -> bad 
-NO
-
-
-
-./fsm -trace 05_uniform.fsm 
-
-sz \t -> sz 
-sz \n -> sz 
-sz EOF -> bad 
-NO
-
-
-
-./fsm -trace 05_uniform.fsm 
-testing space
-sz t -> s0_ident 
-s0_ident e -> s0_ident 
-s0_ident s -> s0_ident 
-s0_ident t -> s0_ident 
-s0_ident i -> s0_ident 
-s0_ident n -> s0_ident 
-s0_ident g -> s0_ident 
-s0_ident \s -> bad 
-fsm: in 05_uniform.fsm, state 'bad' input s not accepted
-
-
-
-./fsm -trace 05_uniform.fsm 
-testing         tab
-sz t -> s0_ident 
-s0_ident e -> s0_ident 
-s0_ident s -> s0_ident 
-s0_ident t -> s0_ident 
-s0_ident i -> s0_ident 
-s0_ident n -> s0_ident 
-s0_ident g -> s0_ident 
-s0_ident \t -> bad 
-fsm: in 05_uniform.fsm, state 'bad' input \t not accepted
-
-
-./fsm -trace 05_uniform.fsm 
-testing
-sz t -> s0_ident 
-s0_ident e -> s0_ident 
-s0_ident s -> s0_ident 
-s0_ident t -> s0_ident 
-s0_ident i -> s0_ident 
-s0_ident n -> s0_ident 
-s0_ident g -> s0_ident 
-s0_ident \n -> good 
-newline
-fsm: in 05_uniform.fsm, state 'good' input n not accepted
-
