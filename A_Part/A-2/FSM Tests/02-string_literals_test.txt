@@ -1,0 +1,80 @@
+./fsm -trace 02_string_literals.fsm 
+""
+sz " -> s0 
+s0 " -> good 
+good \n -> good 
+YES
+
+
+./fsm -trace 02_string_literals.fsm 
+"Test"
+sz " -> s0 
+s0 T -> s1 
+s1 e -> s1 
+s1 s -> s1 
+s1 t -> s1 
+s1 " -> good 
+good \n -> good 
+YES
+
+
+./fsm -trace 02_string_literals.fsm 
+"Mark said, \"Boo!\"\n"
+sz " -> s0 
+s0 M -> s1 
+s1 a -> s1 
+s1 r -> s1 
+s1 k -> s1 
+s1 \s -> s1 
+s1 s -> s1 
+s1 a -> s1 
+s1 i -> s1 
+s1 d -> s1 
+s1 , -> s1 
+s1 \s -> s1 
+s1 \ -> s2 
+s2 " -> s1 
+s1 B -> s1 
+s1 o -> s1 
+s1 o -> s1 
+s1 ! -> s1 
+s1 \ -> s2 
+s2 " -> s1 
+s1 \ -> s2 
+s2 n -> s1 
+s1 " -> good 
+good \n -> good 
+YES
+
+
+// tests with BAD result
+
+./fsm -trace 02_string_literals.fsm
+"test text
+sz " -> s0 
+s0 t -> s1 
+s1 e -> s1 
+s1 s -> s1 
+s1 t -> s1 
+s1 \s -> s1 
+s1 t -> s1 
+s1 e -> s1 
+s1 x -> s1 
+s1 t -> s1 
+s1 \n -> s1 
+s1 EOF -> s1 
+NO
+
+
+./fsm -trace 02_string_literals.fsm
+test text"
+sz t -> bad 
+fsm: in 02_string_literals.fsm, state 'bad' input e not accepted
+
+
+./fsm -trace 02_string_literals.fsm 
+"\test"
+sz " -> s0 
+s0 \ -> s2 
+s2 t -> bad 
+fsm: in 02_string_literals.fsm, state 'bad' input e not accepted

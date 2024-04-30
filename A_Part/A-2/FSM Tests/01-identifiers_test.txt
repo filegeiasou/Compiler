@@ -36,7 +36,7 @@ s0 t -> s0
 s0 \n -> good 
 YES
 
-// test number
+
 
 ./fsm -trace 01_identifiers.fsm
 item1
@@ -49,11 +49,10 @@ s0 \n -> good
 YES
 
 
-// test number at start of variable name
+// tests with BAD result
+
 
 ./fsm -trace 01_identifiers.fsm 
 1item
 sz 1 -> bad 
 fsm: in 01_identifiers.fsm, state 'bad' input i not accepted
-
-
