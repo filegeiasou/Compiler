@@ -1,9 +1,14 @@
 ./fsm -trace 05_uniform.fsm 
-_var_
+_variable_
 sz _ -> s0_ident 
 s0_ident v -> s0_ident 
 s0_ident a -> s0_ident 
 s0_ident r -> s0_ident 
+s0_ident i -> s0_ident 
+s0_ident a -> s0_ident 
+s0_ident b -> s0_ident 
+s0_ident l -> s0_ident 
+s0_ident e -> s0_ident 
 s0_ident _ -> s0_ident 
 s0_ident \n -> good 
 YES
@@ -51,6 +56,7 @@ sz | -> s2_op
 s2_op \n -> bad 
 NO
 
+
 ./fsm -trace 05_uniform.fsm 
 ++
 sz + -> s3_op 
@@ -75,3 +81,35 @@ YES
 sz % -> good 
 good \n -> good 
 YES
+
+./fsm -trace 05_uniform.fsm 
+2e--3
+sz 2 -> s2_num 
+s2_num e -> s4_num 
+s4_num - -> s5_num 
+s5_num - -> bad 
+fsm: in 05_uniform.fsm, state 'bad' input 3 not accepted
+
+./fsm -trace 05_uniform.fsm 
+var@
+sz v -> s0_ident 
+s0_ident a -> s0_ident 
+s0_ident r -> s0_ident 
+s0_ident @ -> bad 
+fsm: in 05_uniform.fsm, state 'bad' input \n not accepted
+
+./fsm -trace 05_uniform.fsm 
+/*/
+sz / -> s0_comm_op 
+s0_comm_op * -> s2_comm 
+s2_comm / -> s2_comm 
+s2_comm \n -> s2_comm 
+s2_comm EOF -> s2_comm 
+NO
+
+
+./fsm -trace 05_uniform.fsm 
+*==
+sz * -> s1_op 
+s1_op = -> good 
+fsm: in 05_uniform.fsm, state 'good' input = not accepted
