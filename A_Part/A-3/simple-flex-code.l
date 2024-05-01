@@ -1,14 +1,15 @@
 /* Onoma arxeiou:       simple-flex-code.l
-   Perigrafh:           Ypodeigma gia anaptyksh lektikou analyth me xrhsh tou ergaleiou Flex
-   Syggrafeas:          Ergasthrio Metaglwttistwn, Tmhma Mhxanikwn Plhroforikhs kai Ypologistwn,
+   Perigrafh:           Lektikos analyths me xrhsh tou ergaleiou Flex
+   Syggrafeas:          Aggelos Konstantinos Mentzelos(21390132),Dimitrios Kontoulis(21390095),
+                        Efrsosini Barsou(21390021),Enterisa Gkiozi(21390041),Leonidas Alexopoulos(21390006)
+                        Ergasthrio Metaglwttistwn, Tmhma Mhxanikwn Plhroforikhs kai Ypologistwn,
                         Panepisthmio Dytikhs Attikhs
    Sxolia:              To paron programma ylopoiei (me th xrhsh flex) enan aplo lektiko analyth
-			pou anagnwrizei kena (space kai tab) kai akeraious (dekadikou systhmatos
-			mono!) gia th glwssa Uni-C enw diaxeirizetai tous eidikous xarakthres
-			neas grammhs '\n' (new line) kai 'EOF' (end of file). Yparxoun anafores
-			gia thn anagnwrish metablhtwn, me ton pragmatiko kwdika na exei antikatastathei
-			apo to lektiko FILL ME wste na symplhrwthei apo esas. Proairetika o lektikos
-			analyths dexetai orismata arxeiwn gia eisodo kai eksodo.
+			pou anagnwrizei kena (space kai tab) operators , identifiers,sxolia,strings,
+                        akeraious , dekadikous , oktadikous kai dekaexadikous arithmous gia th glwssa 
+                        Uni-C enw diaxeirizetai tous eidikous xarakthres neas grammhs '\n' (new line) 
+                        kai 'EOF' (end of file). Proairetika o lektikos analyths dexetai orismata arxeiwn 
+                        gia eisodo kai eksodo.
    Odhgies ekteleshs:   Dinete "make" xwris ta eisagwgika ston trexonta katalogo. Enallaktika:
 			flex -o simple-flex-code.c simple-flex-code.l
                         gcc -o simple-flex-code simple-flex-code.c
@@ -34,7 +35,6 @@
 
 /* Orismos metrhth trexousas grammhs */
 int line = 1;
-int i=0;
 
 %}
 
@@ -70,6 +70,7 @@ WHITESPACE        [ \t]+
 {NUMBERS}       { return NUMBERS; }
 {STRINGS}       { return STRINGS; }
 {COMMENTS}      { 
+                        /* Count the number of lines in a comment */
                         if (yytext[1] == '*') {
                         int i = 2; // Start from the character after '*'
                         while (yytext[i])
