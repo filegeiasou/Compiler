@@ -1,0 +1,29 @@
+
+void compare_strings(char* str1, char* str2)
+{
+    if(strcmp(str1, str2) == 0)
+        printf("The two strings are equal");
+    else
+        printf("The two string are not equal");
+}
+
+
+int main(int argc, char** argv)
+{
+
+    int @var = 2;
+
+    int a = 5;
+    int b = 10;
+
+    while(a << b) a++;
+
+    // strings definition
+    char* str_a = to_string(a);
+    char* str_b = to_string(b);
+
+    // compare the two strings
+    compare_strings(str_a, str_b);
+
+    return 0;
+}
