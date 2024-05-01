@@ -30,11 +30,9 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 /* Header file containing all the required tokens */
 #include "token.h"
 
-/* Current line counter */
-int line = 1;
-int k=0;
-int i=0;
-int yycolumn = 1;
+void handle_comment(); // definition of function to handle multiline comments
+
+int line = 1; // Current line counter
 
 %}
 
@@ -47,9 +45,9 @@ SYMBOLS           [#$^@,:?]
 NUMBERS           (0[xX][0-9A-F]+)|(0[0-7]+)|(([1-9][0-9]*|0)(\.[0-9]+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS       [a-zA-Z_]+[a-zA-Z_0-9]*
 STRINGS           \"([^"\\]*(\\[\\n\"][^"\\]*)*)\"
-COMMENT           \/\/.*
+LINE_COMMENT      \/\/.*
 OPERATORS         ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|&{1,2}|\-{1,2}|\+{1,2}|(\|\|)
-KEYWORDS           break|case|func|const|continue|do|double|else|float|for|if|int|long|return|short|sizeof|struct|switch|void|while
+KEYWORDS          break|case|func|const|continue|do|double|else|float|for|if|int|long|return|short|sizeof|struct|switch|void|while
 OPEN_BRACKET      \{
 CLOSE_BRACKET     \}
 OPEN_PARENTHESIS  \(
@@ -65,42 +63,8 @@ COMMENT1          \/\*[^*]*\*\/
    The return command allows the return of a numerical value through the function yylex() */
 
 %%
-"/*"     { /* ignore multiline comments. */
-           register int c;
-
-        for (;;)
-        {
-                while ((c = input ()) != '*' && c != EOF)
-                {
-                        if (c == '\n') 
-                        {
-                                ++yylineno; /* increment line number */
-                                line++;
-                        }
-                } /* eat up text of comment. */
-                
-                if (c == '*')
-                {
-                        while ((c = input ()) == '*')
-                        {
-                                if (c == '\n') 
-                                {
-                                        ++yylineno; /* increment line number */
-                                        line++;
-                                }
-                        }
-                        if (c == '/')
-                        break; /* found the end. */
-                }
-
-                if (c == EOF)
-                {
-                        printf ("Error: EOF in comment.\n");
-                        break;
-                }
-        }
-}
-{COMMENT}           { /* ignore comments */}
+"/*"                { handle_comment(); }
+{LINE_COMMENT}      { /* ignore line comments */}
 {DELIMITER}         { return DELIMITER; }
 {NUMBERS}           { return NUMBERS; }
 {STRINGS}           { return STRINGS; }
@@ -120,6 +84,53 @@ COMMENT1          \/\*[^*]*\*\/
 .                   { return UNKNOWN_TOKEN; }
 
 %%
+
+void handle_comment()
+{
+        /* ignore multiline comments. */
+
+        int c; // current character read
+
+        for (;;)
+        {
+                // while character read is not '*' (indicating comment end) or EOF
+                while ((c = input()) != '*' && c != EOF)
+                {
+                        // if it's a new line
+                        if (c == '\n')
+                        {
+                                ++yylineno; /* increment line number */
+                                line++;
+                        }
+                } /* eat up text of comment. */
+                
+                // if there is a '*' found, indicating maybe the end of the comment
+                if (c == '*')
+                {
+                        /* the loop below detects if there are many
+                           '*' symbols in a row, basically skipping them
+                           and not regarding them as the end of the comment. */
+
+                        while ((c = input ()) == '*')
+                        {
+                                if (c == '\n') 
+                                {
+                                        ++yylineno; /* increment line number */
+                                        line++;
+                                }
+                        }
+
+                        if (c == '/') break; /* found the end of the comment */
+                }
+
+                // if there is EOF contained in the multiple line comment
+                if (c == EOF)
+                {
+                        printf ("Error: EOF in comment.\n");
+                        break;
+                }
+        }
+}
 
 /* Array with all the tokens that are defined in the token.h file */
 char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN","EOF"};

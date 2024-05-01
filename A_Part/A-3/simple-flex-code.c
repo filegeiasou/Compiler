@@ -621,19 +621,17 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 /* Header file containing all the required tokens */
 #include "token.h"
 
-/* Current line counter */
-int line = 1;
-int k=0;
-int i=0;
-int yycolumn = 1;
+void handle_comment(); // definition of function to handle multiline comments
 
-#line 631 "simple-flex-code.c"
+int line = 1; // Current line counter
+
+#line 629 "simple-flex-code.c"
 /* Name and corresponding regular expressions (in canonical form).
    After this, the names can be used (left) instead of the
    particularly long and cumbersome, canonical expressions */
 /* For each pattern on the left that matches, the corresponding code is executed in the braces.
    The return command allows the return of a numerical value through the function yylex() */
-#line 637 "simple-flex-code.c"
+#line 635 "simple-flex-code.c"
 
 #define INITIAL 0
 
@@ -850,9 +848,9 @@ YY_DECL
 		}
 
 	{
-#line 67 "simple-flex-code.l"
+#line 65 "simple-flex-code.l"
 
-#line 856 "simple-flex-code.c"
+#line 854 "simple-flex-code.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -911,140 +909,106 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 68 "simple-flex-code.l"
-{ /* ignore multiline comments. */
-           register int c;
-
-        for (;;)
-        {
-                while ((c = input ()) != '*' && c != EOF)
-                {
-                        if (c == '\n') 
-                        {
-                                ++yylineno; /* increment line number */
-                                line++;
-                        }
-                } /* eat up text of comment. */
-                
-                if (c == '*')
-                {
-                        while ((c = input ()) == '*')
-                        {
-                                if (c == '\n') 
-                                {
-                                        ++yylineno; /* increment line number */
-                                        line++;
-                                }
-                        }
-                        if (c == '/')
-                        break; /* found the end. */
-                }
-
-                if (c == EOF)
-                {
-                        printf ("Error: EOF in comment.\n");
-                        break;
-                }
-        }
-}
+#line 66 "simple-flex-code.l"
+{ handle_comment(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 103 "simple-flex-code.l"
-{ /* ignore comments */}
+#line 67 "simple-flex-code.l"
+{ /* ignore line comments */}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 104 "simple-flex-code.l"
+#line 68 "simple-flex-code.l"
 { return DELIMITER; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 105 "simple-flex-code.l"
+#line 69 "simple-flex-code.l"
 { return NUMBERS; }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 106 "simple-flex-code.l"
+#line 70 "simple-flex-code.l"
 { return STRINGS; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 107 "simple-flex-code.l"
+#line 71 "simple-flex-code.l"
 { /* DONT RETURN SOMETHING */ }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 108 "simple-flex-code.l"
+#line 72 "simple-flex-code.l"
 { return OPERATORS; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 109 "simple-flex-code.l"
+#line 73 "simple-flex-code.l"
 { return KEYWORD; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 110 "simple-flex-code.l"
+#line 74 "simple-flex-code.l"
 { return IDENTIFIERS; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 111 "simple-flex-code.l"
+#line 75 "simple-flex-code.l"
 { return OPEN_BRACKET; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 112 "simple-flex-code.l"
+#line 76 "simple-flex-code.l"
 { return CLOSE_BRACKET; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 113 "simple-flex-code.l"
+#line 77 "simple-flex-code.l"
 { return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 114 "simple-flex-code.l"
+#line 78 "simple-flex-code.l"
 { return CLOSE_PARENTHESIS; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 115 "simple-flex-code.l"
+#line 79 "simple-flex-code.l"
 { return OPEN_BRACE; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 116 "simple-flex-code.l"
+#line 80 "simple-flex-code.l"
 { return CLOSE_BRACE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 117 "simple-flex-code.l"
+#line 81 "simple-flex-code.l"
 { return SYMBOLS; }
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 118 "simple-flex-code.l"
+#line 82 "simple-flex-code.l"
 { line++; printf("\n"); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 119 "simple-flex-code.l"
+#line 83 "simple-flex-code.l"
 { printf("#END-OF-FILE#\n"); exit(0); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 120 "simple-flex-code.l"
+#line 84 "simple-flex-code.l"
 { return UNKNOWN_TOKEN; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 122 "simple-flex-code.l"
+#line 86 "simple-flex-code.l"
 ECHO;
 	YY_BREAK
-#line 1048 "simple-flex-code.c"
+#line 1012 "simple-flex-code.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2047,8 +2011,55 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 122 "simple-flex-code.l"
+#line 86 "simple-flex-code.l"
 
+
+void handle_comment()
+{
+        /* ignore multiline comments. */
+
+        int c; // current character read
+
+        for (;;)
+        {
+                // while character read is not '*' (indicating comment end) or EOF
+                while ((c = input()) != '*' && c != EOF)
+                {
+                        // if it's a new line
+                        if (c == '\n')
+                        {
+                                ++yylineno; /* increment line number */
+                                line++;
+                        }
+                } /* eat up text of comment. */
+                
+                // if there is a '*' found, indicating maybe the end of the comment
+                if (c == '*')
+                {
+                        /* the loop below detects if there are many
+                           '*' symbols in a row, basically skipping them
+                           and not regarding them as the end of the comment. */
+
+                        while ((c = input ()) == '*')
+                        {
+                                if (c == '\n') 
+                                {
+                                        ++yylineno; /* increment line number */
+                                        line++;
+                                }
+                        }
+
+                        if (c == '/') break; /* found the end of the comment */
+                }
+
+                // if there is EOF contained in the multiple line comment
+                if (c == EOF)
+                {
+                        printf ("Error: EOF in comment.\n");
+                        break;
+                }
+        }
+}
 
 /* Array with all the tokens that are defined in the token.h file */
 char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN","EOF"};
