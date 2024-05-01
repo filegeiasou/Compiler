@@ -595,47 +595,44 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "simple-flex-code.l"
-/* Onoma arxeiou:       simple-flex-code.l
-   Perigrafh:           Ypodeigma gia anaptyksh lektikou analyth me xrhsh tou ergaleiou Flex
-   Syggrafeas:          Ergasthrio Metaglwttistwn, Tmhma Mhxanikwn Plhroforikhs kai Ypologistwn,
-                        Panepisthmio Dytikhs Attikhs
-   Sxolia:              To paron programma ylopoiei (me th xrhsh flex) enan aplo lektiko analyth
-			pou anagnwrizei kena (space kai tab) kai akeraious (dekadikou systhmatos
-			mono!) gia th glwssa Uni-C enw diaxeirizetai tous eidikous xarakthres
-			neas grammhs '\n' (new line) kai 'EOF' (end of file). Yparxoun anafores
-			gia thn anagnwrish metablhtwn, me ton pragmatiko kwdika na exei antikatastathei
-			apo to lektiko FILL ME wste na symplhrwthei apo esas. Proairetika o lektikos
-			analyths dexetai orismata arxeiwn gia eisodo kai eksodo.
-   Odhgies ekteleshs:   Dinete "make" xwris ta eisagwgika ston trexonta katalogo. Enallaktika:
-			flex -o simple-flex-code.c simple-flex-code.l
+/* File name:           simple-flex-code.l
+   Description:         Lexical analyzer using Flex tool
+   Authors:             Aggelos Konstantinos Mentzelos(21390132),Dimitrios Kontoulis(21390095),
+                        Efrsosini Barsou(21390021),Enterisa Gkiozi(21390041),Leonidas Alexopoulos(21390006)
+                        Compilers Lab, Department of Informatics and Computer Engineering,
+                        University of West Attica
+   Comments:            The current program implements (using flex) a simple lexical analyzer
+                        recognizing spaces (space and tab), operators, identifiers, comments, strings,
+                        integers, floats, octals and hexadecimal numbers for the Uni-C language
+                        while handling the special characters of new line '\n' and 'EOF'. The lexical
+                        analyzer accepts input and output file arguments.
+Execution instructions: Give "make" without quotes in the current directory. Alternatively:
+                        flex -o simple-flex-code.c simple-flex-code.l
                         gcc -o simple-flex-code simple-flex-code.c
-                        ./simple-flex-code
+                        ./simple-flex-code input.txt output.txt
 */
-/* H anagnwsh periorizetai se ena mono arxeio kai termatizei sto prwto EOF */
-/* Kwdikas C gia orismo twn apaitoumenwn header files kai twn metablhtwn.
-   Otidhpote anamesa sta %{ kai %} metaferetai autousio sto arxeio C pou
-   tha dhmiourghsei to Flex. */
-#line 27 "simple-flex-code.l"
+/* The reading of the file is limited to one file and terminates at the first EOF */
+/* The following C code is for the definition of the required header files and variables.
+   Anything between %{ and %} is transferred as is to the C file that Flex will create. */
+#line 25 "simple-flex-code.l"
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-/* Header file pou periexei lista me ola ta tokens */
+/* Header file containing all the required tokens */
 #include "token.h"
 
-/* Orismos metrhth trexousas grammhs */
+/* Current line counter */
 int line = 1;
-int i=0;
 
-#line 632 "simple-flex-code.c"
-/* Onomata kai antistoixoi orismoi (ypo morfh kanonikhs ekfrashs).
-   Meta apo auto, mporei na ginei xrhsh twn onomatwn (aristera) anti twn,
-   synhthws idiaiterws makroskelwn kai dysnohtwn, kanonikwn ekfrasewn */
-/* Gia kathe pattern (aristera) pou tairiazei ekteleitai o antistoixos
-   kwdikas mesa sta agkistra. H entolh return epitrepei thn epistrofh
-   mias arithmhtikhs timhs mesw ths synarthshs yylex() */
-#line 639 "simple-flex-code.c"
+#line 630 "simple-flex-code.c"
+/* Name and corresponding regular expressions (in canonical form).
+   After this, the names can be used (left) instead of the
+   particularly long and cumbersome, canonical expressions */
+/* For each pattern on the left that matches, the corresponding code is executed in the braces.
+   The return command allows the return of a numerical value through the function yylex() */
+#line 636 "simple-flex-code.c"
 
 #define INITIAL 0
 
@@ -852,10 +849,10 @@ YY_DECL
 		}
 
 	{
-#line 67 "simple-flex-code.l"
+#line 61 "simple-flex-code.l"
 
 
-#line 859 "simple-flex-code.c"
+#line 856 "simple-flex-code.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -914,109 +911,110 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 69 "simple-flex-code.l"
+#line 63 "simple-flex-code.l"
 { return DELIMITER; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 70 "simple-flex-code.l"
+#line 64 "simple-flex-code.l"
 { return NUMBERS; }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 71 "simple-flex-code.l"
+#line 65 "simple-flex-code.l"
 { return STRINGS; }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 72 "simple-flex-code.l"
+#line 66 "simple-flex-code.l"
 { 
+                        /* Count the number of lines in a comment */
                         if (yytext[1] == '*') {
-                        int i = 2; // Start from the character after '*'
-                        while (yytext[i])
-                                if (yytext[i++] == '\n')
-                                        line++;
+                                int i = 2; // Start from the character after '*'
+                                while (yytext[i])
+                                        if (yytext[i++] == '\n')
+                                                line++;
                         }
-                }
+                    }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 80 "simple-flex-code.l"
+#line 75 "simple-flex-code.l"
 { /* DONT RETURN SOMETHING */ }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 81 "simple-flex-code.l"
+#line 76 "simple-flex-code.l"
 { return OPERATORS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 82 "simple-flex-code.l"
+#line 77 "simple-flex-code.l"
 { return KEYWORD; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 83 "simple-flex-code.l"
+#line 78 "simple-flex-code.l"
 { return IDENTIFIERS; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 84 "simple-flex-code.l"
+#line 79 "simple-flex-code.l"
 { return OPEN_BRACKET; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 85 "simple-flex-code.l"
+#line 80 "simple-flex-code.l"
 { return CLOSE_BRACKET; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 86 "simple-flex-code.l"
+#line 81 "simple-flex-code.l"
 { return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 87 "simple-flex-code.l"
+#line 82 "simple-flex-code.l"
 { return CLOSE_PARENTHESIS; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 88 "simple-flex-code.l"
+#line 83 "simple-flex-code.l"
 { return OPEN_BRACE; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 89 "simple-flex-code.l"
+#line 84 "simple-flex-code.l"
 { return CLOSE_BRACE; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 90 "simple-flex-code.l"
+#line 85 "simple-flex-code.l"
 { return SYMBOLS; }
 	YY_BREAK
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 91 "simple-flex-code.l"
+#line 86 "simple-flex-code.l"
 { line++; printf("\n"); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 92 "simple-flex-code.l"
+#line 87 "simple-flex-code.l"
 { printf("#END-OF-FILE#\n"); exit(0); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 93 "simple-flex-code.l"
+#line 88 "simple-flex-code.l"
 { return UNKNOWN_TOKEN; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 95 "simple-flex-code.l"
+#line 90 "simple-flex-code.l"
 ECHO;
 	YY_BREAK
-#line 1020 "simple-flex-code.c"
+#line 1018 "simple-flex-code.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2019,26 +2017,22 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 95 "simple-flex-code.l"
+#line 90 "simple-flex-code.l"
 
 
-/* Pinakas me ola ta tokens se antistoixia me tous orismous sto token.h */
-char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","EOF","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN"};
+/* Array with all the tokens that are defined in the token.h file */
+char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN","EOF"};
 
-
-/* H synarthsh main: O kwdikas autos tha topotheththei autousios sto
-   programma C pou tha dhmiourghsei to Flex kai tha apotelesei to arxiko
-   shmeio ekteleshs ths efarmoghs tou lektikou analyth. */
+/* The main function : This code will be automatically placed in the C file that Flex will create
+   and will be the starting point of the lexical analyzer application. */
 
 int main(int argc, char **argv){
         int token;
 
-        /* Ginetai o elegxos twn orismatwn ths grammhs entolwn. Ean ta
-           orismata einai 3, to programma diabazei apo to arxeio tou 2ou
-           orismatos kai grafei sto arxeio tou 3ou. Ean ta orismata einai
-           2 diabazei apo to arxeio tou 2ou kai grafei sthn othonh.
-           Ypenthymizetai oti to 1o orisma (argv[0]) sth C einai to onoma
-           tou idiou tou ektelesimou arxeiou. */
+        /* Definitions are checked for the correct number of arguments. If the arguments are 3, 
+           the program reads from the file of the 2nd argument and writes to the file of the 3rd argument.
+           If the arguments are 2, the program reads from the file of the 2nd argument and writes the output to the screen.
+           The 1st argument (argv[0]) is always the name of the executable */
 
         if(argc == 3){
                 if(!(yyin = fopen(argv[1], "r"))) {
@@ -2057,18 +2051,15 @@ int main(int argc, char **argv){
                 }
         }
 
-        /* H synarthsh yylex diabazei xarakthres apo thn eisodo kai prospathei
-           na angnwrisei tokens. Ta tokens pou anagnwrizei einai auta pou exoun
-           oristei sto paron arxeio, anamesa sta %% kai %%. An o kwdikas pou
-           antistoixei se kapoio pattern periexei thn entolh 'return TIMH', h
-           yylex() epistrefei thn timh auth h opoia kai apothhkeyetai sth
-           metablhth token. */
+        /* The yylex function reads characters from the input file and tries to recognize tokens.
+           The tokens the the function recognizes are the ones that are defined between the %% and %%.
+           If the code corresponding to a pattern contains the command 'return VALUE', then yylex() returns
+           the value that is assigned to that token. The return values of each token can be seen in the token.h file */
 
         while( (token=yylex()) >= 0){
-                /* Gia kathe token pou anagnwristhke, ektypwnetai h grammh pou auto
-                   brethhke kathws kai to onoma tou mazi me thn timh tou. */
+                /* For each token recognized, in prints the line number that it was found
+                   as well as it's name and it's assigned value (for example DELIMITER (NAME) 1 (VALUE)). */
                 fprintf(yyout, "\tLine=%d, token=%s, value=\"%s\"\n", line, tname[token-1], yytext);
         }
         return 0;
 }
-

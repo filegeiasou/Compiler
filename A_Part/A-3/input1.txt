@@ -7,7 +7,7 @@ int main (int argc*, char argv**) {
     char *metavlhth = "Hello World\n \" \\ ";
     float metavliti = 4.1;
     --
-    
+    ~
     &-
     &&
     metablhth += 8;
