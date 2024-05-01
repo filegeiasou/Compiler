@@ -1,0 +1,27 @@
+/*int k=0;
+for(k=0;k<20;k++)
+{
+        if(!strcmp(yytext,keywords[k]))
+        {
+                return KEYWORD;
+        }
+}*/
+char *keywords[] = {"break","case","func","const","continue","do","double","else","float","for","if","int","long","return","short","sizeof","struct","switch","void","while"};
+/*if(yytext[1]=='*') 
+{       
+        while(yytext[i]!='\0')
+        {
+                if(yytext[i]=='\n')
+                {
+                        line++;       
+                }
+                i++;
+        }
+}*/
+
+if (yytext[1] == '*') {
+        /*int i = 2; // Start from the character after '*'*/
+        while (yytext[i])
+                if (yytext[i++] == '\n')
+                        line++;
+}
