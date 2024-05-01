@@ -25,3 +25,26 @@
                                         if (yytext[i++] == '\n')
                                                 line++;
                         } 
+                        "/*"     { /* ignore multiline comments. */
+           register int c;
+
+           for (;;)
+           {
+             while ((c = input ()) != '*' && c != EOF)
+               ; /* eat up text of comment. */
+             if (c == '*')
+             {
+               while ((c = input ()) == '*')
+                 ;
+
+               if (c == '/')
+                 break; /* found the end. */
+             }
+
+             if (c == EOF)
+             {
+               printf ("Error: EOF in comment.\n");
+               break;
+             }
+           }
+}

@@ -32,7 +32,8 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 
 /* Current line counter */
 int line = 1;
-int i=2;
+int k=0;
+int i=0;
 int yycolumn = 1;
 
 %}
@@ -46,6 +47,7 @@ SYMBOLS           [#$^@,:?]
 NUMBERS           (0[xX][0-9A-F]+)|(0[0-7]+)|(([1-9][0-9]*|0)(\.[0-9]+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS       [a-zA-Z_]+[a-zA-Z_0-9]*
 STRINGS           \"([^"\\]*(\\[\\n\"][^"\\]*)*)\"
+COMMENT           \/\/.*
 OPERATORS         ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|&{1,2}|\-{1,2}|\+{1,2}|(\|\|)
 KEYWORDS           break|case|func|const|continue|do|double|else|float|for|if|int|long|return|short|sizeof|struct|switch|void|while
 OPEN_BRACKET      \{
@@ -55,31 +57,50 @@ CLOSE_PARENTHESIS \)
 OPEN_BRACE        \[
 CLOSE_BRACE       \]
 WHITESPACE        [ \t]+
+COMMENT1          \/\*[^*]*\*\/
 
-%x COMMENT LINE_COMMENTS
+
 
 /* For each pattern on the left that matches, the corresponding code is executed in the braces.
    The return command allows the return of a numerical value through the function yylex() */
 
 %%
+"/*"     { /* ignore multiline comments. */
+           register int c;
 
-"/*"            { BEGIN(COMMENT); }
-<COMMENT>"*/"   { BEGIN(INITIAL); }
-<COMMENT>.|\n   { 
-                    if (yytext[0] == '\n') 
-                    {
-                        ++yylineno; 
-                        line++;
-                    }
+        for (;;)
+        {
+                while ((c = input ()) != '*' && c != EOF)
+                {
+                        if (c == '\n') 
+                        {
+                                ++yylineno; /* increment line number */
+                                line++;
+                        }
+                } /* eat up text of comment. */
+                
+                if (c == '*')
+                {
+                        while ((c = input ()) == '*')
+                        {
+                                if (c == '\n') 
+                                {
+                                        ++yylineno; /* increment line number */
+                                        line++;
+                                }
+                        }
+                        if (c == '/')
+                        break; /* found the end. */
                 }
 
-"//"            { BEGIN(LINE_COMMENTS); }
-<LINE_COMMENTS>\n { BEGIN(INITIAL); ++yylineno;line++; }
-<LINE_COMMENTS>. {++yycolumn ; }
-
-
-
-
+                if (c == EOF)
+                {
+                        printf ("Error: EOF in comment.\n");
+                        break;
+                }
+        }
+}
+{COMMENT}           { /* ignore comments */}
 {DELIMITER}         { return DELIMITER; }
 {NUMBERS}           { return NUMBERS; }
 {STRINGS}           { return STRINGS; }

@@ -4,7 +4,7 @@
 #define OPERATORS 4
 #define IDENTIFIERS 5
 #define SYMBOLS 6
-#define COMMENTS 7
+#define COMMENT 7
 #define KEYWORD 8
 #define OPEN_BRACKET 9
 #define CLOSE_BRACKET 10
