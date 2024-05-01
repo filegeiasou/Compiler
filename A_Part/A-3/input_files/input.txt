@@ -2,16 +2,21 @@ int main (int argc*, char argv**) {
     int a = 5;
     int b = 6;
     int c = a + b;
+
     // The single line comment
+    
     /*
     The multi line comment
     */
+    
     ~
     @
+    
     float metavliti = 12.3e56;
     if ( metavliti += 012 ) {
         printf("A string");
     }
     return 0;
-    // The single line comment
+
+    // Comments are not recognized by the analyzer
 }
