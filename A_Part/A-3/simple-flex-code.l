@@ -32,19 +32,20 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 
 /* Current line counter */
 int line = 1;
+int i=2;
+int yycolumn = 1;
 
 %}
 
-/* Below are the names of the tokens as well as the regular expressions assigned to them.
-   Assigning names to regular expressions enables us to just use their name to express them,
-   instead of writing the whole regular experssion which is way more complex. */ 
+/* Name and corresponding regular expressions (in canonical form).
+   After this, the names can be used (left) instead of the
+   particularly long and cumbersome, canonical expressions */
 
 DELIMITER         ;
 SYMBOLS           [#$^@,:?]	
 NUMBERS           (0[xX][0-9A-F]+)|(0[0-7]+)|(([1-9][0-9]*|0)(\.[0-9]+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS       [a-zA-Z_]+[a-zA-Z_0-9]*
 STRINGS           \"([^"\\]*(\\[\\n\"][^"\\]*)*)\"
-COMMENTS          \/\*(.|\n)*\*\/|\/\/.*
 OPERATORS         ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|&{1,2}|\-{1,2}|\+{1,2}|(\|\|)
 KEYWORDS           break|case|func|const|continue|do|double|else|float|for|if|int|long|return|short|sizeof|struct|switch|void|while
 OPEN_BRACKET      \{
@@ -55,23 +56,33 @@ OPEN_BRACE        \[
 CLOSE_BRACE       \]
 WHITESPACE        [ \t]+
 
+%x COMMENT LINE_COMMENTS
+
 /* For each pattern on the left that matches, the corresponding code is executed in the braces.
    The return command allows the return of a numerical value through the function yylex() */
 
 %%
 
+"/*"            { BEGIN(COMMENT); }
+<COMMENT>"*/"   { BEGIN(INITIAL); }
+<COMMENT>.|\n   { 
+                    if (yytext[0] == '\n') 
+                    {
+                        ++yylineno; 
+                        line++;
+                    }
+                }
+
+"//"            { BEGIN(LINE_COMMENTS); }
+<LINE_COMMENTS>\n { BEGIN(INITIAL); ++yylineno;line++; }
+<LINE_COMMENTS>. {++yycolumn ; }
+
+
+
+
 {DELIMITER}         { return DELIMITER; }
 {NUMBERS}           { return NUMBERS; }
 {STRINGS}           { return STRINGS; }
-{COMMENTS}          { 
-                        /* Count the number of lines in a comment */
-                        if (yytext[1] == '*') {
-                                int i = 2; // Start from the character after '*'
-                                while (yytext[i])
-                                        if (yytext[i++] == '\n')
-                                                line++;
-                        }
-                    }
 {WHITESPACE}        { /* DONT RETURN SOMETHING */ }
 {OPERATORS}         { return OPERATORS; }
 {KEYWORDS}          { return KEYWORD; }
