@@ -597,7 +597,7 @@ char *yytext;
 #line 1 "simple-flex-code.l"
 /* File name:           simple-flex-code.l
    Description:         Lexical analyzer using Flex tool
-   Authors:             Aggelos Konstantinos Mentzelos(21390132),Dimitrios Kontoulis(21390095),
+   Authors:             Dimitrios Kontoulis(21390095),Aggelos Konstantinos Mentzelos(21390132),
                         Efrsosini Barsou(21390021),Enterisa Gkiozi(21390041),Leonidas Alexopoulos(21390006)
                         Compilers Lab, Department of Informatics and Computer Engineering,
                         University of West Attica
@@ -627,9 +627,9 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 int line = 1;
 
 #line 630 "simple-flex-code.c"
-/* Name and corresponding regular expressions (in canonical form).
-   After this, the names can be used (left) instead of the
-   particularly long and cumbersome, canonical expressions */
+/* Below are the names of the tokens as well as the regular expressions assigned to them.
+   Assigning names to regular expressions enables us to just use their name to express them,
+   instead of writing the whole regular experssion which is way more complex. */ 
 /* For each pattern on the left that matches, the corresponding code is executed in the braces.
    The return command allows the return of a numerical value through the function yylex() */
 #line 636 "simple-flex-code.c"
