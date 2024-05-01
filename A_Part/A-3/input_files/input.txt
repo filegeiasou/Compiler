@@ -1,3 +1,18 @@
+
+/* 
+    In this input file we are testing:
+        - Identifiers
+        - Single & Multiple line Comments
+        - Numbers
+        - Operators
+        - String Literals
+        - Whitespaces
+
+    ** int argc* and char argv** are left on purpose ** 
+
+    ISSUE: This comment makes main unrecognizable
+*/
+
 int main (int argc*, char argv**) {
     int a = 5;
     int b = 6;
@@ -6,16 +21,18 @@ int main (int argc*, char argv**) {
     // The single line comment
     
     /*
-    The multi line comment
+        The multi line comment
     */
     
     ~
     @
+
     
     float metavliti = 12.3e56;
     if ( metavliti += 012 ) {
         printf("A string");
     }
+
     return 0;
 
     // Comments are not recognized by the analyzer
