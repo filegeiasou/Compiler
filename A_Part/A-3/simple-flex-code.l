@@ -35,9 +35,9 @@ int line = 1;
 
 %}
 
-/* Name and corresponding regular expressions (in canonical form).
-   After this, the names can be used (left) instead of the
-   particularly long and cumbersome, canonical expressions */
+/* Below are the names of the tokens as well as the regular expressions assigned to them.
+   Assigning names to regular expressions enables us to just use their name to express them,
+   instead of writing the whole regular experssion which is way more complex. */ 
 
 DELIMITER         ;
 SYMBOLS           [#$^@,:?]	
