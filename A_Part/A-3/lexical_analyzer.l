@@ -85,11 +85,57 @@ COMMENT1          \/\*[^*]*\*\/
 
 %%
 
+
+/* Υπήρξαν κάποια προβλήματα κατά τη υλοποίηση του κώδικα για την εύρεση των σχολίων.
+   Συγκεκριμένα το πρόβλημα αφορούσε τη σωστή εύρεση και διαχείριση των σχολίων πολλαπλής γραμμής.
+   Αν είχε τοποθετηθεί σχόλιο πολλαπλών γραμμών, έπειτα ακολουθούσε μία αλληλουχία από λεκτικές μονάδες (κώδικα)
+   και μετά ξαναυπήρχε σχόλιο πολλαπλών	γραμμών, τότε ο λεκτικός αναλυτής δεν εντόπιζε τον κώδικα που ήταν ανάμεσα στα σχόλια.
+   Αυτό το πρόβλημα με τη σειρά του μας δημιούργησε το πρόβλημα της λανθασμένης μέτρησης του αριθμού των γραμμών
+   που όντως αποτελούν κομμάτι κώδικα. Για την καλύτερη κατανόηση του προβλήματος, παρακάτω παρατίθεται ένα
+   παράδειγμα το μας προκαλούσε το πρόβλημα που προαναφέρθηκε. Το παράδειγμα είναι μία απλοποιημένη μορφή
+   του κώδικα που έχει δημιουργηθεί στο input.txt αρχείο.
+
+      /* sample
+         multiple line
+         comment */
+ 
+      int main(int argc, char** argv)
+      {                
+          // sample code that will be ignored
+          // due to the problem described
+          int a = 5;
+          int b = 10;
+
+          /* another sample
+             multiple line
+             comment */
+
+          // This will be the first lexical unit recognized by the analyzer
+          printf("Sum: %d", a+b);
+
+          return 0;
+      }
+
+   Οπότε το πρόβλημα ήταν ότι ο λεκτικός αναλυτής δεν έβρισκε τα σχόλια πολλαπλών γραμμών ως μία μονάδα.
+   Όπως φαίνεται και παραπάνω, κανονικά θα έπρεπε το πρώτο σχόλιο να ήταν μία μονάδα μόνο του, και το δεύτερο άλλη.
+   Αλλά στο πρόβλημα αυτά θεωρούνταν ένα σχόλιο, επειδή απλώς βρέθηκε το closing tag '*/' των σχολίων.
+
+   Για αυτό και παρακάτω αναπτύχθηκε η συνάρτηση handle_comment η οποία επιλύει το παραπάνω πρόβλημα.
+   Ο κώδικας της συνάρτησης αντλήθηκε απο το αρχείο "Παραδειγματα FLEX αρχείων" το οποίο υπάρχει στο E-Class
+   στα έγγραφα του εργαστηρίου. Συγκεκριμένα το αρχείο μέσα έχει ένα κομμάτι κώδικα με τίτλο
+   "the following is one way to eat up C comments".
+ */
+
+
+
+/* Implementation of function that handles multi-line comments
+
 void handle_comment()
 {
         /* this function handles multi-line comments 
            It detects them, but it does not take them into account
            and handles the line counting appropriately*/
+
 
         int c; // current character that is read
 
@@ -137,7 +183,7 @@ void handle_comment()
 /* Array with all the tokens that are defined in the token.h file */
 char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN","EOF"};
 
-/* The main function : This code will be automatically placed in the C file that Flex will create
+/* The code of the main function will be automatically placed in the C file that Flex will create
    and will be the starting point of the lexical analyzer application. */
 
 int main(int argc, char **argv){
