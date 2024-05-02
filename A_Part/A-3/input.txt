@@ -1,26 +1,27 @@
 
 int main(int argc, char** argv) {
 
-    // Variables
-    int num1 = 10;
+    // testing numbers
+    int num1 =       10; // whitespaces are ignored
     int num2 = 0x14FAC2;
     int num3 = 0;
-    int num4 = 012442562378;
+    int num4 = 012442562378; // the analyzer with separate the 8 from the other part of the number 
     float result = 3.14e-10;
 
-    // Arithmetic operations
+    // Arithmetical operators
     result = num1 + num2;
     result = num2 - num3;
     result = num3 * num4;
     result = num4 / num1;
+    #modulo = num1%num1;
 
     // Comparison operators
     if (num1 >= num2) {
         printf("num1 is greater than num2\n");
     } else if (num1 <= num2) {
         printf("num1 is less than num2\\");
-    } else {
-        printf("num1 is equal to num2\"");
+    } else if (num1 !== num2) {
+        printf("numbers are not equal\"");
     }
 
     // Logical operators
@@ -33,26 +34,31 @@ int main(int argc, char** argv) {
             --result;
             result++;
             printf("inside loop /n"); // /n is not a valid operator, \n is
-        } while(!!num4 || num3 +- = 0);
+
+            if(result == 0) break;
+
+        } while(!num4 == 0 || num3 +- = 0);
     }
 
-    char str1[] = "Hello";
-    char str2[] = "World";
+    char str1[] = "Compilers";
+    char str2[] = "Lab";
     printf("%s %s\n", str1, str2);
 
     for (int i = 0; i < 5; i++) {
         printf(Iteration %d\n", i);
     }
 
-    /*
-        This is a
+    /*  This is a
         multi-line comment */
 
-    /* this combination won't be recognized as an identifier.
-       ~ isan uknown token and @ is a symbol.
+    /* the combination as a whole won't be recognized as an identifier
+       ~ is an uknown token and @ is a symbol. */
     ~var@ = 5;
 
-    /* This is an unterminated multi-line comment */
+    /* This is an unterminated multi-line comment
+       that will cause the analyzer to break because of EOF.
+       Because of this, in the output of the lexical analyzer (output.txt)
+       we will see that the brackets of the main function never close.
 
     return 0;
 }
