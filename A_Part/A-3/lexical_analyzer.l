@@ -37,9 +37,9 @@ int line = 1; // Current line counter
 
 %}
 
-/* Name and corresponding regular expressions (in canonical form).
-   After this, the names can be used (left) instead of the
-   particularly long and cumbersome, canonical expressions */
+/* Below are the names and the corresponding regular expression for each token.
+   With the use of names we can make it easier to use these regular expressions,
+   instead of having to write them all the time, making the program confusing. */
 
 DELIMITER         ;
 SYMBOLS           [#$^@,:?]	
@@ -59,8 +59,9 @@ WHITESPACE        [ \t]+
 COMMENT1          \/\*[^*]*\*\/
 
 
-/* For each pattern on the left that matches, the corresponding code is executed in the braces.
-   The return command allows the return of a numerical value through the function yylex() */
+/* For each pattern on the left that matches, the corresponding code inside the braces is executed.
+   The return command allows the return of a numerical value through the yylex() function,
+   allowing us to return numerican values that we have defined in the token.h file. */
 
 %%
 "/*"                { handle_comment(); }
@@ -134,7 +135,7 @@ void handle_comment()
 {
         /* this function handles multi-line comments 
            It detects them, but it does not take them into account
-           and handles the line counting appropriately*/
+           and handles the line counting accordingly */
 
 
         int c; // current character that is read
@@ -152,7 +153,7 @@ void handle_comment()
                         }
                 } /* eat up text of comment. */
                 
-                // if there is a '*' found, indicating maybe the end of the comment
+                // if there is a '*' found, indicating (possibly) the end of the comment
                 if (c == '*')
                 {
                         /* the loop below detects if there are many
@@ -180,13 +181,15 @@ void handle_comment()
         }
 }
 
+
 /* Array with all the tokens that are defined in the token.h file */
 char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN","EOF"};
+
 
 /* The code of the main function will be automatically placed in the C file that Flex will create
    and will be the starting point of the lexical analyzer application. */
 
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
         int token;
 
         /* Definitions are checked for the correct number of arguments. If the arguments are 3, 
@@ -194,7 +197,7 @@ int main(int argc, char **argv){
            If the arguments are 2, the program reads from the file of the 2nd argument and writes the output to the screen.
            The 1st argument (argv[0]) is always the name of the executable */
 
-        if(argc == 3){
+        if(argc == 3) {
                 if(!(yyin = fopen(argv[1], "r"))) {
                         fprintf(stderr, "Cannot read file: %s\n", argv[1]);
                         return 1;
@@ -204,7 +207,7 @@ int main(int argc, char **argv){
                         return 1;
                 }
         }
-        else if(argc == 2){
+        else if(argc == 2) {
                 if(!(yyin = fopen(argv[1], "r"))) {
                         fprintf(stderr, "Cannot read file: %s\n", argv[1]);
                         return 1;
@@ -216,10 +219,11 @@ int main(int argc, char **argv){
            If the code corresponding to a pattern contains the command 'return VALUE', then yylex() returns
            the value that is assigned to that token. The return values of each token can be seen in the token.h file */
 
-        while( (token=yylex()) >= 0){
+        while((token=yylex()) >= 0){
                 /* For each token recognized, in prints the line number that it was found
                    as well as it's name and it's assigned value (for example DELIMITER (NAME) 1 (VALUE)). */
                 fprintf(yyout, "\tLine=%d, token=%s, value=\"%s\"\n", line, tname[token-1], yytext);
         }
+
         return 0;
 }
