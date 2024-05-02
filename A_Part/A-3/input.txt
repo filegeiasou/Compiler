@@ -1,4 +1,6 @@
-int main() {
+
+int main(int argc, char** argv) {
+
     // Variables
     int num1 = 10;
     int num2 = 0x14FAC2;
@@ -30,10 +32,9 @@ int main() {
         {
             --result;
             result++;
-            printf("inside loop /n");
-        }while(!!num4 || num3 +- = 0);
+            printf("inside loop /n"); // /n is not a valid operator, \n is
+        } while(!!num4 || num3 +- = 0);
     }
-
 
     char str1[] = "Hello";
     char str2[] = "World";
@@ -43,14 +44,12 @@ int main() {
         printf(Iteration %d\n", i);
     }
 
-    // Comments
-    // This is a single-line comment
-
     /*
-    This is a
-    multi-line comment
-    */
+        This is a
+        multi-line comment */
 
+    /* this combination won't be recognized as an identifier.
+       ~ isan uknown token and @ is a symbol.
     ~var@ = 5;
 
     /* This is an unterminated multi-line comment */
