@@ -6,6 +6,7 @@
         - Operators
         - String Literals
         - Whitespaces
+        - Input like ~ and @ which are not valid
 
     ** int argc* and char argv** are left on purpose ** 
 
