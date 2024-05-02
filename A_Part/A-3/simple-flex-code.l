@@ -58,7 +58,6 @@ WHITESPACE        [ \t]+
 COMMENT1          \/\*[^*]*\*\/
 
 
-
 /* For each pattern on the left that matches, the corresponding code is executed in the braces.
    The return command allows the return of a numerical value through the function yylex() */
 
@@ -80,7 +79,7 @@ COMMENT1          \/\*[^*]*\*\/
 {CLOSE_BRACE}       { return CLOSE_BRACE; }
 {SYMBOLS}           { return SYMBOLS; }
 \n                  { line++; printf("\n"); }
-<<EOF>>		    { printf("#END-OF-FILE#\n"); exit(0); }
+<<EOF>>             { printf("#END-OF-FILE#\n"); exit(0); }
 .                   { return UNKNOWN_TOKEN; }
 
 %%
