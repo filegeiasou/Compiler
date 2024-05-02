@@ -10,9 +10,9 @@
                         while handling the special characters of new line '\n' and 'EOF'. The lexical
                         analyzer accepts input and output file arguments.
 Execution instructions: Give "make" without quotes in the current directory. Alternatively:
-                        flex -o simple-flex-code.c simple-flex-code.l
-                        gcc -o simple-flex-code simple-flex-code.c
-                        ./simple-flex-code input.txt output.txt
+                        flex -o lexical_analyzer.c lexical_analyzer.l
+                        gcc -o lexical_analyze lexical_analyze.c
+                        ./lexical_analyze input.txt output.txt
 */
 
 
@@ -56,7 +56,6 @@ CLOSE_PARENTHESIS \)
 OPEN_BRACE        \[
 CLOSE_BRACE       \]
 WHITESPACE        [ \t]+
-COMMENT1          \/\*[^*]*\*\/
 
 
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
@@ -87,7 +86,7 @@ COMMENT1          \/\*[^*]*\*\/
 %%
 
 
-/* Implementation of function that handles multi-line comments */
+// Implementation of function that handles multi-line comments
 
 void handle_comment()
 {
@@ -141,7 +140,7 @@ void handle_comment()
 
 
 /* Array with all the tokens that are defined in the token.h file */
-char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN","EOF"};
+char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","LINE_COMMENT","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN","EOF"};
 
 
 /* The code of the main function will be automatically placed in the C file that Flex will create

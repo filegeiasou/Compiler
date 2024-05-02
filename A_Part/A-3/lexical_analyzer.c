@@ -626,12 +626,13 @@ void handle_comment(); // definition of function to handle multiline comments
 int line = 1; // Current line counter
 
 #line 629 "lexical_analyzer.c"
-/* Name and corresponding regular expressions (in canonical form).
-   After this, the names can be used (left) instead of the
-   particularly long and cumbersome, canonical expressions */
-/* For each pattern on the left that matches, the corresponding code is executed in the braces.
-   The return command allows the return of a numerical value through the function yylex() */
-#line 635 "lexical_analyzer.c"
+/* Below are the names and the corresponding regular expression for each token.
+   With the use of names we can make it easier to use these regular expressions,
+   instead of having to write them all the time, making the program confusing. */
+/* For each pattern on the left that matches, the corresponding code inside the braces is executed.
+   The return command allows the return of a numerical value through the yylex() function,
+   allowing us to return numerican values that we have defined in the token.h file. */
+#line 636 "lexical_analyzer.c"
 
 #define INITIAL 0
 
@@ -848,9 +849,9 @@ YY_DECL
 		}
 
 	{
-#line 65 "lexical_analyzer.l"
+#line 66 "lexical_analyzer.l"
 
-#line 854 "lexical_analyzer.c"
+#line 855 "lexical_analyzer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -909,106 +910,106 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 66 "lexical_analyzer.l"
+#line 67 "lexical_analyzer.l"
 { handle_comment(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 67 "lexical_analyzer.l"
+#line 68 "lexical_analyzer.l"
 { /* ignore line comments */}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 68 "lexical_analyzer.l"
+#line 69 "lexical_analyzer.l"
 { return DELIMITER; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 69 "lexical_analyzer.l"
+#line 70 "lexical_analyzer.l"
 { return NUMBERS; }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 70 "lexical_analyzer.l"
+#line 71 "lexical_analyzer.l"
 { return STRINGS; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 71 "lexical_analyzer.l"
+#line 72 "lexical_analyzer.l"
 { /* DONT RETURN SOMETHING */ }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 72 "lexical_analyzer.l"
+#line 73 "lexical_analyzer.l"
 { return OPERATORS; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 73 "lexical_analyzer.l"
+#line 74 "lexical_analyzer.l"
 { return KEYWORD; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 74 "lexical_analyzer.l"
+#line 75 "lexical_analyzer.l"
 { return IDENTIFIERS; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 75 "lexical_analyzer.l"
+#line 76 "lexical_analyzer.l"
 { return OPEN_BRACKET; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 76 "lexical_analyzer.l"
+#line 77 "lexical_analyzer.l"
 { return CLOSE_BRACKET; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 77 "lexical_analyzer.l"
+#line 78 "lexical_analyzer.l"
 { return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 78 "lexical_analyzer.l"
+#line 79 "lexical_analyzer.l"
 { return CLOSE_PARENTHESIS; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 79 "lexical_analyzer.l"
+#line 80 "lexical_analyzer.l"
 { return OPEN_BRACE; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 80 "lexical_analyzer.l"
+#line 81 "lexical_analyzer.l"
 { return CLOSE_BRACE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 81 "lexical_analyzer.l"
+#line 82 "lexical_analyzer.l"
 { return SYMBOLS; }
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 82 "lexical_analyzer.l"
+#line 83 "lexical_analyzer.l"
 { line++; printf("\n"); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 83 "lexical_analyzer.l"
+#line 84 "lexical_analyzer.l"
 { printf("#END-OF-FILE#\n"); exit(0); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 84 "lexical_analyzer.l"
+#line 85 "lexical_analyzer.l"
 { return UNKNOWN_TOKEN; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 86 "lexical_analyzer.l"
+#line 87 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 1012 "lexical_analyzer.c"
+#line 1013 "lexical_analyzer.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2011,14 +2012,18 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 86 "lexical_analyzer.l"
+#line 87 "lexical_analyzer.l"
 
+
+
+// Implementation of function that handles multi-line comments
 
 void handle_comment()
 {
         /* this function handles multi-line comments 
            It detects them, but it does not take them into account
-           and handles the line counting appropriately*/
+           and handles the line counting accordingly */
+
 
         int c; // current character that is read
 
@@ -2035,7 +2040,7 @@ void handle_comment()
                         }
                 } /* eat up text of comment. */
                 
-                // if there is a '*' found, indicating maybe the end of the comment
+                // if there is a '*' found, indicating (possibly) the end of the comment
                 if (c == '*')
                 {
                         /* the loop below detects if there are many
@@ -2063,13 +2068,15 @@ void handle_comment()
         }
 }
 
+
 /* Array with all the tokens that are defined in the token.h file */
 char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","COMMENTS","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN","EOF"};
 
-/* The main function : This code will be automatically placed in the C file that Flex will create
+
+/* The code of the main function will be automatically placed in the C file that Flex will create
    and will be the starting point of the lexical analyzer application. */
 
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
         int token;
 
         /* Definitions are checked for the correct number of arguments. If the arguments are 3, 
@@ -2077,7 +2084,7 @@ int main(int argc, char **argv){
            If the arguments are 2, the program reads from the file of the 2nd argument and writes the output to the screen.
            The 1st argument (argv[0]) is always the name of the executable */
 
-        if(argc == 3){
+        if(argc == 3) {
                 if(!(yyin = fopen(argv[1], "r"))) {
                         fprintf(stderr, "Cannot read file: %s\n", argv[1]);
                         return 1;
@@ -2087,7 +2094,7 @@ int main(int argc, char **argv){
                         return 1;
                 }
         }
-        else if(argc == 2){
+        else if(argc == 2) {
                 if(!(yyin = fopen(argv[1], "r"))) {
                         fprintf(stderr, "Cannot read file: %s\n", argv[1]);
                         return 1;
@@ -2099,10 +2106,11 @@ int main(int argc, char **argv){
            If the code corresponding to a pattern contains the command 'return VALUE', then yylex() returns
            the value that is assigned to that token. The return values of each token can be seen in the token.h file */
 
-        while( (token=yylex()) >= 0){
+        while((token=yylex()) >= 0){
                 /* For each token recognized, in prints the line number that it was found
                    as well as it's name and it's assigned value (for example DELIMITER (NAME) 1 (VALUE)). */
                 fprintf(yyout, "\tLine=%d, token=%s, value=\"%s\"\n", line, tname[token-1], yytext);
         }
+
         return 0;
 }
