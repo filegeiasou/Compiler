@@ -99,28 +99,27 @@ void handle_comment()
         for (;;)
         {
              // while character read is not '*' (indicating comment end) or EOF
+             // this loop basically eats up the text inside the comment.
              while ((c = input()) != '*' && c != 0)
-             {
                 if (c == '\n') line++;
-             }/* eat up text of comment. */
 
              // if there is a '*' found, indicating (possibly) the end of the comment
              if (c == '*')
              {
                 /* the loop below detects if there are many
-                           '*' symbols in a row, basically skipping them
-                           and not regarding them as the end of the comment. */
+                   '*' symbols in a row, basically skipping them
+                   and not regarding them as the end of the comment. */
 
                 while ((c = input()) == '*');
-                if (c == '/')
-                        break; /* found the end. */
+
+                if (c == '/') break; // found the end of the comment.
              }
              
              // if there is EOF contained in the multiple line comment
              if (c == 0)
              {
-               printf ("Error: EOF in comment.\n");
-               break;
+                printf ("Error: EOF in comment.\n");
+                break;
              }
         }
 }
