@@ -15,6 +15,7 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
                         ./simple-flex-code input.txt output.txt
 */
 
+
 /* The reading of the file is limited to one file and terminates at the first EOF */
 %option noyywrap
 
@@ -86,9 +87,11 @@ COMMENT1          \/\*[^*]*\*\/
 
 void handle_comment()
 {
-        /* ignore multiline comments. */
+        /* this function handles multi-line comments 
+           It detects them, but it does not take them into account
+           and handles the line counting appropriately*/
 
-        int c; // current character read
+        int c; // current character that is read
 
         for (;;)
         {
