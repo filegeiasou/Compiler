@@ -1,0 +1,59 @@
+int main() {
+    // Variables
+    int num1 = 10;
+    int num2 = 0x14FAC2;
+    int num3 = 0;
+    int num4 = 012442562378;
+    float result = 3.14e-10;
+
+    // Arithmetic operations
+    result = num1 + num2;
+    result = num2 - num3;
+    result = num3 * num4;
+    result = num4 / num1;
+
+    // Comparison operators
+    if (num1 >= num2) {
+        printf("num1 is greater than num2\n");
+    } else if (num1 <= num2) {
+        printf("num1 is less than num2\\");
+    } else {
+        printf("num1 is equal to num2\"");
+    }
+
+    // Logical operators
+    if (num1 > 0 &&& num2 > 0) {
+        printf("Both num1 and num2 are positive\n");
+    } else if (num1 < 0 | num2 != 0 || num3 == 0) {
+        
+        do
+        {
+            --result;
+            result++;
+            printf("inside loop /n");
+        }while(!!num4 || num3 +- = 0);
+    }
+
+
+    char str1[] = "Hello";
+    char str2[] = "World";
+    printf("%s %s\n", str1, str2);
+
+    for (int i = 0; i < 5; i++) {
+        printf(Iteration %d\n", i);
+    }
+
+    // Comments
+    // This is a single-line comment
+
+    /*
+    This is a
+    multi-line comment
+    */
+
+    ~var@ = 5;
+
+    /* This is an unterminated multi-line comment */
+
+    return 0;
+}
