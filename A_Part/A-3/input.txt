@@ -2,8 +2,7 @@
 int main(int argc, char** argv) {
 
     // testing numbers
-    int num  =   5;  // whitespaces are ignored
-    int num1 = -10;  // this is not recognized as a number. It's an operator and a number
+    int num1 =      -10;  // this is recognized as an operator and a number. Also whitespaces are ignored
     int num2 = 0x14FAC2;
     int num3 = 0;
     int num4 = 012442562378; // the analyzer will separate the 8 from the other part of the number 
@@ -15,6 +14,8 @@ int main(int argc, char** argv) {
     result -=  num2 - (num3 / num1);
     #modulo /= num1 % num1;
 
+    char str1[24] = "Compilers Lab"; // testing braces
+
     // Comparison operators and string literals with Escape Sequence characters
     if (num1 >= num2) {
         printf("num1 is greater than num2\n");
@@ -23,9 +24,6 @@ int main(int argc, char** argv) {
     } else if (num1 !== num2) {
         printf("numbers are not equal\"");
     }
-    
-    // testing braces
-    char str1[24] = "Compilers Lab";
 
     // Logical operators and arithmetic operators
     if (num1 > 0 &&& num2 > 0) {
