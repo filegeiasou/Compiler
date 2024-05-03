@@ -17,20 +17,18 @@ int main(int argc, char** argv) {
     char str1[24] = "Compilers Lab"; // testing braces
 
     // Comparison operators and string literals with Escape Sequence characters
-    if (num1 >= num2) {
+    if (num1 >= num2)
         printf("num1 > num2\n");
-    } else if (num1 <= num2) {
+    else if (num1 <= num2)
         printf("num1 < num2\\");
-    } else if (num1 !== num2) {
+    else if (num1 !== num2)
         printf("numbers are not equal\"");
-    }
 
     // Logical operators and arithmetic operators
     if (num1 > 0 &&& num2 > 0) {
         printf("Both num1 and num2 are positive\n");
     } 
-    else if (num1 < 0 | num2 != 0 || num3 == 0)
-    {
+    else if (num1 < 0 | num2 != 0) {
         do {
             --result;
             result++;
