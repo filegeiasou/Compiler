@@ -21,6 +21,9 @@ int main(int argc, char** argv) {
     } else if (num1 !== num2) {
         printf("numbers are not equal\"");
     }
+    
+    // testing braces
+    char str1[] = "Compilers Lab";
 
     // Logical operators
     if (num1 > 0 &&& num2 > 0) {
@@ -36,9 +39,6 @@ int main(int argc, char** argv) {
             if(result == 0) break;
         } while(!num4 == 0 || num3 +- = 0);
     }
-
-    // testing braces
-    char str1[] = "Compilers Lab";
 
     /* the combination as a whole won't be recognized as an identifier.
        ~ is an unknown token and @ is a symbol. */
