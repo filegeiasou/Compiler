@@ -11,11 +11,11 @@ int main(int argc, char** argv) {
     float b = 1.1e3.14 // this is not a valid number
 
     // Arithmetical operators
-    result =  num1 + (num2 * num3);
-    result =  num2 - (num3 / num1);
-    #modulo = num1 % num1;
+    result +=  num1 + (num2 * num3);
+    result -=  num2 - (num3 / num1);
+    #modulo /= num1 % num1;
 
-    // Comparison operators
+    // Comparison operators and string literals
     if (num1 >= num2) {
         printf("num1 is greater than num2\n");
     } else if (num1 <= num2) {
