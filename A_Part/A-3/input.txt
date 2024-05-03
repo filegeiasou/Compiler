@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
     int num1 = -10;  // this is not recognized as a number. It's an operator and a number
     int num2 = 0x14FAC2;
     int num3 = 0;
-    int num4 = 012442562378; // the analyzer with separate the 8 from the other part of the number 
+    int num4 = 012442562378; // the analyzer will separate the 8 from the other part of the number 
     float result = 3.14e-10;
 
     // Arithmetical operators
