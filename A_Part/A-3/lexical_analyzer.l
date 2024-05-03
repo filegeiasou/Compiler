@@ -90,38 +90,38 @@ WHITESPACE        [ \t]+
 
 void handle_comment()
 {
-        /* this function handles multi-line comments 
-           It detects them, but it does not take them into account
-           and handles the line counting accordingly */
+   /* this function handles multi-line comments 
+      It detects them, but it does not take them into account
+      and handles the line counting accordingly */
 
-        register int c;
+   register int c;
 
-        for (;;)
-        {
-             // while character read is not '*' (indicating comment end) or EOF
-             // this loop basically eats up the text inside the comment.
-             while ((c = input()) != '*' && c != 0)
-                if (c == '\n') line++;
+   for (;;)
+   {
+      /* while character read is not '*' (indicating comment end) or EOF
+         this loop basically eats up the text inside the comment. */
+      while ((c = input()) != '*' && c != 0)
+         if (c == '\n') line++;
 
-             // if there is a '*' found, indicating (possibly) the end of the comment
-             if (c == '*')
-             {
-                /* the loop below detects if there are many
-                   '*' symbols in a row, basically skipping them
-                   and not regarding them as the end of the comment. */
+      // if there is a '*' found, indicating (possibly) the end of the comment
+      if (c == '*')
+      {
+         /* the loop below detects if there are many
+            '*' symbols in a row, basically skipping them
+            and not regarding them as the end of the comment. */
 
-                while ((c = input()) == '*');
+         while ((c = input()) == '*');
 
-                if (c == '/') break; // found the end of the comment.
-             }
-             
-             // if there is EOF contained in the multiple line comment
-             if (c == 0)
-             {
-                printf ("Error: EOF in comment.\n");
-                break;
-             }
-        }
+         if (c == '/') break; // found the end of the comment.
+      }
+         
+      // if there is EOF contained in the multiple line comment
+      if (c == 0)
+      {
+         printf ("Error: EOF in comment.\n");
+         break;
+      }
+   }
 }
 
 

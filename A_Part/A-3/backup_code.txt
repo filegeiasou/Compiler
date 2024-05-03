@@ -25,3 +25,20 @@ if (yytext[1] == '*') {
                 if (yytext[i++] == '\n')
                         line++;
 }
+
+%x COMMENTS LINE_COMMENT
+
+%%
+
+"/*"    {BEGIN(COMMENTS);}
+"//"    {BEGIN(LINE_COMMENT);}
+
+<COMMENTS>{
+        "*/"    {BEGIN(INITIAL);}
+        .       {;}
+}
+
+<LINE_COMMENT>{
+        "\n"    {BEGIN(INITIAL); line++;}
+        .       {;}
+}

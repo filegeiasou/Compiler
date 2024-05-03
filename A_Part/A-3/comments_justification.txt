@@ -55,6 +55,15 @@ https://stackoverflow.com/questions/73767676/flex-cant-handle-eof-in-action-or-h
 0 όταν εντοπίζει end of input. Οπότε αυτό ήταν ένα workaround του προβλήματος στο οποίο
 απαιτήθηκε η χρήση εξωτερικής πηγής για την άντληση πληροφοριών.
 
+
+/* This is an unterminated multi-line comment
+       that will cause the analyzer to break because of EOF.
+       Because of this, in the output of the lexical analyzer (output.txt)
+       we will see that the brackets of the main function never close.
+
+    return 0;
+}
+
 ==============================================================================================
 
 
