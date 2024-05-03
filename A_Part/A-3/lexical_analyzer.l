@@ -42,8 +42,9 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
    instead of having to write them all the time, making the program confusing. */
 
 DELIMITER         ;
-SYMBOLS           [#$^@,:?]	
-NUMBERS           (0[xX][0-9A-F]+)|(0[0-7]+)|(([1-9][0-9]*|0)(\.[0-9]+)?([eE][-]?([1-9][0-9]*|0))?)
+SYMBOLS           [#$^@,:?]
+INTEGER           ([1-9][0-9]*|0)|(0[xX][0-9A-F]+)|(0[0-7]+)
+FLOAT             (([1-9][0-9]*|0)(\.[0-9]+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS       [a-zA-Z_]+[a-zA-Z_0-9]*
 STRINGS           \"([^"\\]*(\\[\\n\"][^"\\]*)*)\"
 LINE_COMMENT      \/\/.*
@@ -67,7 +68,8 @@ WHITESPACE        [ \t]+
 "/*"                { handle_comment(); }
 {LINE_COMMENT}      { /* ignore line comments */}
 {DELIMITER}         { return DELIMITER; }
-{NUMBERS}           { return NUMBERS; }
+{INTEGER}           { return INTEGER; }
+{FLOAT}             { return FLOAT; }
 {STRINGS}           { return STRINGS; }
 {WHITESPACE}        { /* dont return anything */ }
 {OPERATORS}         { return OPERATORS; }
@@ -128,7 +130,7 @@ void handle_comment()
 
 
 /* Array with all the tokens that are defined in the token.h file */
-char *tname[14] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","UNKNOWN TOKEN"};
+char *tname[15] = {"DELIMITER","INTEGER","FLOAT","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","UNKNOWN TOKEN"};
 
 
 /* The code of the main function will be automatically placed in the C file that Flex will create
