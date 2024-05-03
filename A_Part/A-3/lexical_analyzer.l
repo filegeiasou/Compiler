@@ -63,6 +63,7 @@ WHITESPACE        [ \t]+
    allowing us to return numerican values that we have defined in the token.h file. */
 
 %%
+
 "/*"                { handle_comment(); }
 {LINE_COMMENT}      { /* ignore line comments */}
 {DELIMITER}         { return DELIMITER; }
@@ -100,6 +101,7 @@ void handle_comment()
    {
       /* while character read is not '*' (indicating comment end) or EOF
          this loop basically eats up the text inside the comment. */
+
       while ((c = input()) != '*' && c != 0)
          if (c == '\n') line++;
 
@@ -133,40 +135,40 @@ char *tname[14] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SY
    and will be the starting point of the lexical analyzer application. */
 
 int main(int argc, char **argv) {
-        int token;
+      int token;
 
-        /* Definitions are checked for the correct number of arguments. If the arguments are 3, 
-           the program reads from the file of the 2nd argument and writes to the file of the 3rd argument.
-           If the arguments are 2, the program reads from the file of the 2nd argument and writes the output to the screen.
-           The 1st argument (argv[0]) is always the name of the executable */
+      /* Definitions are checked for the correct number of arguments. If the arguments are 3, 
+         the program reads from the file of the 2nd argument and writes to the file of the 3rd argument.
+         If the arguments are 2, the program reads from the file of the 2nd argument and writes the output to the screen.
+         The 1st argument (argv[0]) is always the name of the executable */
 
-        if(argc == 3) {
-                if(!(yyin = fopen(argv[1], "r"))) {
-                        fprintf(stderr, "Cannot read file: %s\n", argv[1]);
-                        return 1;
-                }
-                if(!(yyout = fopen(argv[2], "w"))) {
-                        fprintf(stderr, "Cannot create file: %s\n", argv[2]);
-                        return 1;
-                }
-        }
-        else if(argc == 2) {
-                if(!(yyin = fopen(argv[1], "r"))) {
-                        fprintf(stderr, "Cannot read file: %s\n", argv[1]);
-                        return 1;
-                }
-        }
+      if(argc == 3) {
+               if(!(yyin = fopen(argv[1], "r"))) {
+                     fprintf(stderr, "Cannot read file: %s\n", argv[1]);
+                     return 1;
+               }
+               if(!(yyout = fopen(argv[2], "w"))) {
+                     fprintf(stderr, "Cannot create file: %s\n", argv[2]);
+                     return 1;
+               }
+      }
+      else if(argc == 2) {
+               if(!(yyin = fopen(argv[1], "r"))) {
+                     fprintf(stderr, "Cannot read file: %s\n", argv[1]);
+                     return 1;
+               }
+      }
 
-        /* The yylex function reads characters from the input file and tries to recognize tokens.
-           The tokens the the function recognizes are the ones that are defined between the %% and %%.
-           If the code corresponding to a pattern contains the command 'return VALUE', then yylex() returns
-           the value that is assigned to that token. The return values of each token can be seen in the token.h file */
+      /* The yylex function reads characters from the input file and tries to recognize tokens.
+         The tokens the the function recognizes are the ones that are defined between the %% and %%.
+         If the code corresponding to a pattern contains the command 'return VALUE', then yylex() returns
+         the value that is assigned to that token. The return values of each token can be seen in the token.h file */
 
-        while((token=yylex()) >= 0){
-                /* For each token recognized, in prints the line number that it was found
-                   as well as it's name and it's assigned value (for example DELIMITER (NAME) 1 (VALUE)). */
-                fprintf(yyout, "\tLine=%d, token=%s, value=\"%s\"\n", line, tname[token-1], yytext);
-        }
+      while((token = yylex()) >= 0){
+               /* For each token recognized, in prints the line number that it was found
+                  as well as it's name and it's assigned value (for example DELIMITER (NAME) 1 (VALUE)). */
+               fprintf(yyout, "\tLine=%d, token=%s, value=\"%s\"\n", line, tname[token-1], yytext);
+      }
 
-        return 0;
+      return 0;
 }
