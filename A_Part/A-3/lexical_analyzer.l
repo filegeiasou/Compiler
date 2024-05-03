@@ -69,7 +69,7 @@ WHITESPACE        [ \t]+
 {DELIMITER}         { return DELIMITER; }
 {NUMBERS}           { return NUMBERS; }
 {STRINGS}           { return STRINGS; }
-{WHITESPACE}        { /* DONT RETURN SOMETHING */ }
+{WHITESPACE}        { /* dont return anything */ }
 {OPERATORS}         { return OPERATORS; }
 {KEYWORDS}          { return KEYWORD; }
 {IDENTIFIERS}       { return IDENTIFIERS; }
