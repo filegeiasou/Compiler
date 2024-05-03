@@ -36,7 +36,6 @@ int main(int argc, char** argv) {
         do {
             --result;
             result++;
-            printf("inside loop /n"); // /n is not a valid operator, \n is
 
             if(result == 0) break;
         } while(!num4 == 0 || num3 +- = 0);
