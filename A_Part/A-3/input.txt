@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     }
     
     // testing braces
-    char str1[] = "Compilers Lab";
+    char str1[24] = "Compilers Lab";
 
     // Logical operators
     if (num1 > 0 &&& num2 > 0) {
