@@ -8,6 +8,7 @@ int main(int argc, char** argv) {
     int num3 = 0;
     int num4 = 012442562378; // the analyzer will separate the 8 from the other part of the number 
     float result = 3.14e-10;
+    float b = 1.1e3.14 // this is not a valid number
 
     // Arithmetical operators
     result =  num1 + (num2 * num3);
