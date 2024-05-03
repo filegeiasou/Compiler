@@ -18,9 +18,9 @@ int main(int argc, char** argv) {
 
     // Comparison operators and string literals with Escape Sequence characters
     if (num1 >= num2) {
-        printf("num1 is greater than num2\n");
+        printf("num1 > num2\n");
     } else if (num1 <= num2) {
-        printf("num1 is less than num2\\");
+        printf("num1 < than num2\\");
     } else if (num1 !== num2) {
         printf("numbers are not equal\"");
     }
