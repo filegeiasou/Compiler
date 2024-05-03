@@ -169,7 +169,7 @@ int main(int argc, char **argv) {
       while((token = yylex()) >= 0){
                /* For each token recognized, in prints the line number that it was found
                   as well as it's name and it's assigned value (for example DELIMITER (NAME) 1 (VALUE)). */
-               fprintf(yyout, "\tLine=%d, token=%s, value=\"%s\"\n", line, tname[token-1], yytext);
+               fprintf(yyout, "Line=%d, token=%s, value=\"%s\"\n", line, tname[token-1], yytext);
       }
 
       return 0;
