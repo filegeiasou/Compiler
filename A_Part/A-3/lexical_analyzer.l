@@ -11,8 +11,8 @@
                         analyzer accepts input and output file arguments.
 Execution instructions: Give "make" without quotes in the current directory. Alternatively:
                         flex -o lexical_analyzer.c lexical_analyzer.l
-                        gcc -o lexical_analyze lexical_analyze.c
-                        ./lexical_analyze input.txt output.txt
+                        gcc -o lexical_analyzer lexical_analyzer.c
+                        ./lexical_analyzer input.txt output.txt
 */
 
 
