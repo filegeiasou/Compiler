@@ -24,16 +24,16 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 
 %{
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+   #include <stdio.h>
+   #include <string.h>
+   #include <stdlib.h>
 
-/* Header file containing all the required tokens */
-#include "token.h"
+   /* Header file containing all the required tokens */
+   #include "token.h"
 
-void handle_comment(); // definition of function to handle multiline comments
+   void handle_comment(); // definition of function to handle multiline comments
 
-int line = 1; // Current line counter
+   int line = 1; // Current line counter
 
 %}
 
