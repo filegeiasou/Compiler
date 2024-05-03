@@ -9,11 +9,9 @@ int main(int argc, char** argv) {
     float result = 3.14e-10;
 
     // Arithmetical operators
-    result = num1 + num2;
-    result = num2 - num3;
-    result = num3 * num4;
-    result = num4 / num1;
-    #modulo = num1%num1;
+    result =  num1 + (num2 * num3);
+    result =  num2 - (num3 / num1);
+    #modulo = num1 % num1;
 
     // Comparison operators
     if (num1 >= num2) {
@@ -27,32 +25,23 @@ int main(int argc, char** argv) {
     // Logical operators
     if (num1 > 0 &&& num2 > 0) {
         printf("Both num1 and num2 are positive\n");
-    } else if (num1 < 0 | num2 != 0 || num3 == 0) {
-        
-        do
-        {
+    } 
+    else if (num1 < 0 | num2 != 0 || num3 == 0)
+    {
+        do {
             --result;
             result++;
             printf("inside loop /n"); // /n is not a valid operator, \n is
 
             if(result == 0) break;
-
         } while(!num4 == 0 || num3 +- = 0);
     }
 
-    char str1[] = "Compilers";
-    char str2[] = "Lab";
-    printf("%s %s\n", str1, str2);
+    // testing braces
+    char str1[] = "Compilers Lab";
 
-    for (int i = 0; i < 5; i++) {
-        printf(Iteration %d\n", i);
-    }
-
-    /*  This is a
-        multi-line comment */
-
-    /* the combination as a whole won't be recognized as an identifier
-       ~ is an uknown token and @ is a symbol. */
+    /* the combination as a whole won't be recognized as an identifier.
+       ~ is an unknown token and @ is a symbol. */
     ~var@ = 5;
 
     /* This is an unterminated multi-line comment
