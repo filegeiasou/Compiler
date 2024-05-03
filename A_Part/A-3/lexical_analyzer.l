@@ -16,7 +16,7 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 */
 
 
-/* The reading of the file is limited to one file and terminates at the first EOF */
+/* The lexer can only read from one file and terminates at the first EOF */
 %option noyywrap
 
 /* The following C code is for the definition of the required header files and variables.
