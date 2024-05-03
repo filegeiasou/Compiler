@@ -2020,44 +2020,43 @@ void yyfree (void * ptr )
 
 void handle_comment()
 {
-        /* this function handles multi-line comments 
-           It detects them, but it does not take them into account
-           and handles the line counting accordingly */
+   /* this function handles multi-line comments 
+      It detects them, but it does not take them into account
+      and handles the line counting accordingly */
 
-        register int c;
+   register int c;
 
-        for (;;)
-        {
-             // while character read is not '*' (indicating comment end) or EOF
-             while ((c = input()) != '*' && c != 0)
-             {
-                if (c == '\n') line++;
-             }/* eat up text of comment. */
+   for (;;)
+   {
+      /* while character read is not '*' (indicating comment end) or EOF
+         this loop basically eats up the text inside the comment. */
+      while ((c = input()) != '*' && c != 0)
+         if (c == '\n') line++;
 
-             // if there is a '*' found, indicating (possibly) the end of the comment
-             if (c == '*')
-             {
-                /* the loop below detects if there are many
-                           '*' symbols in a row, basically skipping them
-                           and not regarding them as the end of the comment. */
+      // if there is a '*' found, indicating (possibly) the end of the comment
+      if (c == '*')
+      {
+         /* the loop below detects if there are many
+            '*' symbols in a row, basically skipping them
+            and not regarding them as the end of the comment. */
 
-                while ((c = input()) == '*');
-                if (c == '/')
-                        break; /* found the end. */
-             }
-             
-             // if there is EOF contained in the multiple line comment
-             if (c == 0)
-             {
-               printf ("Error: EOF in comment.\n");
-               break;
-             }
-        }
+         while ((c = input()) == '*');
+
+         if (c == '/') break; // found the end of the comment.
+      }
+         
+      // if there is EOF contained in the multiple line comment
+      if (c == 0)
+      {
+         printf ("Error: EOF in comment.\n");
+         break;
+      }
+   }
 }
 
 
 /* Array with all the tokens that are defined in the token.h file */
-char *tname[17] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","LINE_COMMENT","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN","EOF"};
+char *tname[16] = {"DELIMITER","NUMBERS","STRINGS","OPERATORS","IDENTIFIERS","SYMBOLS","LINE_COMMENT","KEYWORD","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","WHITESPACE","UNKNOWN TOKEN"};
 
 
 /* The code of the main function will be automatically placed in the C file that Flex will create
