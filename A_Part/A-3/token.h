@@ -4,8 +4,8 @@
 #define STRINGS 4
 #define OPERATORS 5
 #define IDENTIFIERS 6
-#define SYMBOLS 7
-#define KEYWORD 8
+#define KEYWORD 7
+#define SYMBOL 8
 #define OPEN_BRACKET 9
 #define CLOSE_BRACKET 10
 #define OPEN_PARENTHESIS 11
