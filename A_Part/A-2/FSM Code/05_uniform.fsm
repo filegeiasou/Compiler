@@ -44,10 +44,12 @@ S3_COMM:   /                   -> GOOD    // in this case we have the combinatio
 S0_STR:    *                   -> S1_STR  // if any text inside the string go to S1_STR
            \\                  -> S2_STR  // check if there is a backslash in the string
            "                   -> GOOD    // string is closed
+           \n                  -> BAD     // if there is a new line character, it's not accepted
 
 S1_STR:    \\                  -> S2_STR  // if there is \\ then we have a \ in printf
            "                   -> GOOD    // string is closed
            *                   -> S1_STR  // if you get any text, keep looping on S1
+           \n                  -> BAD     // if there is a newline character before the string closes, it's invalid
 
 S2_STR:    \\ " n              -> S1_STR  // in case of another backslash (\), then that equals (\\) in printf, so a single \ on the screen output
            *                   -> BAD     // anything else is not valid
