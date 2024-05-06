@@ -46,7 +46,7 @@ SYMBOL            ,
 INTEGER           ([1-9][0-9]*|0)|(0[xX][0-9A-F]+)|(0[0-7]+)
 FLOAT             (([1-9][0-9]*|0)(\.[0-9]+)?([eE][-]?([1-9][0-9]*|0))?)
 IDENTIFIERS       [a-zA-Z_]+[a-zA-Z_0-9]*
-STRINGS           \"([^"\\]*(\\[\\n\"][^"\\]*)*)\"
+STRINGS           "(\\[\\n\"]|[^\n\\\"])*"
 LINE_COMMENT      \/\/.*
 OPERATORS         ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|&{1,2}|\-{1,2}|\+{1,2}|(\|\|)
 KEYWORDS          break|case|func|const|continue|do|double|else|float|for|if|int|long|return|short|sizeof|struct|switch|void|while
