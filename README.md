@@ -6,6 +6,6 @@
   - FSM Code
   - Transition Diagrams
   - Transition Tables
-- **A-3 Part:** : FLEX model code completion 
+- **A-3 Part:** FLEX model code completion 
   - Flex Code
   - Makefile
