@@ -1,6 +1,6 @@
 # Compiler
 ## Project for Compilers Lab
-
+### A Part
 - **A-2 Part:** Coding Finite-state automata via FSM
   - Regex
   - FSM Code
@@ -9,8 +9,8 @@
 - **A-3 Part:** FLEX model code completion 
   - Flex Code
   - Makefile
+### B Part
 - **B-2 Part:** Bison
   - Bison code
   - Makefile
   - Flex code A3
-  
