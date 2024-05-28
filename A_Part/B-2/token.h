@@ -1,0 +1,15 @@
+#define DELIMITER 1
+#define INTEGER 2
+#define FLOAT 3
+#define STRINGS 4
+#define OPERATORS 5
+#define IDENTIFIERS 6
+#define KEYWORD 7
+#define SYMBOL 8
+#define OPEN_BRACKET 9
+#define CLOSE_BRACKET 10
+#define OPEN_PARENTHESIS 11
+#define CLOSE_PARENTHESIS 12
+#define OPEN_BRACE 13
+#define CLOSE_BRACE 14
+#define UNKNOWN_TOKEN 15
