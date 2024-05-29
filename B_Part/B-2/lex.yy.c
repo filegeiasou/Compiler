@@ -354,8 +354,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 20
-#define YY_END_OF_BUFFER 21
+#define YY_NUM_RULES 21
+#define YY_END_OF_BUFFER 22
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -365,19 +365,19 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[114] =
     {   0,
-        0,    0,   21,   19,    7,   18,    8,   19,    8,    8,
-       13,   14,    8,   17,    8,    8,    4,    4,    3,   10,
-       15,   16,   10,   10,   10,   10,   10,   10,   10,   10,
-       10,   10,   10,   11,   19,   12,    7,    8,    0,    6,
+        0,    0,   22,   20,    7,   19,    8,   20,    8,    8,
+       14,   15,    8,   18,    8,    8,    4,    4,    3,   11,
+       16,   17,   11,   11,   11,   11,   11,   11,   11,   11,
+       11,   11,   11,   12,   20,   13,    7,    8,    0,    6,
         0,    8,    8,    8,    1,    2,    0,    4,    0,    0,
-        4,   10,   10,   10,   10,   10,    9,   10,   10,   10,
-       10,    9,   10,   10,   10,   10,   10,   10,   10,   10,
-       10,    2,    5,    0,    5,    5,    4,   10,   10,   10,
-       10,   10,   10,   10,   10,   10,   10,   10,   10,   10,
-       10,   10,    5,   10,   10,   10,   10,   10,   10,   10,
+        4,   11,   11,   11,   11,   11,   10,   11,   11,   11,
+       11,   10,   11,   11,   11,   11,   11,   11,   11,   11,
+       11,    2,    5,    0,    5,    5,    4,   11,   11,   11,
+       11,   11,   11,   11,   11,   11,   11,   11,   11,   11,
+       11,   11,    5,   11,   11,   11,   11,   11,   11,   11,
 
-       10,   10,   10,   10,   10,   10,   10,   10,   10,   10,
-       10,   10,    0
+       11,   11,   11,   11,   11,   11,   11,   11,   11,   11,
+       11,   11,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -589,7 +589,7 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "a.l"
+#line 1 "lexical_analyzer.l"
 /* File name:           simple-flex-code.l
    Description:         Lexical analyzer using Flex tool
    Authors:             Dimitrios Kontoulis(21390095),Aggelos Konstantinos Mentzelos(21390132),
@@ -609,15 +609,15 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 /* The lexer can only read from one file and terminates at the first EOF */
 /* The following C code is for the definition of the required header files and variables.
    Anything between %{ and %} is transferred as is to the C file that Flex will create. */
-#line 26 "a.l"
+#line 26 "lexical_analyzer.l"
 
    #include <stdio.h>
    #include <string.h>
    #include <stdlib.h>
-
+   #define YYSTYPE double
    /* Header file containing all the required tokens */
    #include "token.h"
-
+   #define END 0
    void handle_comment(); // definition of function to handle multiline comments
 
    int line = 1; // Current line counter
@@ -846,7 +846,7 @@ YY_DECL
 		}
 
 	{
-#line 66 "a.l"
+#line 65 "lexical_analyzer.l"
 
 
 #line 853 "lex.yy.c"
@@ -908,110 +908,115 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 68 "a.l"
+#line 67 "lexical_analyzer.l"
 { handle_comment(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 69 "a.l"
+#line 68 "lexical_analyzer.l"
 { /* ignore line comments */}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 70 "a.l"
+#line 69 "lexical_analyzer.l"
 { return DELIMITER; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 71 "a.l"
+#line 70 "lexical_analyzer.l"
 { return INTEGER; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 72 "a.l"
+#line 71 "lexical_analyzer.l"
 { return FLOAT; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 73 "a.l"
+#line 72 "lexical_analyzer.l"
 { return STRINGS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 74 "a.l"
+#line 73 "lexical_analyzer.l"
 { /* dont return anything */ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 75 "a.l"
+#line 74 "lexical_analyzer.l"
 { return OPERATORS; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 76 "a.l"
-{ return KEYWORD; }
+#line 75 "lexical_analyzer.l"
+{ return PLUS; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 77 "a.l"
-{ return IDENTIFIERS; }
+#line 76 "lexical_analyzer.l"
+{ return KEYWORD; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 78 "a.l"
-{ return OPEN_BRACKET; }
+#line 77 "lexical_analyzer.l"
+{ return IDENTIFIERS; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 79 "a.l"
-{ return CLOSE_BRACKET; }
+#line 78 "lexical_analyzer.l"
+{ return OPEN_BRACKET; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 80 "a.l"
-{ return OPEN_PARENTHESIS; }
+#line 79 "lexical_analyzer.l"
+{ return CLOSE_BRACKET; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 81 "a.l"
-{ return CLOSE_PARENTHESIS; }
+#line 80 "lexical_analyzer.l"
+{ return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 82 "a.l"
-{ return OPEN_BRACE; }
+#line 81 "lexical_analyzer.l"
+{ return CLOSE_PARENTHESIS; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 83 "a.l"
-{ return CLOSE_BRACE; }
+#line 82 "lexical_analyzer.l"
+{ return OPEN_BRACE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 84 "a.l"
-{ return SYMBOL; }
+#line 83 "lexical_analyzer.l"
+{ return CLOSE_BRACE; }
 	YY_BREAK
 case 18:
-/* rule 18 can match eol */
 YY_RULE_SETUP
-#line 85 "a.l"
-{ line++; printf("\n"); }
-	YY_BREAK
-case YY_STATE_EOF(INITIAL):
-#line 86 "a.l"
-{ printf("#END-OF-FILE#\n"); exit(0); }
+#line 84 "lexical_analyzer.l"
+{ return SYMBOL; }
 	YY_BREAK
 case 19:
+/* rule 19 can match eol */
 YY_RULE_SETUP
-#line 87 "a.l"
-{ return UNKNOWN_TOKEN; }
+#line 85 "lexical_analyzer.l"
+{ line++; return END;}
+	YY_BREAK
+case YY_STATE_EOF(INITIAL):
+#line 86 "lexical_analyzer.l"
+{ printf("#END-OF-FILE#\n"); exit(0); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 89 "a.l"
+#line 87 "lexical_analyzer.l"
+{ return UNKNOWN_TOKEN; }
+	YY_BREAK
+case 21:
+YY_RULE_SETUP
+#line 89 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 1015 "lex.yy.c"
+#line 1020 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2014,7 +2019,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 89 "a.l"
+#line 89 "lexical_analyzer.l"
 
 
 
@@ -2058,49 +2063,5 @@ void handle_comment()
 }
 
 
-/* Array with all the tokens that are defined in the token.h file */
-char *tname[15] = {"DELIMITER","INTEGER","FLOAT","STRINGS","OPERATORS","IDENTIFIERS","KEYWORD","SYMBOL","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","UNKNOWN TOKEN"};
 
-
-/* The code of the main function will be automatically placed in the C file that Flex will create
-   and will be the starting point of the lexical analyzer application. */
-
-/* int main(int argc, char **argv) {
-      int token; */
-
-      /* Definitions are checked for the correct number of arguments. If the arguments are 3, 
-         the program reads from the file of the 2nd argument and writes to the file of the 3rd argument.
-         If the arguments are 2, the program reads from the file of the 2nd argument and writes the output to the screen.
-         The 1st argument (argv[0]) is always the name of the executable */
-
-      /* if(argc == 3) {
-               if(!(yyin = fopen(argv[1], "r"))) {
-                     fprintf(stderr, "Cannot read file: %s\n", argv[1]);
-                     return 1;
-               }
-               if(!(yyout = fopen(argv[2], "w"))) {
-                     fprintf(stderr, "Cannot create file: %s\n", argv[2]);
-                     return 1;
-               }
-      }
-      else if(argc == 2) {
-               if(!(yyin = fopen(argv[1], "r"))) {
-                     fprintf(stderr, "Cannot read file: %s\n", argv[1]);
-                     return 1;
-               }
-      } */
-
-      /* The yylex function reads characters from the input file and tries to recognize tokens.
-         The tokens the the function recognizes are the ones that are defined between the %% and %%.
-         If the code corresponding to a pattern contains the command 'return VALUE', then yylex() returns
-         the value that is assigned to that token. The return values of each token can be seen in the token.h file */
-
-      /* while((token = yylex()) >= 0){ */
-               /* For each token recognized, in prints the line number that it was found
-                  as well as it's name and it's assigned value (for example DELIMITER (NAME) 1 (VALUE)). */
-               /* fprintf(yyout, "Line=%d, token=%s, value=\"%s\"\n", line, tname[token-1], yytext);
-      }
-
-      return 0;
-} */
 

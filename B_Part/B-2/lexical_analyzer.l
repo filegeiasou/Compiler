@@ -27,10 +27,10 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
    #include <stdio.h>
    #include <string.h>
    #include <stdlib.h>
-
+   #define YYSTYPE double
    /* Header file containing all the required tokens */
    #include "token.h"
-
+   #define END 0
    void handle_comment(); // definition of function to handle multiline comments
 
    int line = 1; // Current line counter
@@ -58,7 +58,6 @@ OPEN_BRACE        \[
 CLOSE_BRACE       \]
 WHITESPACE        [ \t]+
 
-
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
    The return command allows the return of a numerical value through the yylex() function,
    allowing us to return numerican values that we have defined in the token.h file. */
@@ -82,7 +81,7 @@ WHITESPACE        [ \t]+
 {OPEN_BRACE}        { return OPEN_BRACE; }
 {CLOSE_BRACE}       { return CLOSE_BRACE; }
 {SYMBOL}            { return SYMBOL; }
-\n                  { line++; printf("\n"); }
+\n                  { line++;}
 <<EOF>>             { printf("#END-OF-FILE#\n"); exit(0); }
 .                   { return UNKNOWN_TOKEN; }
 
@@ -129,48 +128,4 @@ void handle_comment()
 }
 
 
-/* Array with all the tokens that are defined in the token.h file */
-char *tname[15] = {"DELIMITER","INTEGER","FLOAT","STRINGS","OPERATORS","IDENTIFIERS","KEYWORD","SYMBOL","OPEN_BRACKET","CLOSE_BRACKET","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACE","CLOSE_BRACE","UNKNOWN TOKEN"};
 
-
-/* The code of the main function will be automatically placed in the C file that Flex will create
-   and will be the starting point of the lexical analyzer application. */
-
-/* int main(int argc, char **argv) {
-      int token; */
-
-      /* Definitions are checked for the correct number of arguments. If the arguments are 3, 
-         the program reads from the file of the 2nd argument and writes to the file of the 3rd argument.
-         If the arguments are 2, the program reads from the file of the 2nd argument and writes the output to the screen.
-         The 1st argument (argv[0]) is always the name of the executable */
-
-      /* if(argc == 3) {
-               if(!(yyin = fopen(argv[1], "r"))) {
-                     fprintf(stderr, "Cannot read file: %s\n", argv[1]);
-                     return 1;
-               }
-               if(!(yyout = fopen(argv[2], "w"))) {
-                     fprintf(stderr, "Cannot create file: %s\n", argv[2]);
-                     return 1;
-               }
-      }
-      else if(argc == 2) {
-               if(!(yyin = fopen(argv[1], "r"))) {
-                     fprintf(stderr, "Cannot read file: %s\n", argv[1]);
-                     return 1;
-               }
-      } */
-
-      /* The yylex function reads characters from the input file and tries to recognize tokens.
-         The tokens the the function recognizes are the ones that are defined between the %% and %%.
-         If the code corresponding to a pattern contains the command 'return VALUE', then yylex() returns
-         the value that is assigned to that token. The return values of each token can be seen in the token.h file */
-
-      /* while((token = yylex()) >= 0){ */
-               /* For each token recognized, in prints the line number that it was found
-                  as well as it's name and it's assigned value (for example DELIMITER (NAME) 1 (VALUE)). */
-               /* fprintf(yyout, "Line=%d, token=%s, value=\"%s\"\n", line, tname[token-1], yytext);
-      }
-
-      return 0;
-} */

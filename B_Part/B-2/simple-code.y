@@ -18,33 +18,47 @@
 %{
 /* Orismoi kai dhlwseis glwssas C. Otidhpote exei na kanei me orismo h arxikopoihsh
    metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to shmeio */
-    #include <stdio.h>
-	#include <stdlib.h>
-	#define YYSTYPE int
+        #include <stdio.h>
+        #include <math.h>
+        #include <stdlib.h>
+	#define YYSTYPE double
 %}
 
 /* Orismos twn anagnwrisimwn lektikwn monadwn. */
-%token INTCONST VARIABLE PLUS NEWLINE /* FILL ME */
+%token NUMBER
+%token PLUS MINUS TIMES DIVIDE POWER
+%token LEFT RIGHT
+%token END
 
 /* Orismos proteraiothtwn sta tokens */
-%left PLUS
-
+%left PLUS MINUS
+%left TIMES DIVIDE
+%left NEG
+%right POWER
+%start program
 %%
-
 /* Orismos twn grammatikwn kanonwn. Kathe fora pou antistoixizetai enas grammatikos
    kanonas me ta dedomena eisodou, ekteleitai o kwdikas C pou brisketai anamesa sta
    agkistra. H anamenomenh syntaksh einai:
 				onoma : kanonas { kwdikas C } */
 program:
-        program a1 NEWLINE { printf("%d\n", $2); }
-        |
-        ;
-a1:
-        INTCONST         { $$ = $1; }
-		| VARIABLE	 { $$ = $1; }
-        | a1 PLUS a1 { $$ = $1 + $3; }
-/* FILL ME */
-        ;
+        
+        | program Line 
+;
+Line:
+        END
+        | exp END { printf("Result: %f\n", $1); }
+
+;
+
+exp:
+        NUMBER{ $$ = $1; }
+        | exp PLUS exp { $$ = $1 + $3; }
+        | exp MINUS exp { $$ = $1 - $3; }
+        | exp TIMES exp { $$ = $1 * $3; }
+        | exp DIVIDE exp { $$ = $1 / $3; }
+        | exp POWER exp { $$ = pow($1, $3); }
+;        
 %%
 
 
@@ -62,12 +76,10 @@ void yyerror(char *s) {
    gia na ksekinhsei h syntaktikh analysh. */
 int main(void)  {
 
-    int res =yyparse();
+        int res =yyparse();
 	if(res==0)
 		printf("Syntax OK\n");
 	else
-		printf("Syntax Error\n");
-    
-	
-	return 0;
+	        printf("Syntax Error\n");
+        return 0;
 }
