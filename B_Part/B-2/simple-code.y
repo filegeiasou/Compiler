@@ -22,10 +22,12 @@
         #include <math.h>
         #include <stdlib.h>
 	#define YYSTYPE double
+        int yylex(void);
+	void yyerror(char *);
 %}
 
 /* Orismos twn anagnwrisimwn lektikwn monadwn. */
-%token NUMBER
+%token INTEGER
 %token PLUS MINUS TIMES DIVIDE POWER
 %token LEFT RIGHT
 %token END
@@ -42,23 +44,22 @@
    agkistra. H anamenomenh syntaksh einai:
 				onoma : kanonas { kwdikas C } */
 program:
-        
-        | program Line 
-;
+        program Line 
+        |
+        ;
 Line:
         END
         | exp END { printf("Result: %f\n", $1); }
-
-;
+        ;
 
 exp:
-        NUMBER{ $$ = $1; }
+        INTEGER{ $$ = $1; }
         | exp PLUS exp { $$ = $1 + $3; }
         | exp MINUS exp { $$ = $1 - $3; }
         | exp TIMES exp { $$ = $1 * $3; }
         | exp DIVIDE exp { $$ = $1 / $3; }
         | exp POWER exp { $$ = pow($1, $3); }
-;        
+        ;        
 %%
 
 
@@ -76,7 +77,7 @@ void yyerror(char *s) {
    gia na ksekinhsei h syntaktikh analysh. */
 int main(void)  {
 
-        int res =yyparse();
+        int res = yyparse();
 	if(res==0)
 		printf("Syntax OK\n");
 	else
