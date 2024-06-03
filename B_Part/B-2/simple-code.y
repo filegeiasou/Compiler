@@ -56,6 +56,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 %type <dval> compare
 
 %left OPERATORS
+%right INTEGER FLOAT IDENTIFIERS
 %start program
 
 %%
@@ -137,7 +138,6 @@ compare:
             $$ = $1 <= $3;
     }
     ;
-
 %%
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
    apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h
