@@ -115,6 +115,7 @@ declaration:
         if (strcmp($1, "int") && strcmp($1, "float")) yyerror("Invalid type");
         $$ = $1}
     | keyword IDENTIFIERS eq_oper 
+    | keyword IDENTIFIERS eq_oper OPEN_BRACE INTEGER CLOSE_BRACE DELIMITER {$$ = $1;}
     ;
 assignment:
     IDENTIFIERS eq_oper num DELIMITER {$$ = $3;}
