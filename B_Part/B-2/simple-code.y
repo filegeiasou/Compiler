@@ -7,7 +7,7 @@
 			kai ektypwnei to apotelesma sthn othonh (thewrontas oti oi metablhtes exoun
 			panta thn timh 0). Leitourgei autonoma, dhladh xwris Flex kai anagnwrizei kena
 			(space & tab), akeraious (dekadikou systhmatos) kai onomata metablhtwn ths glwssas
-			Uni-C enw diaxeirizetai tous eidikous xarakthres neas grammhs '\n' (new line)
+			Uni-C enw diaxeirizetai tous eidikous xarakthres neas grammhs '\n' (new valid)
 			kai 'EOF' (end of file). Kathara gia logous debugging typwnei sthn othonh otidhpote
 			epistrefei h synarthsh yylex().
    Odhgies ekteleshs:   Dinete "make" xwris ta eisagwgika ston trexonta katalogo. Enallaktika:
@@ -24,26 +24,38 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         #include <stdlib.h>
         #include <string.h>
         extern char *yytext;
-        void yyerror(char *);
-        int yylex(void);
+        extern void yyerror(char *);
+        extern int yylex(void);
+        int cor_words = 0;
+        int cor_numr = 0;
+        int inc_words = 0;
+        int inc_numr = 0;
 %}
 
 /* Orismos twn anagnwrisimwn lektikwn monadwn. */
 %union {
+    int ival;
     double dval;
     char *sval;
 }
 
 %token <dval> INTEGER FLOAT
-%token <sval> OPERATORS
-%token DELIMITER STRINGS IDENTIFIERS KEYWORD SYMBOL
+%token <sval> OPERATORS IDENTIFIERS STRINGS KEYWORD 
+%token DELIMITER SYMBOL
 %token OPEN_BRACKET CLOSE_BRACKET OPEN_PARENTHESIS CLOSE_PARENTHESIS
 %token OPEN_BRACE CLOSE_BRACE UNKNOWN_TOKEN
 %token END
 
 /* Orismos proteraiothtwn sta tokens */
-%type <dval> exp
+%type <dval> num
 %type <sval> operator
+%type <sval> keyword
+%type <sval> declaration
+%type <dval> assignment
+%type <sval> eq_oper
+%type <dval> compare
+
+%left OPERATORS
 %start program
 
 %%
@@ -53,22 +65,34 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 				onoma : kanonas { kwdikas C } */
 
 program:
-    | program Line
+    | program line
     ;
-
-Line:
+line:
     END
-    | exp END { printf("Result: %f\n", $1); }
+    | num END { printf("Number: %f\n", $1); }
+    | operator END {printf("Operator: %s\n", $1);}
+    | declaration END {printf("Valid declaration of type %s\n",$1);}
+    | assignment END {printf("Valid assignment of %f\n", $1);}
+    | compare END {printf("Comparison: %f\n", $1);}
     ;
-
 operator:
-    OPERATORS { $$ = strdup(yytext); printf("Operator: %s\n", $$);}
+    OPERATORS { $$ = strdup(yytext); cor_words++;}
     ;
-
-exp:
-    INTEGER { $$ = atof(yytext); }
-    | FLOAT { $$ = atof(yytext); }
-    | exp operator exp {
+keyword: 
+    KEYWORD { $$ = strdup(yytext); cor_words++;}
+    ;
+eq_oper:
+    operator { if(!strcmp($1, "=")) $$ = $1;}
+    ;
+identifier_sym:
+    IDENTIFIERS
+    | IDENTIFIERS SYMBOL{}
+    ;
+num:
+    INTEGER { $$ = atof(yytext); cor_words++; }
+    | FLOAT { $$ = atof(yytext); cor_words++;}
+    | IDENTIFIERS { $$ = 0; cor_words++;}
+    | num operator num { 
         if (!strcmp($2, "+"))
             $$ = $1 + $3;
         else if (!strcmp($2, "-"))
@@ -77,8 +101,39 @@ exp:
             $$ = $1 * $3;
         else if (!strcmp($2, "/"))
             $$ = $1 / $3;
-        else if (!strcmp($2, "^"))
-            $$ = pow($1, $3);
+     } 
+    | operator num { 
+        if (!strcmp($1, "-"))
+            $$ = -$2;
+        else if (!strcmp($1, "+"))
+            $$ = $2;
+    }
+    ;
+declaration:
+    keyword IDENTIFIERS DELIMITER {$$ = $1;}
+    | keyword IDENTIFIERS eq_oper num DELIMITER { 
+        if (strcmp($1, "int") && strcmp($1, "float")) yyerror("Invalid type");
+        $$ = $1}
+    | keyword IDENTIFIERS eq_oper 
+    ;
+assignment:
+    IDENTIFIERS eq_oper num DELIMITER {$$ = $3;}
+    | identifier_sym IDENTIFIERS eq_oper num DELIMITER {$$ = $4;} //multiple assignments -> only works for two for now
+    ;
+compare:
+    num operator num {  
+        if (!strcmp($2, "=="))
+            $$ = $1 == $3;
+        else if (!strcmp($2, "!="))
+            $$ = $1 != $3;
+        else if (!strcmp($2, ">"))
+            $$ = $1 > $3;
+        else if (!strcmp($2, "<"))
+            $$ = $1 < $3;
+        else if (!strcmp($2, ">="))
+            $$ = $1 >= $3;
+        else if (!strcmp($2, "<="))
+            $$ = $1 <= $3;
     }
     ;
 
