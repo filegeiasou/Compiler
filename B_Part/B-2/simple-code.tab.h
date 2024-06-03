@@ -1,14 +1,14 @@
-/* A Bison parser, made by GNU Bison 3.8.2.  */
+/* A Bison parser, made by GNU Bison 2.3.  */
 
-/* Bison interface for Yacc-like parsers in C
+/* Skeleton interface for Bison's Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
-   Inc.
+   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
 
-   This program is free software: you can redistribute it and/or modify
+   This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,7 +16,9 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,55 +33,65 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
-   especially those whose name start with YY_ or yy_.  They are
-   private implementation details that can be changed or removed.  */
-
-#ifndef YY_YY_SIMPLE_CODE_TAB_H_INCLUDED
-# define YY_YY_SIMPLE_CODE_TAB_H_INCLUDED
-/* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
-#if YYDEBUG
-extern int yydebug;
-#endif
-
-/* Token kinds.  */
+/* Tokens.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-  enum yytokentype
-  {
-    YYEMPTY = -2,
-    YYEOF = 0,                     /* "end of file"  */
-    YYerror = 256,                 /* error  */
-    YYUNDEF = 257,                 /* "invalid token"  */
-    NUMBER = 258,                  /* NUMBER  */
-    PLUS = 259,                    /* PLUS  */
-    MINUS = 260,                   /* MINUS  */
-    TIMES = 261,                   /* TIMES  */
-    DIVIDE = 262,                  /* DIVIDE  */
-    POWER = 263,                   /* POWER  */
-    LEFT = 264,                    /* LEFT  */
-    RIGHT = 265,                   /* RIGHT  */
-    END = 266,                     /* END  */
-    NEG = 267                      /* NEG  */
-  };
-  typedef enum yytokentype yytoken_kind_t;
+   /* Put the tokens into the symbol table, so that GDB and other debuggers
+      know about them.  */
+   enum yytokentype {
+     INTEGER = 258,
+     FLOAT = 259,
+     OPERATORS = 260,
+     DELIMITER = 261,
+     STRINGS = 262,
+     IDENTIFIERS = 263,
+     KEYWORD = 264,
+     SYMBOL = 265,
+     OPEN_BRACKET = 266,
+     CLOSE_BRACKET = 267,
+     OPEN_PARENTHESIS = 268,
+     CLOSE_PARENTHESIS = 269,
+     OPEN_BRACE = 270,
+     CLOSE_BRACE = 271,
+     UNKNOWN_TOKEN = 272,
+     END = 273
+   };
 #endif
+/* Tokens.  */
+#define INTEGER 258
+#define FLOAT 259
+#define OPERATORS 260
+#define DELIMITER 261
+#define STRINGS 262
+#define IDENTIFIERS 263
+#define KEYWORD 264
+#define SYMBOL 265
+#define OPEN_BRACKET 266
+#define CLOSE_BRACKET 267
+#define OPEN_PARENTHESIS 268
+#define CLOSE_PARENTHESIS 269
+#define OPEN_BRACE 270
+#define CLOSE_BRACE 271
+#define UNKNOWN_TOKEN 272
+#define END 273
 
-/* Value type.  */
+
+
+
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
+typedef union YYSTYPE
+#line 11 "simple-code.y"
+{
+    double dval;
+    char *sval;
+}
+/* Line 1529 of yacc.c.  */
+#line 90 "simple-code.tab.h"
+	YYSTYPE;
+# define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
+# define YYSTYPE_IS_TRIVIAL 1
 #endif
-
 
 extern YYSTYPE yylval;
 
-
-int yyparse (void);
-
-
-#endif /* !YY_YY_SIMPLE_CODE_TAB_H_INCLUDED  */
