@@ -80,7 +80,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 11 "simple-code.y"
+#line 32 "simple-code.y"
 {
     double dval;
     char *sval;

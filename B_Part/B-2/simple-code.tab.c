@@ -106,8 +106,10 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 1 "simple-code.y"
+#line 19 "simple-code.y"
 
+/* Orismoi kai dhlwseis glwssas C. Otidhpote exei na kanei me orismo h arxikopoihsh
+metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to shmeio */
         #include <stdio.h>
         #include <math.h>
         #include <stdlib.h>
@@ -137,13 +139,13 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 11 "simple-code.y"
+#line 32 "simple-code.y"
 {
     double dval;
     char *sval;
 }
 /* Line 193 of yacc.c.  */
-#line 147 "simple-code.tab.c"
+#line 149 "simple-code.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -156,7 +158,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 160 "simple-code.tab.c"
+#line 162 "simple-code.tab.c"
 
 #ifdef short
 # undef short
@@ -441,7 +443,7 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    29,    29,    30,    34,    35,    39,    43,    44,    45
+       0,    55,    55,    56,    60,    61,    65,    69,    70,    71
 };
 #endif
 
@@ -1347,27 +1349,27 @@ yyreduce:
   switch (yyn)
     {
         case 5:
-#line 35 "simple-code.y"
+#line 61 "simple-code.y"
     { printf("Result: %f\n", (yyvsp[(1) - (2)].dval)); ;}
     break;
 
   case 6:
-#line 39 "simple-code.y"
+#line 65 "simple-code.y"
     { (yyval.sval) = strdup(yytext); printf("Operator: %s\n", (yyval.sval));;}
     break;
 
   case 7:
-#line 43 "simple-code.y"
+#line 69 "simple-code.y"
     { (yyval.dval) = atof(yytext); ;}
     break;
 
   case 8:
-#line 44 "simple-code.y"
+#line 70 "simple-code.y"
     { (yyval.dval) = atof(yytext); ;}
     break;
 
   case 9:
-#line 45 "simple-code.y"
+#line 71 "simple-code.y"
     {
         if (!strcmp((yyvsp[(2) - (3)].sval), "+"))
             (yyval.dval) = (yyvsp[(1) - (3)].dval) + (yyvsp[(3) - (3)].dval);
@@ -1384,7 +1386,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1388 "simple-code.tab.c"
+#line 1390 "simple-code.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1598,13 +1600,18 @@ yyreturn:
 }
 
 
-#line 59 "simple-code.y"
+#line 85 "simple-code.y"
 
-
+/* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
+   apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h
+   synarthsh epi ths ousias typwnei mhnyma lathous sthn othonh. */
 void yyerror(char *s) {
     fprintf(stderr, "Error: %s\n", s);
 }
 
+/* H synarthsh main pou apotelei kai to shmeio ekkinhshs tou programmatos.
+   Sthn sygkekrimenh periptwsh apla kalei thn synarthsh yyparse tou Bison
+   gia na ksekinhsei h syntaktikh analysh. */
 int main(void) {
     if (yyparse() == 0)
         fprintf(stderr, "Successful parsing.\n");

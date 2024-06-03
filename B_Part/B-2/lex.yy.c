@@ -590,18 +590,43 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "lexical_analyzer.l"
-#line 4 "lexical_analyzer.l"
+/* File name:           simple-flex-code.l
+   Description:         Lexical analyzer using Flex tool
+   Authors:             Dimitrios Kontoulis(21390095),Aggelos Konstantinos Mentzelos(21390132),
+                        Efrsosini Barsou(21390021),Enterisa Gkiozi(21390041),Leonidas Alexopoulos(21390006)
+                        Compilers Lab, Department of Informatics and Computer Engineering,
+                        University of West Attica
+   Comments:            The current program implements (using flex) a simple lexical analyzer
+                        recognizing spaces (space and tab), operators, identifiers, comments, strings,
+                        integers, floats, octals and hexadecimal numbers for the Uni-C language
+                        while handling the special characters of new line '\n' and 'EOF'. The lexical
+                        analyzer accepts input and output file arguments.
+Execution instructions: Give "make" without quotes in the current directory. Alternatively:
+                        flex -o lexical_analyzer.c lexical_analyzer.l
+                        gcc -o lexical_analyzer lexical_analyzer.c
+                        ./lexical_analyzer input.txt output.txt
+*/
+/* The lexer can only read from one file and terminates at the first EOF */
+/* The following C code is for the definition of the required header files and variables.
+   Anything between %{ and %} is transferred as is to the C file that Flex will create. */
+#line 25 "lexical_analyzer.l"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+/* Header file containing all the required tokens */
 #include "simple-code.tab.h"  // Include the Bison header
 void handle_comment(); // definition of function to handle multiline comments
 
 int line = 1; // Current line counter
 
-#line 602 "lex.yy.c"
-/* Regular expression definitions */
-#line 604 "lex.yy.c"
+#line 622 "lex.yy.c"
+/* Below are the names and the corresponding regular expression for each token.
+   With the use of names we can make it easier to use these regular expressions,
+   instead of having to write them all the time, making the program confusing. */
+/* For each pattern on the left that matches, the corresponding code inside the braces is executed.
+   The return command allows the return of a numerical value through the yylex() function,
+   allowing us to return numerican values that we have defined in the token.h file. */
+#line 629 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -818,9 +843,9 @@ YY_DECL
 		}
 
 	{
-#line 32 "lexical_analyzer.l"
+#line 61 "lexical_analyzer.l"
 
-#line 823 "lex.yy.c"
+#line 848 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -879,110 +904,110 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 33 "lexical_analyzer.l"
+#line 62 "lexical_analyzer.l"
 { handle_comment(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 34 "lexical_analyzer.l"
+#line 63 "lexical_analyzer.l"
 { /* ignore line comments */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 35 "lexical_analyzer.l"
+#line 64 "lexical_analyzer.l"
 { return DELIMITER; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 36 "lexical_analyzer.l"
+#line 65 "lexical_analyzer.l"
 { return INTEGER; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 37 "lexical_analyzer.l"
+#line 66 "lexical_analyzer.l"
 { return FLOAT; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 38 "lexical_analyzer.l"
+#line 67 "lexical_analyzer.l"
 { return STRINGS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 39 "lexical_analyzer.l"
+#line 68 "lexical_analyzer.l"
 { /* don't return anything */ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 40 "lexical_analyzer.l"
+#line 69 "lexical_analyzer.l"
 { return OPERATORS; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 41 "lexical_analyzer.l"
+#line 70 "lexical_analyzer.l"
 { return KEYWORD; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 42 "lexical_analyzer.l"
+#line 71 "lexical_analyzer.l"
 { return IDENTIFIERS; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 43 "lexical_analyzer.l"
+#line 72 "lexical_analyzer.l"
 { return OPEN_BRACKET; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 44 "lexical_analyzer.l"
+#line 73 "lexical_analyzer.l"
 { return CLOSE_BRACKET; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 45 "lexical_analyzer.l"
+#line 74 "lexical_analyzer.l"
 { return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 46 "lexical_analyzer.l"
+#line 75 "lexical_analyzer.l"
 { return CLOSE_PARENTHESIS; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 47 "lexical_analyzer.l"
+#line 76 "lexical_analyzer.l"
 { return OPEN_BRACE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 48 "lexical_analyzer.l"
+#line 77 "lexical_analyzer.l"
 { return CLOSE_BRACE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 49 "lexical_analyzer.l"
+#line 78 "lexical_analyzer.l"
 { return SYMBOL; }
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 50 "lexical_analyzer.l"
+#line 79 "lexical_analyzer.l"
 { line++; return END; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 51 "lexical_analyzer.l"
+#line 80 "lexical_analyzer.l"
 { printf("#END-OF-FILE#\n"); exit(0); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 52 "lexical_analyzer.l"
+#line 81 "lexical_analyzer.l"
 { return UNKNOWN_TOKEN; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 54 "lexical_analyzer.l"
+#line 83 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 985 "lex.yy.c"
+#line 1010 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1985,23 +2010,29 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 54 "lexical_analyzer.l"
+#line 83 "lexical_analyzer.l"
 
 
+// Implementation of function that handles multi-line comments
 void handle_comment()
 {
+    /* while character read is not '*' (indicating comment end) or EOF
+         this loop basically eats up the text inside the comment. */
     register int c;
     for (;;)
     {
         while ((c = input()) != '*' && c != 0)
             if (c == '\n') line++;
-
+        // if there is a '*' found, indicating (possibly) the end of the comment
         if (c == '*')
         {
-            while ((c = input()) == '*');
-            if (c == '/') break;
+            /* the loop below detects if there are many
+            '*' symbols in a row, basically skipping them
+            and not regarding them as the end of the comment. */
+            while ((c = input()) == '*'); 
+            if (c == '/') break; // found the end of the comment.
         }
-
+        // if there is EOF contained in the multiple line comment
         if (c == 0)
         {
             printf("Error: EOF in comment.\n");
