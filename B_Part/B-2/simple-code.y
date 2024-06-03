@@ -56,6 +56,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 %type <dval> compare
 
 %left OPERATORS
+%right INTEGER FLOAT IDENTIFIERS
 %start program
 
 %%
@@ -115,6 +116,7 @@ declaration:
         if (strcmp($1, "int") && strcmp($1, "float")) yyerror("Invalid type");
         $$ = $1}
     | keyword IDENTIFIERS eq_oper 
+    | keyword IDENTIFIERS eq_oper OPEN_BRACE INTEGER CLOSE_BRACE DELIMITER {$$ = $1;}
     ;
 assignment:
     IDENTIFIERS eq_oper num DELIMITER {$$ = $3;}
@@ -136,7 +138,6 @@ compare:
             $$ = $1 <= $3;
     }
     ;
-
 %%
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
    apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h

@@ -42,10 +42,10 @@
      INTEGER = 258,
      FLOAT = 259,
      OPERATORS = 260,
-     DELIMITER = 261,
+     IDENTIFIERS = 261,
      STRINGS = 262,
-     IDENTIFIERS = 263,
-     KEYWORD = 264,
+     KEYWORD = 263,
+     DELIMITER = 264,
      SYMBOL = 265,
      OPEN_BRACKET = 266,
      CLOSE_BRACKET = 267,
@@ -61,10 +61,10 @@
 #define INTEGER 258
 #define FLOAT 259
 #define OPERATORS 260
-#define DELIMITER 261
+#define IDENTIFIERS 261
 #define STRINGS 262
-#define IDENTIFIERS 263
-#define KEYWORD 264
+#define KEYWORD 263
+#define DELIMITER 264
 #define SYMBOL 265
 #define OPEN_BRACKET 266
 #define CLOSE_BRACKET 267
@@ -80,13 +80,14 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 32 "simple-code.y"
+#line 36 "simple-code.y"
 {
+    int ival;
     double dval;
     char *sval;
 }
 /* Line 1529 of yacc.c.  */
-#line 90 "simple-code.tab.h"
+#line 91 "simple-code.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
