@@ -44,7 +44,7 @@ IDENTIFIERS       [a-zA-Z_]+[a-zA-Z_0-9]*
 STRINGS           \"(\\[\\n\"]|[^\n\\\"])*\"
 LINE_COMMENT      \/\/.*
 OPERATORS         ([\+\-\*\/\=\!\<\>]=)|[\*\/\=\!\<\>%]|&{1,2}|\-{1,2}|\+{1,2}|(\|\|)
-KEYWORDS          break|case|func|const|continue|do|double|else|float|for|if|int|long|return|short|sizeof|struct|switch|void|while
+KEYWORDS          scan|len|cmp|print|break|case|func|const|continue|do|double|else|float|for|if|int|long|return|short|sizeof|struct|switch|void|while
 OPEN_BRACKET      \{
 CLOSE_BRACKET     \}
 OPEN_PARENTHESIS  \(
@@ -52,7 +52,6 @@ CLOSE_PARENTHESIS \)
 OPEN_BRACE        \[
 CLOSE_BRACE       \]
 WHITESPACE        [ \t]+
-
 
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
    The return command allows the return of a numerical value through the yylex() function,

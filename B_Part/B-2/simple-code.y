@@ -40,7 +40,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 }
 
 %token <dval> INTEGER FLOAT
-%token <sval> OPERATORS IDENTIFIERS STRINGS KEYWORD 
+%token <sval> OPERATORS IDENTIFIERS STRINGS KEYWORD
 %token DELIMITER SYMBOL
 %token OPEN_BRACKET CLOSE_BRACKET OPEN_PARENTHESIS CLOSE_PARENTHESIS
 %token OPEN_BRACE CLOSE_BRACE UNKNOWN_TOKEN
@@ -53,7 +53,9 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 %type <sval> declaration
 %type <dval> assignment
 %type <sval> eq_oper
-%type <dval> compare
+%type <ival> compare
+%type <sval> num_oper
+%type <sval> func_call
 
 %left OPERATORS
 %right INTEGER FLOAT IDENTIFIERS
@@ -74,7 +76,8 @@ line:
     | operator END {printf("Operator: %s\n", $1);}
     | declaration END {printf("Valid declaration of type %s\n",$1);}
     | assignment END {printf("Valid assignment of %f\n", $1);}
-    | compare END {printf("Comparison: %f\n", $1);}
+    | compare END {printf("Valid Comparison: %d\n", $1);}
+    | func_call END {printf("Function call: %s\n", $1);}
     ;
 operator:
     OPERATORS { $$ = strdup(yytext); cor_words++;}
@@ -85,15 +88,20 @@ keyword:
 eq_oper:
     operator { if(!strcmp($1, "=")) $$ = $1;}
     ;
+num_oper:
+    operator { 
+        if(!strcmp($1, "+") && !strcmp($1, "-") && !strcmp($1, "*") && !strcmp($1, "/"))
+                $$ = $1;
+    }
 identifier_sym:
     IDENTIFIERS
-    | IDENTIFIERS SYMBOL{}
+    | identifier_sym SYMBOL IDENTIFIERS {}
     ;
 num:
     INTEGER { $$ = atof(yytext); cor_words++; }
     | FLOAT { $$ = atof(yytext); cor_words++;}
     | IDENTIFIERS { $$ = 0; cor_words++;}
-    | num operator num { 
+    | num num_oper num {
         if (!strcmp($2, "+"))
             $$ = $1 + $3;
         else if (!strcmp($2, "-"))
@@ -102,8 +110,8 @@ num:
             $$ = $1 * $3;
         else if (!strcmp($2, "/"))
             $$ = $1 / $3;
-     } 
-    | operator num { 
+    } 
+    | num_oper num { 
         if (!strcmp($1, "-"))
             $$ = -$2;
         else if (!strcmp($1, "+"))
@@ -111,19 +119,50 @@ num:
     }
     ;
 declaration:
-    keyword IDENTIFIERS DELIMITER {$$ = $1;}
-    | keyword IDENTIFIERS eq_oper num DELIMITER { 
-        if (strcmp($1, "int") && strcmp($1, "float")) yyerror("Invalid type");
-        $$ = $1}
+    keyword IDENTIFIERS {$$ = $1;}
+    | keyword IDENTIFIERS eq_oper num { 
+                if (!strcmp($1, "int") || !strcmp($1, "float") || !strcmp($1, "double"))  
+                        $$ = $1;
+                else yyerror("Invalid declaration type");       
+        }
+    | keyword keyword IDENTIFIERS eq_oper num {
+                if (!strcmp($1, "const") && !strcmp($2, "int") || !strcmp($2, "float") || !strcmp($2, "double"))
+                        $$ = $1;
+                else yyerror("Invalid declaration type");
+        }
     | keyword IDENTIFIERS eq_oper 
-    | keyword IDENTIFIERS eq_oper OPEN_BRACE INTEGER CLOSE_BRACE DELIMITER {$$ = $1;}
+    | keyword IDENTIFIERS eq_oper OPEN_BRACE INTEGER CLOSE_BRACE {$$ = $1;}
     ;
 assignment:
-    IDENTIFIERS eq_oper num DELIMITER {$$ = $3;}
-    | identifier_sym IDENTIFIERS eq_oper num DELIMITER {$$ = $4;} //multiple assignments -> only works for two for now
+    /* IDENTIFIERS eq_oper num {$$ = $3;} */
+    identifier_sym eq_oper num {$$ = $3;}
+    ;
+func_call:
+    keyword OPEN_PARENTHESIS IDENTIFIERS CLOSE_PARENTHESIS {
+        if(!strcmp($1, "scan") || !strcmp($1, "len") || !strcmp($1, "print"))
+                $$ = $1;
+        else yyerror("Other function was called"); // ****
+    }
+    | keyword OPEN_PARENTHESIS IDENTIFIERS SYMBOL IDENTIFIERS CLOSE_PARENTHESIS {
+        if(!strcmp($1, "cmp"))
+                $$ = $1;
+        else yyerror("Other function was called"); // Case that we have
+    }
+    | keyword OPEN_PARENTHESIS STRINGS SYMBOL STRINGS CLOSE_PARENTHESIS {
+        if(!strcmp($1, "cmp"))
+                $$ = $1;
+    }
+    | keyword OPEN_PARENTHESIS STRINGS SYMBOL IDENTIFIERS CLOSE_PARENTHESIS {
+        if(!strcmp($1, "cmp"))
+                $$ = $1;
+    }
+    | keyword OPEN_PARENTHESIS IDENTIFIERS SYMBOL STRINGS CLOSE_PARENTHESIS {
+        if(!strcmp($1, "cmp"))
+                $$ = $1;
+    }
     ;
 compare:
-    num operator num {  
+    num operator num {
         if (!strcmp($2, "=="))
             $$ = $1 == $3;
         else if (!strcmp($2, "!="))
@@ -144,6 +183,7 @@ compare:
    synarthsh epi ths ousias typwnei mhnyma lathous sthn othonh. */
 void yyerror(char *s) {
     fprintf(stderr, "Error: %s\n", s);
+    exit(1);
 }
 
 /* H synarthsh main pou apotelei kai to shmeio ekkinhshs tou programmatos.
