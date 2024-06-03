@@ -15,7 +15,6 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
                         ./lexical_analyzer input.txt output.txt
 */
 
-
 /* The lexer can only read from one file and terminates at the first EOF */
 %option noyywrap
 
@@ -23,24 +22,20 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
    Anything between %{ and %} is transferred as is to the C file that Flex will create. */
 
 %{
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+/* Header file containing all the required tokens */
+#include "simple-code.tab.h"  // Include the Bison header
+void handle_comment(); // definition of function to handle multiline comments
 
-   #include <stdio.h>
-   #include <string.h>
-   #include <stdlib.h>
-   #define YYSTYPE double
-   /* Header file containing all the required tokens */
-   #include "token.h"
-   #define END 0
-   void handle_comment(); // definition of function to handle multiline comments
-
-   int line = 1; // Current line counter
+int line = 1; // Current line counter
 
 %}
 
 /* Below are the names and the corresponding regular expression for each token.
    With the use of names we can make it easier to use these regular expressions,
    instead of having to write them all the time, making the program confusing. */
-
 DELIMITER         ;
 SYMBOL            ,
 INTEGER           ([1-9][0-9]*|0)|(0[xX][0-9A-F]+)|(0[0-7]+)
@@ -58,19 +53,19 @@ OPEN_BRACE        \[
 CLOSE_BRACE       \]
 WHITESPACE        [ \t]+
 
+
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
    The return command allows the return of a numerical value through the yylex() function,
    allowing us to return numerican values that we have defined in the token.h file. */
 
 %%
-
 "/*"                { handle_comment(); }
-{LINE_COMMENT}      { /* ignore line comments */}
+{LINE_COMMENT}      { /* ignore line comments */ }
 {DELIMITER}         { return DELIMITER; }
 {INTEGER}           { return INTEGER; }
 {FLOAT}             { return FLOAT; }
 {STRINGS}           { return STRINGS; }
-{WHITESPACE}        { /* dont return anything */ }
+{WHITESPACE}        { /* don't return anything */ }
 {OPERATORS}         { return OPERATORS; }
 {KEYWORDS}          { return KEYWORD; }
 {IDENTIFIERS}       { return IDENTIFIERS; }
@@ -81,51 +76,36 @@ WHITESPACE        [ \t]+
 {OPEN_BRACE}        { return OPEN_BRACE; }
 {CLOSE_BRACE}       { return CLOSE_BRACE; }
 {SYMBOL}            { return SYMBOL; }
-\n                  { line++;}
+\n                  { line++; return END; }
 <<EOF>>             { printf("#END-OF-FILE#\n"); exit(0); }
 .                   { return UNKNOWN_TOKEN; }
 
 %%
 
-
 // Implementation of function that handles multi-line comments
-
 void handle_comment()
 {
-   /* this function handles multi-line comments 
-      It detects them, but it does not take them into account
-      and handles the line counting accordingly */
-
-   register int c;
-
-   for (;;)
-   {
-      /* while character read is not '*' (indicating comment end) or EOF
+    /* while character read is not '*' (indicating comment end) or EOF
          this loop basically eats up the text inside the comment. */
-
-      while ((c = input()) != '*' && c != 0)
-         if (c == '\n') line++;
-
-      // if there is a '*' found, indicating (possibly) the end of the comment
-      if (c == '*')
-      {
-         /* the loop below detects if there are many
+    register int c;
+    for (;;)
+    {
+        while ((c = input()) != '*' && c != 0)
+            if (c == '\n') line++;
+        // if there is a '*' found, indicating (possibly) the end of the comment
+        if (c == '*')
+        {
+            /* the loop below detects if there are many
             '*' symbols in a row, basically skipping them
             and not regarding them as the end of the comment. */
-
-         while ((c = input()) == '*');
-
-         if (c == '/') break; // found the end of the comment.
-      }
-         
-      // if there is EOF contained in the multiple line comment
-      if (c == 0)
-      {
-         printf ("Error: EOF in comment.\n");
-         break;
-      }
-   }
+            while ((c = input()) == '*'); 
+            if (c == '/') break; // found the end of the comment.
+        }
+        // if there is EOF contained in the multiple line comment
+        if (c == 0)
+        {
+            printf("Error: EOF in comment.\n");
+            break;
+        }
+    }
 }
-
-
-

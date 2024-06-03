@@ -15,72 +15,88 @@
                         gcc -o simple-bison-code simple-bison-code.c
                         ./simple-bison-code
 */
+
 %{
 /* Orismoi kai dhlwseis glwssas C. Otidhpote exei na kanei me orismo h arxikopoihsh
-   metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to shmeio */
+metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to shmeio */
         #include <stdio.h>
         #include <math.h>
         #include <stdlib.h>
-	#define YYSTYPE double
+        #include <string.h>
+        extern char *yytext;
+        void yyerror(char *);
         int yylex(void);
-	void yyerror(char *);
 %}
 
 /* Orismos twn anagnwrisimwn lektikwn monadwn. */
-%token INTEGER
-%token PLUS MINUS TIMES DIVIDE POWER
-%token LEFT RIGHT
+%union {
+    double dval;
+    char *sval;
+}
+
+%token <dval> INTEGER FLOAT
+%token <sval> OPERATORS
+%token DELIMITER STRINGS IDENTIFIERS KEYWORD SYMBOL
+%token OPEN_BRACKET CLOSE_BRACKET OPEN_PARENTHESIS CLOSE_PARENTHESIS
+%token OPEN_BRACE CLOSE_BRACE UNKNOWN_TOKEN
 %token END
 
 /* Orismos proteraiothtwn sta tokens */
-%left PLUS MINUS
-%left TIMES DIVIDE
-%left NEG
-%right POWER
+%type <dval> exp
+%type <sval> operator
 %start program
+
 %%
 /* Orismos twn grammatikwn kanonwn. Kathe fora pou antistoixizetai enas grammatikos
    kanonas me ta dedomena eisodou, ekteleitai o kwdikas C pou brisketai anamesa sta
    agkistra. H anamenomenh syntaksh einai:
 				onoma : kanonas { kwdikas C } */
+
 program:
-        program Line 
-        |
-        ;
+    | program Line
+    ;
+
 Line:
-        END
-        | exp END { printf("Result: %f\n", $1); }
-        ;
+    END
+    | exp END { printf("Result: %f\n", $1); }
+    ;
+
+operator:
+    OPERATORS { $$ = strdup(yytext); printf("Operator: %s\n", $$);}
+    ;
 
 exp:
-        INTEGER{ $$ = $1; }
-        | exp PLUS exp { $$ = $1 + $3; }
-        | exp MINUS exp { $$ = $1 - $3; }
-        | exp TIMES exp { $$ = $1 * $3; }
-        | exp DIVIDE exp { $$ = $1 / $3; }
-        | exp POWER exp { $$ = pow($1, $3); }
-        ;        
+    INTEGER { $$ = atof(yytext); }
+    | FLOAT { $$ = atof(yytext); }
+    | exp operator exp {
+        if (!strcmp($2, "+"))
+            $$ = $1 + $3;
+        else if (!strcmp($2, "-"))
+            $$ = $1 - $3;
+        else if (!strcmp($2, "*"))
+            $$ = $1 * $3;
+        else if (!strcmp($2, "/"))
+            $$ = $1 / $3;
+        else if (!strcmp($2, "^"))
+            $$ = pow($1, $3);
+    }
+    ;
+
 %%
-
-
-
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
    apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h
    synarthsh epi ths ousias typwnei mhnyma lathous sthn othonh. */
 void yyerror(char *s) {
-        fprintf(stderr, "Error: %s\n", s);
+    fprintf(stderr, "Error: %s\n", s);
 }
-
 
 /* H synarthsh main pou apotelei kai to shmeio ekkinhshs tou programmatos.
    Sthn sygkekrimenh periptwsh apla kalei thn synarthsh yyparse tou Bison
    gia na ksekinhsei h syntaktikh analysh. */
-int main(void)  {
-
-        int res = yyparse();
-	if(res==0)
-		printf("Syntax OK\n");
-	else
-	        printf("Syntax Error\n");
-        return 0;
+int main(void) {
+    if (yyparse() == 0)
+        fprintf(stderr, "Successful parsing.\n");
+    else
+        fprintf(stderr, "Error found.\n");
+    return 0;
 }

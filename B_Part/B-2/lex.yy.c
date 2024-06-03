@@ -1,5 +1,5 @@
 
-#line 3 "lex.yy.c"
+#line 2 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -354,8 +354,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 21
-#define YY_END_OF_BUFFER 22
+#define YY_NUM_RULES 20
+#define YY_END_OF_BUFFER 21
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -365,19 +365,19 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[114] =
     {   0,
-        0,    0,   22,   20,    7,   19,    8,   20,    8,    8,
-       14,   15,    8,   18,    8,    8,    4,    4,    3,   11,
-       16,   17,   11,   11,   11,   11,   11,   11,   11,   11,
-       11,   11,   11,   12,   20,   13,    7,    8,    0,    6,
+        0,    0,   21,   19,    7,   18,    8,   19,    8,    8,
+       13,   14,    8,   17,    8,    8,    4,    4,    3,   10,
+       15,   16,   10,   10,   10,   10,   10,   10,   10,   10,
+       10,   10,   10,   11,   19,   12,    7,    8,    0,    6,
         0,    8,    8,    8,    1,    2,    0,    4,    0,    0,
-        4,   11,   11,   11,   11,   11,   10,   11,   11,   11,
-       11,   10,   11,   11,   11,   11,   11,   11,   11,   11,
-       11,    2,    5,    0,    5,    5,    4,   11,   11,   11,
-       11,   11,   11,   11,   11,   11,   11,   11,   11,   11,
-       11,   11,    5,   11,   11,   11,   11,   11,   11,   11,
+        4,   10,   10,   10,   10,   10,    9,   10,   10,   10,
+       10,    9,   10,   10,   10,   10,   10,   10,   10,   10,
+       10,    2,    5,    0,    5,    5,    4,   10,   10,   10,
+       10,   10,   10,   10,   10,   10,   10,   10,   10,   10,
+       10,   10,    5,   10,   10,   10,   10,   10,   10,   10,
 
-       11,   11,   11,   11,   11,   11,   11,   11,   11,   11,
-       11,   11,    0
+       10,   10,   10,   10,   10,   10,   10,   10,   10,   10,
+       10,   10,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -609,27 +609,24 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 /* The lexer can only read from one file and terminates at the first EOF */
 /* The following C code is for the definition of the required header files and variables.
    Anything between %{ and %} is transferred as is to the C file that Flex will create. */
-#line 26 "lexical_analyzer.l"
+#line 25 "lexical_analyzer.l"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+/* Header file containing all the required tokens */
+#include "simple-code.tab.h"  // Include the Bison header
+void handle_comment(); // definition of function to handle multiline comments
 
-   #include <stdio.h>
-   #include <string.h>
-   #include <stdlib.h>
-   #define YYSTYPE double
-   /* Header file containing all the required tokens */
-   #include "token.h"
-   #define END 0
-   void handle_comment(); // definition of function to handle multiline comments
+int line = 1; // Current line counter
 
-   int line = 1; // Current line counter
-
-#line 626 "lex.yy.c"
+#line 622 "lex.yy.c"
 /* Below are the names and the corresponding regular expression for each token.
    With the use of names we can make it easier to use these regular expressions,
    instead of having to write them all the time, making the program confusing. */
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
    The return command allows the return of a numerical value through the yylex() function,
    allowing us to return numerican values that we have defined in the token.h file. */
-#line 633 "lex.yy.c"
+#line 629 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -846,10 +843,9 @@ YY_DECL
 		}
 
 	{
-#line 65 "lexical_analyzer.l"
+#line 61 "lexical_analyzer.l"
 
-
-#line 853 "lex.yy.c"
+#line 848 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -908,115 +904,110 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 67 "lexical_analyzer.l"
+#line 62 "lexical_analyzer.l"
 { handle_comment(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 68 "lexical_analyzer.l"
-{ /* ignore line comments */}
+#line 63 "lexical_analyzer.l"
+{ /* ignore line comments */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 69 "lexical_analyzer.l"
+#line 64 "lexical_analyzer.l"
 { return DELIMITER; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 70 "lexical_analyzer.l"
+#line 65 "lexical_analyzer.l"
 { return INTEGER; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 71 "lexical_analyzer.l"
+#line 66 "lexical_analyzer.l"
 { return FLOAT; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 72 "lexical_analyzer.l"
+#line 67 "lexical_analyzer.l"
 { return STRINGS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 73 "lexical_analyzer.l"
-{ /* dont return anything */ }
+#line 68 "lexical_analyzer.l"
+{ /* don't return anything */ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 74 "lexical_analyzer.l"
+#line 69 "lexical_analyzer.l"
 { return OPERATORS; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 75 "lexical_analyzer.l"
-{ return PLUS; }
+#line 70 "lexical_analyzer.l"
+{ return KEYWORD; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 76 "lexical_analyzer.l"
-{ return KEYWORD; }
+#line 71 "lexical_analyzer.l"
+{ return IDENTIFIERS; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 77 "lexical_analyzer.l"
-{ return IDENTIFIERS; }
+#line 72 "lexical_analyzer.l"
+{ return OPEN_BRACKET; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 78 "lexical_analyzer.l"
-{ return OPEN_BRACKET; }
+#line 73 "lexical_analyzer.l"
+{ return CLOSE_BRACKET; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 79 "lexical_analyzer.l"
-{ return CLOSE_BRACKET; }
+#line 74 "lexical_analyzer.l"
+{ return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 80 "lexical_analyzer.l"
-{ return OPEN_PARENTHESIS; }
+#line 75 "lexical_analyzer.l"
+{ return CLOSE_PARENTHESIS; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 81 "lexical_analyzer.l"
-{ return CLOSE_PARENTHESIS; }
+#line 76 "lexical_analyzer.l"
+{ return OPEN_BRACE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 82 "lexical_analyzer.l"
-{ return OPEN_BRACE; }
+#line 77 "lexical_analyzer.l"
+{ return CLOSE_BRACE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 83 "lexical_analyzer.l"
-{ return CLOSE_BRACE; }
-	YY_BREAK
-case 18:
-YY_RULE_SETUP
-#line 84 "lexical_analyzer.l"
+#line 78 "lexical_analyzer.l"
 { return SYMBOL; }
 	YY_BREAK
-case 19:
-/* rule 19 can match eol */
+case 18:
+/* rule 18 can match eol */
 YY_RULE_SETUP
-#line 85 "lexical_analyzer.l"
-{ line++; return END;}
+#line 79 "lexical_analyzer.l"
+{ line++; return END; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 86 "lexical_analyzer.l"
+#line 80 "lexical_analyzer.l"
 { printf("#END-OF-FILE#\n"); exit(0); }
+	YY_BREAK
+case 19:
+YY_RULE_SETUP
+#line 81 "lexical_analyzer.l"
+{ return UNKNOWN_TOKEN; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 87 "lexical_analyzer.l"
-{ return UNKNOWN_TOKEN; }
-	YY_BREAK
-case 21:
-YY_RULE_SETUP
-#line 89 "lexical_analyzer.l"
+#line 83 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 1020 "lex.yy.c"
+#line 1010 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2019,49 +2010,33 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 89 "lexical_analyzer.l"
-
+#line 83 "lexical_analyzer.l"
 
 
 // Implementation of function that handles multi-line comments
-
 void handle_comment()
 {
-   /* this function handles multi-line comments 
-      It detects them, but it does not take them into account
-      and handles the line counting accordingly */
-
-   register int c;
-
-   for (;;)
-   {
-      /* while character read is not '*' (indicating comment end) or EOF
+    /* while character read is not '*' (indicating comment end) or EOF
          this loop basically eats up the text inside the comment. */
-
-      while ((c = input()) != '*' && c != 0)
-         if (c == '\n') line++;
-
-      // if there is a '*' found, indicating (possibly) the end of the comment
-      if (c == '*')
-      {
-         /* the loop below detects if there are many
+    register int c;
+    for (;;)
+    {
+        while ((c = input()) != '*' && c != 0)
+            if (c == '\n') line++;
+        // if there is a '*' found, indicating (possibly) the end of the comment
+        if (c == '*')
+        {
+            /* the loop below detects if there are many
             '*' symbols in a row, basically skipping them
             and not regarding them as the end of the comment. */
-
-         while ((c = input()) == '*');
-
-         if (c == '/') break; // found the end of the comment.
-      }
-         
-      // if there is EOF contained in the multiple line comment
-      if (c == 0)
-      {
-         printf ("Error: EOF in comment.\n");
-         break;
-      }
-   }
+            while ((c = input()) == '*'); 
+            if (c == '/') break; // found the end of the comment.
+        }
+        // if there is EOF contained in the multiple line comment
+        if (c == 0)
+        {
+            printf("Error: EOF in comment.\n");
+            break;
+        }
+    }
 }
-
-
-
-
