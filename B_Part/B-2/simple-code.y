@@ -53,12 +53,12 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 %type <sval> declaration
 %type <dval> assignment
 %type <sval> eq_oper
-%type <ival> compare
-%type <sval> num_oper
+%type <dval> operations
+%type <ival> num_oper
 %type <sval> func_call
 
-%left OPERATORS
-%right INTEGER FLOAT IDENTIFIERS
+%left INTEGER 
+%right OPERATORS FLOAT IDENTIFIERS
 %start program
 
 %%
@@ -72,51 +72,79 @@ program:
     ;
 line:
     END
-    | num END { printf("Number: %f\n", $1); }
+    | num END { printf("Result: %f\n", $1); }
     | operator END {printf("Operator: %s\n", $1);}
     | declaration END {printf("Valid declaration of type %s\n",$1);}
     | assignment END {printf("Valid assignment of %f\n", $1);}
-    | compare END {printf("Valid Comparison: %d\n", $1);}
     | func_call END {printf("Function call: %s\n", $1);}
-    ;
-operator:
-    OPERATORS { $$ = strdup(yytext); cor_words++;}
     ;
 keyword: 
     KEYWORD { $$ = strdup(yytext); cor_words++;}
+    ;
+operator:
+    OPERATORS { $$ = strdup(yytext); cor_words++;}
     ;
 eq_oper:
     operator { if(!strcmp($1, "=")) $$ = $1;}
     ;
 num_oper:
     operator { 
-        if(!strcmp($1, "+") && !strcmp($1, "-") && !strcmp($1, "*") && !strcmp($1, "/"))
-                $$ = $1;
+        if(!strcmp($1, "+"))
+            $$ = 1;
+        if(!strcmp($1, "-"))
+            $$ = 2;
+        if(!strcmp($1, "*"))
+            $$ = 3;
+        if(!strcmp($1, "/"))
+            $$ = 4;
+        if (!strcmp($1, "=="))
+            $$ = 5;
+        if (!strcmp($1, "!="))
+           $$ = 6;
+        if (!strcmp($1, ">"))
+            $$ = 7;
+        if (!strcmp($1, "<"))
+            $$ = 8;
+        if (!strcmp($1, ">="))
+            $$ = 9;
+        if (!strcmp($1, "<="))
+            $$ = 10;  
     }
+operations:
+    num num_oper num {
+        switch($2) {
+            case 1: $$ = $1 + $3; break;
+            case 2: $$ = $1 - $3; break;
+            case 3: $$ = $1 * $3; break;
+            case 4: $$ = $1 / $3; break;
+            case 5: $$ = $1 == $3; break;
+            case 6: $$ = $1 != $3; break;
+            case 7: $$ = $1 > $3; break;
+            case 8: $$ = $1 < $3; break;
+            case 9: $$ = $1 >= $3; break;
+            case 10: $$ = $1 <= $3; break;
+        }
+    } 
+    | num_oper num { 
+        switch($1) {
+            case 1: $$ = $2; break;
+            case 2: $$ = -$2; break;
+        }
+    }
+    ;
 identifier_sym:
     IDENTIFIERS
     | identifier_sym SYMBOL IDENTIFIERS {}
+    ;
+integer_sym:
+    INTEGER
+    | integer_sym SYMBOL INTEGER {}
     ;
 num:
     INTEGER { $$ = atof(yytext); cor_words++; }
     | FLOAT { $$ = atof(yytext); cor_words++;}
     | IDENTIFIERS { $$ = 0; cor_words++;}
-    | num num_oper num {
-        if (!strcmp($2, "+"))
-            $$ = $1 + $3;
-        else if (!strcmp($2, "-"))
-            $$ = $1 - $3;
-        else if (!strcmp($2, "*"))
-            $$ = $1 * $3;
-        else if (!strcmp($2, "/"))
-            $$ = $1 / $3;
-    } 
-    | num_oper num { 
-        if (!strcmp($1, "-"))
-            $$ = -$2;
-        else if (!strcmp($1, "+"))
-            $$ = $2;
-    }
+    | operations { $$ = $1; }
     ;
 declaration:
     keyword IDENTIFIERS {$$ = $1;}
@@ -130,11 +158,10 @@ declaration:
                         $$ = $1;
                 else yyerror("Invalid declaration type");
         }
-    | keyword IDENTIFIERS eq_oper 
-    | keyword IDENTIFIERS eq_oper OPEN_BRACE INTEGER CLOSE_BRACE {$$ = $1;}
+    | keyword IDENTIFIERS eq_oper OPEN_BRACE integer_sym CLOSE_BRACE {$$ = $1;}
     ;
 assignment:
-    /* IDENTIFIERS eq_oper num {$$ = $3;} */
+    /* IDENTIFIERS eq_oper num {$$ = $3;}  */
     identifier_sym eq_oper num {$$ = $3;}
     ;
 func_call:
@@ -159,22 +186,6 @@ func_call:
     | keyword OPEN_PARENTHESIS IDENTIFIERS SYMBOL STRINGS CLOSE_PARENTHESIS {
         if(!strcmp($1, "cmp"))
                 $$ = $1;
-    }
-    ;
-compare:
-    num operator num {
-        if (!strcmp($2, "=="))
-            $$ = $1 == $3;
-        else if (!strcmp($2, "!="))
-            $$ = $1 != $3;
-        else if (!strcmp($2, ">"))
-            $$ = $1 > $3;
-        else if (!strcmp($2, "<"))
-            $$ = $1 < $3;
-        else if (!strcmp($2, ">="))
-            $$ = $1 >= $3;
-        else if (!strcmp($2, "<="))
-            $$ = $1 <= $3;
     }
     ;
 %%

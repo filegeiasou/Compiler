@@ -1,5 +1,5 @@
 
-#line 3 "lex.yy.c"
+#line 2 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -631,14 +631,14 @@ void handle_comment(); // definition of function to handle multiline comments
 
 int line = 1; // Current line counter
 
-#line 635 "lex.yy.c"
+#line 634 "lex.yy.c"
 /* Below are the names and the corresponding regular expression for each token.
    With the use of names we can make it easier to use these regular expressions,
    instead of having to write them all the time, making the program confusing. */
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
    The return command allows the return of a numerical value through the yylex() function,
    allowing us to return numerican values that we have defined in the token.h file. */
-#line 642 "lex.yy.c"
+#line 641 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -857,7 +857,7 @@ YY_DECL
 	{
 #line 60 "lexical_analyzer.l"
 
-#line 861 "lex.yy.c"
+#line 860 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1019,7 +1019,7 @@ YY_RULE_SETUP
 #line 82 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 1023 "lex.yy.c"
+#line 1022 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
