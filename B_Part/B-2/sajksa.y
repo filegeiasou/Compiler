@@ -55,8 +55,6 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 %type <dval> expr
 %type <ival> oper_val
 %type <ival> keyword_val
-%type <ival> scan_len_print
-%type <ival> cmp_print
 /* %type <sval> func_call */
 %type <sval> var
 
@@ -214,46 +212,45 @@ assignment:
 arr:    
     OPEN_BRACE help_str CLOSE_BRACE   {}
     | OPEN_BRACE help_num CLOSE_BRACE  {}
-    | var OPEN_BRACE INTEGER CLOSE_BRACE {} 
-    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); }
+    | var OPEN_BRACE INTEGER CLOSE_BRACE {}
     ;
 // Βοηθητικοί κανόνες για κόμματα (STRINGS, NUMBERS, VARIABLES)
 help_str: 
     STRINGS
-    | help_str SYMBOL STRINGS
+    | STRINGS SYMBOL help_str
     ;
 help_num: 
     num
-    | help_num SYMBOL num
+    | num SYMBOL help_num
     ;
 help_var: 
     var
-    | help_var SYMBOL var
+    | help_var SYMBOL help_var
     ;
-help:
-    var
-    | help SYMBOL var
-    | help_str
 
-// Κανόνας για την συνάρτηση len και την print
+// Κανόνας για την συνάρτηση len και την print και την scan
 scan_len_print: 
-    keyword_val OPEN_PARENTHESIS var CLOSE_PARENTHESIS { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call"); $$ = $1}
-    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  {if ($1 != 4) yyerror("Invalid function call"); $$ = $1;}
-    | keyword_val OPEN_PARENTHESIS STRINGS CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); $$ = $1;}
+    keyword_val OPEN_PARENTHESIS var CLOSE_PARENTHESIS { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");}
+    keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  {if ($1 != 4) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS STRINGS CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call");}
     ;
 // Κανόνας για την συνάρτηση cmp
 cmp_print: 
-    keyword_val OPEN_PARENTHESIS IDENTIFIERS SYMBOL IDENTIFIERS CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1;}
-    | keyword_val OPEN_PARENTHESIS STRINGS SYMBOL STRINGS CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1;}
-    | keyword_val OPEN_PARENTHESIS STRINGS SYMBOL IDENTIFIERS CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1;}
-    | keyword_val OPEN_PARENTHESIS IDENTIFIERS SYMBOL STRINGS CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1;}
+    keyword_val OPEN_PARENTHESIS cmp_helper CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call");}
     ;
-// Κανόνας για την συνάρτηση print. !!!!!ΔΕΝ ΕΧΕΙ ΥΛΟΠΟΙΗΘΕΙ ΓΙΑ ΠΟΛΛΑ 
-print: 
-    keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 5) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS help CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call");} //!!!!!!!!!!1 NOT WORK BECAUSE OF CMP CONFILICT
+cmp_helper:
+    IDENTIFIERS SYMBOL IDENTIFIERS
+    | STRINGS SYMBOL STRINGS
+    | STRINGS SYMBOL IDENTIFIERS
+    | IDENTIFIERS SYMBOL STRINGS
+    | cmp_helper SYMBOL cmp_helper
     ;
+// Κανόνας για την συνάρτηση print.
+print : 
+    keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call");}
+    ;
+
 func_call:
     scan_len_print
     | cmp_print
