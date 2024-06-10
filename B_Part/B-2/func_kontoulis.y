@@ -1,4 +1,4 @@
-func_call:
+/* func_call:
     keyword_val OPEN_PARENTHESIS IDENTIFIERS CLOSE_PARENTHESIS 
         {if($1 != 3) yyerror("Invalid function call");}
     | keyword OPEN_PARENTHESIS IDENTIFIERS SYMBOL IDENTIFIERS CLOSE_PARENTHESIS {
@@ -18,7 +18,7 @@ func_call:
         if(!strcmp($1, "cmp"))
                 $$ = $1;
     }
-    ;
+    ; */
 
 
 // COMMA FOR ASSIGNMENT
