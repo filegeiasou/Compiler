@@ -47,18 +47,10 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 %token END
 
 /* Orismos proteraiothtwn sta tokens */
-%type <dval> num
-%type <sval> operator
-%type <sval> keyword
-%type <sval> declaration
-%type <dval> assignment
-%type <dval> expr
-%type <ival> oper_val
-%type <ival> keyword_val
-%type <ival> scan_len_print
-%type <ival> cmp_print
+%type <dval> num assignment expr help_num
+%type <sval> operator keyword declaration var 
+%type <ival> oper_val keyword_val scan_len_print cmp_print arr 
 /* %type <sval> func_call */
-%type <sval> var
 
 %left '+' '-'
 %left '*' '/'
@@ -79,8 +71,8 @@ line:
     | num END { printf("Result: %f\n", $1); }
     | operator END {printf("Operator: %s\n", $1);}
     | declaration END {printf("Valid declaration\n");}
-    | assignment END {printf("Valid assignment of\n");}
-    | arr END {printf("Valid array\n");}
+    | assignment END {printf("Valid assignment\n");}
+    /* | arr END {printf("Valid array\n");} */
     | func_call END {printf("Valid function call\n");}
     ;
 keyword: 
@@ -201,21 +193,35 @@ declaration:
     | keyword_val var oper_val num { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type");}
     | keyword_val keyword_val var { if ($1 != 2 || $2 != 1) yyerror("Invalid declaration type");}
     | keyword_val keyword_val var oper_val num { if ($1 != 2 || $2 != 1 || $4 != 12) yyerror("Invalid declaration type");}
-    /* | keyword_val var eq_oper OPEN_BRACE integer_sym CLOSE_BRACE {$$ = $1;} */
+    | keyword_val var oper_val arr {if ($1 != 1 || $3 != 12 ) yyerror("Invalid declaration type");} 
     ;
 
-// Κανόνες για ανάθεση
-assignment:
-    /* IDENTIFIERS eq_oper num {$$ = $3;}  */
-    help_var oper_val num {if($2 == 12) $$ = $3; else yyerror("Invalid assignment");}
-    ;
+// Κανόνες για ανάθεση τιμών 
+assignment: 
+    help_var oper_val help_num {if($2 == 12) $$ = $3; else yyerror("Invalid assignment");}
+    | help_var oper_val help_arr {if($2 == 12) $$ = 1; else yyerror("Invalid assignment");}
+    | help_var oper_val help_var {if($2 == 12) $$ = 1; else yyerror("Invalid assignment");}
+    | help_var oper_val help_str {if($2 == 12) $$ = 1; else yyerror("Invalid assignment");}
 
+    // Multiple types (up to 2) 
+    /* | help_arr oper_val help_num help_arr {if($2 == 12) ; else yyerror("Invalid assignment");}
+    | help_arr oper_val help_num help_var {if($2 == 12) ; else yyerror("Invalid assignment");}
+    | help_arr oper_val help_num help_str {if($2 == 12) ; else yyerror("Invalid assignment");}
+
+    | help_arr oper_val help_arr help_arr {if($2 == 12) ; else yyerror("Invalid assignment");}
+    | help_arr oper_val help_arr help_var {if($2 == 12) ; else yyerror("Invalid assignment");}
+    | help_arr oper_val help_arr help_num {if($2 == 12) ; else yyerror("Invalid assignment");}
+
+    | help_arr oper_val help_var help_arr {if($2 == 12) ; else yyerror("Invalid assignment");}
+    | help_arr oper_val help_var help_var {if($2 == 12) ; else yyerror("Invalid assignment");}
+    | help_arr oper_val help_var help_num {if($2 == 12) ; else yyerror("Invalid assignment");} */
+    ;
 // Κανόνας για πίνακες
 arr:    
-    OPEN_BRACE help_str CLOSE_BRACE   {}
-    | OPEN_BRACE help_num CLOSE_BRACE  {}
-    | var OPEN_BRACE INTEGER CLOSE_BRACE {} 
-    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); }
+    OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1;}
+    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2;}
+    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3;} 
+    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4;}
     ;
 // Βοηθητικοί κανόνες για κόμματα (STRINGS, NUMBERS, VARIABLES)
 help_str: 
@@ -223,12 +229,16 @@ help_str:
     | help_str SYMBOL STRINGS
     ;
 help_num: 
-    num
+    num { $$ = $1;}
     | help_num SYMBOL num
     ;
 help_var: 
     var
     | help_var SYMBOL var
+    ;
+help_arr:
+    arr
+    | help_arr SYMBOL arr
     ;
 help:
     var
@@ -259,7 +269,6 @@ func_call:
     | cmp_print
     | print
     ;
-
 %%
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
    apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h
