@@ -626,7 +626,7 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 #include <string.h>
 #include <stdlib.h>
 /* Header file containing all the required tokens */
-#include "simple-code.tab.h"  // Include the Bison header
+#include "syntax_analyzer.tab.h"  // Include the Bison header
 void handle_comment(); // definition of function to handle multiline comments
 
 int line = 1; // Current line counter
