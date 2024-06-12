@@ -77,9 +77,9 @@ line:
     END
     | num END { printf("Result: %f\n", $1); }
     | operator END {printf("Operator: %s\n", $1);}
-    | declaration END {printf("Valid declaration\n");}
-    | assignment END {printf("Valid assignment\n");}
-    | func_call END {printf("Valid function call\n");}
+    | declaration END {printf("Valid declaration\n"); cor_expr++;}
+    | assignment END {printf("Valid assignment\n"); cor_expr++;}
+    | func_call END {printf("Valid function call\n"); cor_expr++;}
     ;
 keyword: 
     KEYWORD { $$ = strdup(yytext);}
@@ -206,21 +206,21 @@ expr:
     ;
 // Κανόνες για αριθμούς
 num:
-    INTEGER { $$ = atof(yytext); }
-    | FLOAT { $$ = atof(yytext);}
-    | expr  { $$ = $1; }
+    INTEGER { $$ = atof(yytext); cor_words++; }
+    | FLOAT { $$ = atof(yytext); cor_words++; }
+    | expr  { $$ = $1; cor_words++;}
     ;
 // Κανόνες για μεταβλητές
 var: 
-    IDENTIFIERS { $$ = strdup(yytext);}
+    IDENTIFIERS { $$ = strdup(yytext); cor_words++; }
     ;
 
 // Κανόνας για πίνακες
 arr:    
-    OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1; val_com=0}
-    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2; val_com=0}
-    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0} 
-    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0} //concat array
+    OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1; val_com=0; cor_words++;}
+    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2; val_com=0; cor_words++;}
+    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0; cor_words++;} 
+    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0; cor_words++;} //concat array
     ;
 
 // Βοηθητικοί κανόνες για κόμματα (STRINGS, NUMBERS, VARIABLES)
@@ -303,7 +303,7 @@ help_cmp:
     ;
 // Κανόνας για την συνάρτηση scan, len και την print (όταν όρισμα είναι ένα)
 scan_len_print: 
-    keyword_val OPEN_PARENTHESIS var CLOSE_PARENTHESIS { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call"); printf("SCAN "); $$ = $1}
+    keyword_val OPEN_PARENTHESIS var CLOSE_PARENTHESIS { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call"); printf("SCAN "); $$ = $1;}
     | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  {if ($1 != 4) yyerror("Invalid function call"); printf("SCAN "); $$ = $1;}
     | keyword_val OPEN_PARENTHESIS STRINGS CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); printf("SCAN "); $$ = $1;}
     ;
