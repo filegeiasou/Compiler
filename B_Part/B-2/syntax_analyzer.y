@@ -26,10 +26,13 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         extern char *yytext;
         extern void yyerror(char *);
         extern int yylex(void);
+        extern int line; // Μετρητής γραμμών κώδικα
+        int errflag=0; // Μετρητής σφαλμάτων
         int cor_words = 0;
         int cor_numr = 0;
         int inc_words = 0;
         int inc_numr = 0;
+        FILE *yyin;
 %}
 
 /* Orismos twn anagnwrisimwn lektikwn monadwn. */
@@ -74,6 +77,7 @@ line:
     | assignment END {printf("Valid assignment\n");}
     /* | arr END {printf("Valid array\n");} */
     | func_call END {printf("Valid function call\n");}
+    | help_print END {printf("Valid print\n");}
     ;
 keyword: 
     KEYWORD { $$ = strdup(yytext);}
@@ -223,6 +227,7 @@ arr:
     | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3;} 
     | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4;}
     ;
+
 // Βοηθητικοί κανόνες για κόμματα (STRINGS, NUMBERS, VARIABLES)
 help_str: 
     STRINGS
@@ -240,35 +245,52 @@ help_arr:
     arr
     | help_arr SYMBOL arr
     ;
-help:
-    var
-    | help SYMBOL var
-    | help_str
-
+// Βοηθητικοί κανόνες για συναρτήσεις
+help_print:
+    help_cmp SYMBOL var
+    | help_cmp SYMBOL STRINGS
+    | help_print SYMBOL var
+    | help_print SYMBOL STRINGS
+    ;
+help_cmp:
+    var SYMBOL var
+    | STRINGS SYMBOL STRINGS
+    | STRINGS SYMBOL var
+    | var SYMBOL STRINGS
+    ;
 // Κανόνας για την συνάρτηση len και την print
 scan_len_print: 
-    keyword_val OPEN_PARENTHESIS var CLOSE_PARENTHESIS { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call"); $$ = $1}
-    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  {if ($1 != 4) yyerror("Invalid function call"); $$ = $1;}
-    | keyword_val OPEN_PARENTHESIS STRINGS CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); $$ = $1;}
+    keyword_val OPEN_PARENTHESIS var CLOSE_PARENTHESIS { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call"); printf("SCAN "); $$ = $1}
+    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  {if ($1 != 4) yyerror("Invalid function call"); printf("SCAN "); $$ = $1;}
+    | keyword_val OPEN_PARENTHESIS STRINGS CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); printf("SCAN "); $$ = $1;}
     ;
 // Κανόνας για την συνάρτηση cmp
 cmp_print: 
-    keyword_val OPEN_PARENTHESIS IDENTIFIERS SYMBOL IDENTIFIERS CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1;}
-    | keyword_val OPEN_PARENTHESIS STRINGS SYMBOL STRINGS CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1;}
-    | keyword_val OPEN_PARENTHESIS STRINGS SYMBOL IDENTIFIERS CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1;}
-    | keyword_val OPEN_PARENTHESIS IDENTIFIERS SYMBOL STRINGS CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1;}
+    keyword_val OPEN_PARENTHESIS help_cmp CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1; printf("CMP ");}
     ;
-// Κανόνας για την συνάρτηση print. !!!!!ΔΕΝ ΕΧΕΙ ΥΛΟΠΟΙΗΘΕΙ ΓΙΑ ΠΟΛΛΑ 
+// Κανόνας για την συνάρτηση print. 
 print: 
-    keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 5) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS help CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call");} //!!!!!!!!!!1 NOT WORK BECAUSE OF CMP CONFILICT
+    keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call"); else printf("PRINT ");}
+    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 5) yyerror("Invalid function call"); else printf("PRINT ");}
+    | keyword_val OPEN_PARENTHESIS help_print CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call"); else printf("PRINT ");} 
     ;
 func_call:
     scan_len_print
     | cmp_print
     | print
     ;
+
+// Κανόνας για άνοιγμα/κλείσιμο σώματος {} συναρτήσεων
+/* body  : OPEN_BRACKET all CLOSE_BRACKET
+      | OPEN_BRACKET END all CLOSE_BRACKET
+      | OPEN_BRACKET all END CLOSE_BRACKET
+      | OPEN_BRACKET END all END CLOSE_BRACKET
+      ; */
+
+// Βοηθητικός κανόνας για χρήση σε άλλους κανόνες
+/* all:
+    |
+    ; */
 %%
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
    apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h
@@ -281,8 +303,16 @@ void yyerror(char *s) {
 /* H synarthsh main pou apotelei kai to shmeio ekkinhshs tou programmatos.
    Sthn sygkekrimenh periptwsh apla kalei thn synarthsh yyparse tou Bison
    gia na ksekinhsei h syntaktikh analysh. */
-int main(void) {
-    if (yyparse() == 0)
+int main(int argc,char **argv) {
+
+    if(argc == 2)
+	    yyin=fopen(argv[1],"r");
+	else
+		yyin=stdin;
+
+	int parse = yyparse();    
+
+    if (parse == 0)
         fprintf(stderr, "Successful parsing.\n");
     else
         fprintf(stderr, "Error found.\n");
