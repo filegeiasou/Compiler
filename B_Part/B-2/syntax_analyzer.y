@@ -32,7 +32,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         int var_com = 0, val_com = 0, val_arr_com = 0, val_ass_com = 0;
 
         int errflag=0; // Μετρητής σφαλμάτων
-        int cor_words = 0;
+        extern int cor_words; // μετρήτης σωστών λέξεων (flex)
         int cor_expr = 0;
         int inc_words = 0;
         int inc_expr = 0;
@@ -48,10 +48,8 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 
 %token <dval> INTEGER FLOAT
 %token <sval> OPERATORS IDENTIFIERS STRINGS KEYWORD
-%token DELIMITER SYMBOL
-%token OPEN_BRACKET CLOSE_BRACKET OPEN_PARENTHESIS CLOSE_PARENTHESIS
-%token OPEN_BRACE CLOSE_BRACE UNKNOWN_TOKEN
-%token END
+%token DELIMITER SYMBOL OPEN_BRACKET CLOSE_BRACKET OPEN_PARENTHESIS CLOSE_PARENTHESIS
+%token OPEN_BRACE CLOSE_BRACE UNKNOWN_TOKEN END
 
 /* Orismos proteraiothtwn sta tokens */
 %type <dval> num assignment expr help_num
@@ -206,21 +204,21 @@ expr:
     ;
 // Κανόνες για αριθμούς
 num:
-    INTEGER { $$ = atof(yytext); cor_words++; }
-    | FLOAT { $$ = atof(yytext); cor_words++; }
-    | expr  { $$ = $1; cor_words++;}
+    INTEGER { $$ = atof(yytext); }
+    | FLOAT { $$ = atof(yytext); }
+    | expr  { $$ = $1;}
     ;
 // Κανόνες για μεταβλητές
 var: 
-    IDENTIFIERS { $$ = strdup(yytext); cor_words++; }
+    IDENTIFIERS { $$ = strdup(yytext); }
     ;
 
 // Κανόνας για πίνακες
 arr:    
-    OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1; val_com=0; cor_words++;}
-    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2; val_com=0; cor_words++;}
-    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0; cor_words++;} 
-    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0; cor_words++;} //concat array
+    OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1; val_com=0;}
+    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2; val_com=0;}
+    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0;} 
+    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0;} //concat array
     ;
 
 // Βοηθητικοί κανόνες για κόμματα (STRINGS, NUMBERS, VARIABLES)

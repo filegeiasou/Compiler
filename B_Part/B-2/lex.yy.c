@@ -622,23 +622,24 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 /* The following C code is for the definition of the required header files and variables.
    Anything between %{ and %} is transferred as is to the C file that Flex will create. */
 #line 25 "lexical_analyzer.l"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-/* Header file containing all the required tokens */
-#include "syntax_analyzer.tab.h"  // Include the Bison header
-void handle_comment(); // definition of function to handle multiline comments
+    #include <stdio.h>
+    #include <string.h>
+    #include <stdlib.h>
+    /* Header file containing all the required tokens */
+    #include "syntax_analyzer.tab.h"  // Include the Bison header
+    void handle_comment(); // definition of function to handle multiline comments
 
-int line = 1; // Current line counter
+    int line = 1; // Current line counter
+    int cor_words = 0; // Counter for correct words
 
-#line 634 "lex.yy.c"
+#line 635 "lex.yy.c"
 /* Below are the names and the corresponding regular expression for each token.
    With the use of names we can make it easier to use these regular expressions,
    instead of having to write them all the time, making the program confusing. */
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
    The return command allows the return of a numerical value through the yylex() function,
    allowing us to return numerican values that we have defined in the token.h file. */
-#line 641 "lex.yy.c"
+#line 642 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -855,9 +856,9 @@ YY_DECL
 		}
 
 	{
-#line 60 "lexical_analyzer.l"
+#line 61 "lexical_analyzer.l"
 
-#line 860 "lex.yy.c"
+#line 861 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -916,110 +917,110 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 61 "lexical_analyzer.l"
+#line 62 "lexical_analyzer.l"
 { handle_comment(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 62 "lexical_analyzer.l"
+#line 63 "lexical_analyzer.l"
 { /* ignore line comments */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 63 "lexical_analyzer.l"
+#line 64 "lexical_analyzer.l"
 { return DELIMITER; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 64 "lexical_analyzer.l"
-{ return INTEGER; }
+#line 65 "lexical_analyzer.l"
+{ return INTEGER; cor_words++;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 65 "lexical_analyzer.l"
-{ return FLOAT; }
+#line 66 "lexical_analyzer.l"
+{ return FLOAT; cor_words++;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 66 "lexical_analyzer.l"
-{ return STRINGS; }
+#line 67 "lexical_analyzer.l"
+{ return STRINGS; cor_words++;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 67 "lexical_analyzer.l"
+#line 68 "lexical_analyzer.l"
 { /* don't return anything */ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 68 "lexical_analyzer.l"
-{ return OPERATORS; }
+#line 69 "lexical_analyzer.l"
+{ return OPERATORS; cor_words++;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 69 "lexical_analyzer.l"
-{ return KEYWORD; }
+#line 70 "lexical_analyzer.l"
+{ return KEYWORD; cor_words++;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 70 "lexical_analyzer.l"
-{ return IDENTIFIERS; }
+#line 71 "lexical_analyzer.l"
+{ return IDENTIFIERS; cor_words++;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 71 "lexical_analyzer.l"
+#line 72 "lexical_analyzer.l"
 { return OPEN_BRACKET; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 72 "lexical_analyzer.l"
+#line 73 "lexical_analyzer.l"
 { return CLOSE_BRACKET; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 73 "lexical_analyzer.l"
+#line 74 "lexical_analyzer.l"
 { return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 74 "lexical_analyzer.l"
+#line 75 "lexical_analyzer.l"
 { return CLOSE_PARENTHESIS; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 75 "lexical_analyzer.l"
+#line 76 "lexical_analyzer.l"
 { return OPEN_BRACE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 76 "lexical_analyzer.l"
+#line 77 "lexical_analyzer.l"
 { return CLOSE_BRACE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 77 "lexical_analyzer.l"
+#line 78 "lexical_analyzer.l"
 { return SYMBOL; }
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 78 "lexical_analyzer.l"
+#line 79 "lexical_analyzer.l"
 { line++; return END; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 79 "lexical_analyzer.l"
+#line 80 "lexical_analyzer.l"
 { printf("#END-OF-FILE#\n"); exit(0); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 80 "lexical_analyzer.l"
+#line 81 "lexical_analyzer.l"
 { return UNKNOWN_TOKEN; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 82 "lexical_analyzer.l"
+#line 83 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 1022 "lex.yy.c"
+#line 1023 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2022,7 +2023,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 82 "lexical_analyzer.l"
+#line 83 "lexical_analyzer.l"
 
 
 // Implementation of function that handles multi-line comments

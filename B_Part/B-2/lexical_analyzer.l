@@ -22,14 +22,15 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
    Anything between %{ and %} is transferred as is to the C file that Flex will create. */
 
 %{
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-/* Header file containing all the required tokens */
-#include "syntax_analyzer.tab.h"  // Include the Bison header
-void handle_comment(); // definition of function to handle multiline comments
+    #include <stdio.h>
+    #include <string.h>
+    #include <stdlib.h>
+    /* Header file containing all the required tokens */
+    #include "syntax_analyzer.tab.h"  // Include the Bison header
+    void handle_comment(); // definition of function to handle multiline comments
 
-int line = 1; // Current line counter
+    int line = 1; // Current line counter
+    int cor_words = 0; // Counter for correct words
 
 %}
 
@@ -61,13 +62,13 @@ WHITESPACE        [ \t]+
 "/*"                { handle_comment(); }
 {LINE_COMMENT}      { /* ignore line comments */ }
 {DELIMITER}         { return DELIMITER; }
-{INTEGER}           { return INTEGER; }
-{FLOAT}             { return FLOAT; }
-{STRINGS}           { return STRINGS; }
+{INTEGER}           { return INTEGER; cor_words++;}
+{FLOAT}             { return FLOAT; cor_words++;}
+{STRINGS}           { return STRINGS; cor_words++;}
 {WHITESPACE}        { /* don't return anything */ }
-{OPERATORS}         { return OPERATORS; }
-{KEYWORDS}          { return KEYWORD; }
-{IDENTIFIERS}       { return IDENTIFIERS; }
+{OPERATORS}         { return OPERATORS; cor_words++;}
+{KEYWORDS}          { return KEYWORD; cor_words++;}
+{IDENTIFIERS}       { return IDENTIFIERS; cor_words++;}
 {OPEN_BRACKET}      { return OPEN_BRACKET; }
 {CLOSE_BRACKET}     { return CLOSE_BRACKET; }
 {OPEN_PARENTHESIS}  { return OPEN_PARENTHESIS; }
