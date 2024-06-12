@@ -23,3 +23,6 @@ x1, list1, string = 0, [1, 2, 3], "HELLO"
 
 1 > 2
 3 <= 4
+
+/*sjsa
+*/
