@@ -56,7 +56,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 /* Orismos proteraiothtwn sta tokens */
 %type <dval> num assignment expr help_num
 %type <sval> operator keyword declaration var str func_decl
-%type <ival> oper_val keyword_val scan_len_print cmp_print arr 
+%type <ival> oper_val keyword_val scan_len_print cmp_print arr if_while_grammar
 /* %type <sval> func_call */
 
 %left '+' '-'
@@ -75,13 +75,14 @@ program:
     ;
 valid:
     END
-    /* | num END { printf("Result: %f\n", $1); }
-    | operator END {printf("Operator: %s\n", $1);} */
+    | num END { printf("Result: %f\n", $1); }
+    | operator END {printf("Operator: %s\n", $1);}
     | declaration END {printf("Valid declaration\n"); cor_expr++;}
     | assignment END {printf("Valid assignment\n"); cor_expr++;}
     | func_call END {printf("Valid function call\n"); cor_expr++;}
     | func_decl END {printf("Valid function declaration\n"); cor_expr++;}
-    | if_grammar END {printf("Valid if statement\n"); cor_expr++;}
+    | if_while_grammar END {printf("Valid if/while statement\n"); cor_expr++;}
+    | for_grammar END {printf("Valid for statement\n"); cor_expr++;}
     | body END {printf("Valid body\n");}
     | EOP   { print_report(cor_words); }
     | UNKNOWN_TOKEN {inc_words++;}
@@ -106,6 +107,9 @@ keyword_val:
         if(!strcmp($1, "func")) $$ = 7;
         // for conditionals
         if(!strcmp($1, "if")) $$ = 8;
+        if(!strcmp($1, "else")) $$ = 9;
+        if(!strcmp($1, "while")) $$ = 10;
+        if(!strcmp($1, "for")) $$ = 11;
     }
 // Rule for operators
 oper_val:
@@ -150,8 +154,6 @@ expr:
             case 14: $$ = $1 - $3; break;
             case 15: $$ = $1 * $3; break;
             case 16: $$ = $1 / $3; break;
-            case 17: $$ = $1 + 1; break;
-            case 18: $$ = $1 - 1; break;
         }
     } 
     | expr oper_val num {
@@ -267,11 +269,17 @@ declaration:
 
 // Κανόνες για ανάθεση τιμών 
 assignment: 
-    help_var oper_val help_num {if($2 != 12 || var_com != val_com)  yyerror("Invalid assignment1"); var_com = 0; val_com = 0;}
-    | help_var oper_val help_arr {if($2 != 12 || val_arr_com) yyerror("Invalid assignment2"); var_com = 0; val_arr_com = 0;}
-    | help_var oper_val help_var {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment3"); var_com = 0; val_com = 0;}
-    | help_var oper_val help_str {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment4"); var_com = 0; val_com = 0;}
-    | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment5"); var_com = 0; val_ass_com = 0;}
+    help_var oper_val help_num {if($2 != 12 || var_com != val_com)  yyerror("Invalid assignment"); var_com = 0; val_com = 0;}
+    | help_var oper_val help_arr {if($2 != 12 || val_arr_com) yyerror("Invalid assignment"); var_com = 0; val_arr_com = 0;}
+    | help_var oper_val help_var {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0;}
+    | help_var oper_val help_str {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0;}
+    | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0;}
+    | num oper_val{
+        switch($2) {
+            case 17: $$ = $1 + 1; break;
+            case 18: $$ = $1 - 1; break;
+        }
+    }
     ;
  
 // Βοηθητικοί κανόνες για συναρτήσεις print και cmp
@@ -341,6 +349,11 @@ body:
     | OPEN_BRACKET all END CLOSE_BRACKET
     | OPEN_BRACKET END all END CLOSE_BRACKET
     ;
+   
+cond_body:
+    body
+    | END body
+    ;
 // Κανόνας για στοιχεία στο body συνάρτησης
 all:
     func_call DELIMITER
@@ -353,14 +366,24 @@ all:
     | all END assignment DELIMITER
     | all END declaration DELIMITER
     ;
-// Κανόνας για την δομή if 
-if_grammar:
-    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS body {if ($1 != 8) yyerror("Invalid if statement");}
-    | keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS body keyword_val body{if ($1 != 8) yyerror("Invalid if statement");}
-    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS body {if ($1 != 8) yyerror("Invalid if statement");}
-    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS body keyword_val body{if ($1 != 8) yyerror("Invalid if statement");}
+// Κανόνας για την δομή if και while
+if_while_grammar:
+    // $$ = $1 θέτω με το keyword που πήρε για να ξέρω αμα έιναι η if για να ξέρω αν να βάλω την else
+    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1} 
+    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1}
+    | if_while_grammar keyword_val cond_body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement");}
+    | if_while_grammar END keyword_val cond_body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement");} 
     ;
-// Κανόνας για την δομή while
+//Κανόνας για την δομή for !!! ΘΕΛΕΙ ΔΟΥΛΕΙΑ ΑΚΟΜΑ
+for_grammar:
+    keyword_val OPEN_PARENTHESIS assignment DELIMITER expr DELIMITER assignment CLOSE_PARENTHESIS {
+        if($1 != 11) yyerror("Invalid for statement");
+        if($5 < 5 || $5 > 10) yyerror("Not a comparsison");
+        }
+    | keyword_val OPEN_PARENTHESIS assignment DELIMITER var_oper DELIMITER assignment DELIMITER assignment CLOSE_PARENTHESIS {
+        if($1 != 11) yyerror("Invalid for statement");
+        }
+    ;
 
 %%
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
