@@ -53,6 +53,7 @@ CLOSE_PARENTHESIS \)
 OPEN_BRACE        \[
 CLOSE_BRACE       \]
 WHITESPACE        [ \t]+
+%x REALLYEND
 
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
    The return command allows the return of a numerical value through the yylex() function,
@@ -62,13 +63,13 @@ WHITESPACE        [ \t]+
 "/*"                { handle_comment(); }
 {LINE_COMMENT}      { /* ignore line comments */ }
 {DELIMITER}         { return DELIMITER; }
-{INTEGER}           { return INTEGER; cor_words++;}
-{FLOAT}             { return FLOAT; cor_words++;}
-{STRINGS}           { return STRINGS; cor_words++;}
+{INTEGER}           { return INTEGER;}
+{FLOAT}             { return FLOAT;}
+{STRINGS}           { return STRINGS;}
 {WHITESPACE}        { /* don't return anything */ }
-{OPERATORS}         { return OPERATORS; cor_words++;}
-{KEYWORDS}          { return KEYWORD; cor_words++;}
-{IDENTIFIERS}       { return IDENTIFIERS; cor_words++;}
+{OPERATORS}         { return OPERATORS;}
+{KEYWORDS}          { return KEYWORD;}
+{IDENTIFIERS}       { return IDENTIFIERS;}
 {OPEN_BRACKET}      { return OPEN_BRACKET; }
 {CLOSE_BRACKET}     { return CLOSE_BRACKET; }
 {OPEN_PARENTHESIS}  { return OPEN_PARENTHESIS; }
@@ -77,8 +78,10 @@ WHITESPACE        [ \t]+
 {CLOSE_BRACE}       { return CLOSE_BRACE; }
 {SYMBOL}            { return SYMBOL; }
 \n                  { line++; return END; }
-<<EOF>>             { printf("#END-OF-FILE#\n"); exit(0); }
 .                   { return UNKNOWN_TOKEN; }
+
+<INITIAL><<EOF>>  { BEGIN(REALLYEND); printf("#END-OF-FILE#\n"); return EOP; }
+<REALLYEND><<EOF>> {yyterminate();}
 
 %%
 

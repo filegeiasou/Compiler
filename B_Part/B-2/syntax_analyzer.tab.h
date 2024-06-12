@@ -45,16 +45,17 @@
      IDENTIFIERS = 261,
      STRINGS = 262,
      KEYWORD = 263,
-     DELIMITER = 264,
-     SYMBOL = 265,
-     OPEN_BRACKET = 266,
-     CLOSE_BRACKET = 267,
-     OPEN_PARENTHESIS = 268,
-     CLOSE_PARENTHESIS = 269,
-     OPEN_BRACE = 270,
-     CLOSE_BRACE = 271,
-     UNKNOWN_TOKEN = 272,
-     END = 273
+     SYMBOL = 264,
+     OPEN_PARENTHESIS = 265,
+     CLOSE_PARENTHESIS = 266,
+     OPEN_BRACE = 267,
+     CLOSE_BRACE = 268,
+     END = 269,
+     EOP = 270,
+     UNKNOWN_TOKEN = 271,
+     DELIMITER = 272,
+     OPEN_BRACKET = 273,
+     CLOSE_BRACKET = 274
    };
 #endif
 /* Tokens.  */
@@ -64,16 +65,17 @@
 #define IDENTIFIERS 261
 #define STRINGS 262
 #define KEYWORD 263
-#define DELIMITER 264
-#define SYMBOL 265
-#define OPEN_BRACKET 266
-#define CLOSE_BRACKET 267
-#define OPEN_PARENTHESIS 268
-#define CLOSE_PARENTHESIS 269
-#define OPEN_BRACE 270
-#define CLOSE_BRACE 271
-#define UNKNOWN_TOKEN 272
-#define END 273
+#define SYMBOL 264
+#define OPEN_PARENTHESIS 265
+#define CLOSE_PARENTHESIS 266
+#define OPEN_BRACE 267
+#define CLOSE_BRACE 268
+#define END 269
+#define EOP 270
+#define UNKNOWN_TOKEN 271
+#define DELIMITER 272
+#define OPEN_BRACKET 273
+#define CLOSE_BRACKET 274
 
 
 
@@ -87,7 +89,7 @@ typedef union YYSTYPE
     char *sval;
 }
 /* Line 1529 of yacc.c.  */
-#line 91 "syntax_analyzer.tab.h"
+#line 93 "syntax_analyzer.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
