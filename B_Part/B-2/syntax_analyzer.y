@@ -26,10 +26,13 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         extern char *yytext;
         extern void yyerror(char *);
         extern int yylex(void);
+        extern int line; // Μετρητής γραμμών κώδικα
+        int errflag=0; // Μετρητής σφαλμάτων
         int cor_words = 0;
         int cor_numr = 0;
         int inc_words = 0;
         int inc_numr = 0;
+        FILE *yyin;
 %}
 
 /* Orismos twn anagnwrisimwn lektikwn monadwn. */
@@ -269,6 +272,18 @@ func_call:
     | cmp_print
     | print
     ;
+
+// Κανόνας για άνοιγμα/κλείσιμο σώματος {} συναρτήσεων
+/* body  : OPEN_BRACKET all CLOSE_BRACKET
+      | OPEN_BRACKET END all CLOSE_BRACKET
+      | OPEN_BRACKET all END CLOSE_BRACKET
+      | OPEN_BRACKET END all END CLOSE_BRACKET
+      ; */
+
+// Βοηθητικός κανόνας για χρήση σε άλλους κανόνες
+/* all:
+    |
+    ; */
 %%
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
    apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h
@@ -278,11 +293,21 @@ void yyerror(char *s) {
     exit(1);
 }
 
+
+
 /* H synarthsh main pou apotelei kai to shmeio ekkinhshs tou programmatos.
    Sthn sygkekrimenh periptwsh apla kalei thn synarthsh yyparse tou Bison
    gia na ksekinhsei h syntaktikh analysh. */
-int main(void) {
-    if (yyparse() == 0)
+int main(int argc,char **argv) {
+
+    if(argc == 2)
+	      yyin=fopen(argv[1],"r");
+	else
+		yyin=stdin;
+
+	int parse = yyparse();    
+
+    if (parse == 0)
         fprintf(stderr, "Successful parsing.\n");
     else
         fprintf(stderr, "Error found.\n");
