@@ -20,3 +20,8 @@ Valid assignment
 Result: 0.000000
 Result: 1.000000
 #END-OF-FILE#
+-------Report:-------
+Correct Words: 70
+Correct Expressions: 19
+Incorrect Words: 0
+Incorrect Expressions: 0

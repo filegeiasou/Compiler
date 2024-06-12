@@ -26,17 +26,17 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         extern char *yytext;
         extern void yyerror(char *);
         extern int yylex(void);
-        extern int line; // Μετρητής γραμμών κώδικα
+        void print_report(int);
+        FILE *yyin;
 
+        extern int line; // Μετρητής γραμμών κώδικα
         // Μετρητές για μέτρηση των κομμάτων
         int var_com = 0, val_com = 0, val_arr_com = 0, val_ass_com = 0;
-
         int errflag=0; // Μετρητής σφαλμάτων
         extern int cor_words; // μετρήτης σωστών λέξεων (flex)
         int cor_expr = 0;
         int inc_words = 0;
         int inc_expr = 0;
-        FILE *yyin;
 %}
 
 /* Orismos twn anagnwrisimwn lektikwn monadwn. */
@@ -48,8 +48,9 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 
 %token <dval> INTEGER FLOAT
 %token <sval> OPERATORS IDENTIFIERS STRINGS KEYWORD
-%token DELIMITER SYMBOL OPEN_BRACKET CLOSE_BRACKET OPEN_PARENTHESIS CLOSE_PARENTHESIS
-%token OPEN_BRACE CLOSE_BRACE UNKNOWN_TOKEN END
+%token  SYMBOL OPEN_PARENTHESIS CLOSE_PARENTHESIS
+%token OPEN_BRACE CLOSE_BRACE END EOP  
+%token UNKNOWN_TOKEN DELIMITER OPEN_BRACKET CLOSE_BRACKET
 
 /* Orismos proteraiothtwn sta tokens */
 %type <dval> num assignment expr help_num
@@ -69,21 +70,22 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 				onoma : kanonas { kwdikas C } */
 
 program:
-    | program line
+    | program valid
     ;
-line:
+valid:
     END
     | num END { printf("Result: %f\n", $1); }
     | operator END {printf("Operator: %s\n", $1);}
     | declaration END {printf("Valid declaration\n"); cor_expr++;}
     | assignment END {printf("Valid assignment\n"); cor_expr++;}
     | func_call END {printf("Valid function call\n"); cor_expr++;}
+    | EOP   { print_report(cor_words); }
     ;
 keyword: 
-    KEYWORD { $$ = strdup(yytext);}
+    KEYWORD { $$ = strdup(yytext); cor_words++;}
     ;
 operator:
-    OPERATORS { $$ = strdup(yytext);}
+    OPERATORS { $$ = strdup(yytext); cor_words++;}
     ;
 // Rule of keywords
 keyword_val:
@@ -204,13 +206,13 @@ expr:
     ;
 // Κανόνες για αριθμούς
 num:
-    INTEGER { $$ = atof(yytext); }
-    | FLOAT { $$ = atof(yytext); }
+    INTEGER { $$ = atof(yytext); cor_words++;} 
+    | FLOAT { $$ = atof(yytext); cor_words++;}
     | expr  { $$ = $1;}
     ;
 // Κανόνες για μεταβλητές
 var: 
-    IDENTIFIERS { $$ = strdup(yytext); }
+    IDENTIFIERS { $$ = strdup(yytext); cor_words++;}
     ;
 
 // Κανόνας για πίνακες
@@ -223,7 +225,7 @@ arr:
 
 // Βοηθητικοί κανόνες για κόμματα (STRINGS, NUMBERS, VARIABLES)
 help_str: 
-    STRINGS
+    STRINGS {cor_words++;}
     | STRINGS SYMBOL help_str {val_com++;}
     ;
 help_num: 
@@ -342,6 +344,14 @@ void yyerror(char *s) {
     exit(1);
 }
 
+void print_report(int cor_words) {
+    printf("-------Report:-------\n");
+    printf("Correct Words: %d\n", cor_words);
+    printf("Correct Expressions: %d\n", cor_expr);
+    printf("Incorrect Words: %d\n", inc_words);
+    printf("Incorrect Expressions: %d\n", inc_expr);
+}
+
 /* H synarthsh main pou apotelei kai to shmeio ekkinhshs tou programmatos.
    Sthn sygkekrimenh periptwsh apla kalei thn synarthsh yyparse tou Bison
    gia na ksekinhsei h syntaktikh analysh. */
@@ -351,17 +361,10 @@ int main(int argc,char **argv) {
 	    yyin=fopen(argv[1],"r");
 	else
 		yyin=stdin;
-
-	int parse = yyparse();    
+	int parse = yyparse();   
 
     if (parse == 0)
-    {
-        fprintf(stderr, "Successful parsing.\n");
-        printf("Correct Words: %d\n", cor_words);
-        printf("Correct Expressions: %d\n", cor_expr);
-        printf("Incorrect Words: %d\n", inc_words);
-        printf("Incorrect Expressions: %d\n", inc_expr);
-    }
+        fprintf(stderr, "Successful parsing.\n");  
     else
         fprintf(stderr, "Error found.\n");
     return 0;
