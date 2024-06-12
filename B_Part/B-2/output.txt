@@ -1,0 +1,22 @@
+Valid declaration
+Valid declaration
+Valid declaration
+Valid assignment
+Valid assignment
+SCAN Valid function call
+SCAN Valid function call
+SCAN Valid function call
+SCAN Valid function call
+CMP Valid function call
+CMP Valid function call
+SCAN Valid function call
+PRINT Valid function call
+CMP PRINT Valid function call
+SCAN PRINT Valid function call
+Valid assignment
+Valid assignment
+Valid assignment
+Valid assignment
+Result: 0.000000
+Result: 1.000000
+#END-OF-FILE#

@@ -27,11 +27,15 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         extern void yyerror(char *);
         extern int yylex(void);
         extern int line; // Μετρητής γραμμών κώδικα
+
+        // Μετρητές για μέτρηση των κομμάτων
+        int var_com = 0, val_com = 0, val_arr_com = 0, val_ass_com = 0;
+
         int errflag=0; // Μετρητής σφαλμάτων
         int cor_words = 0;
-        int cor_numr = 0;
+        int cor_expr = 0;
         int inc_words = 0;
-        int inc_numr = 0;
+        int inc_expr = 0;
         FILE *yyin;
 %}
 
@@ -75,9 +79,7 @@ line:
     | operator END {printf("Operator: %s\n", $1);}
     | declaration END {printf("Valid declaration\n");}
     | assignment END {printf("Valid assignment\n");}
-    /* | arr END {printf("Valid array\n");} */
     | func_call END {printf("Valid function call\n");}
-    | help_print END {printf("Valid print\n");}
     ;
 keyword: 
     KEYWORD { $$ = strdup(yytext);}
@@ -169,6 +171,28 @@ expr:
             case 18: $$ = $1 - 1; break;
         }
     } 
+    | expr oper_val num {
+        switch($2) {
+            case 1: $$ = $1 + $3; break;
+            case 2: $$ = $1 - $3; break;
+            case 3: $$ = $1 * $3; break;
+            case 4: $$ = $1 / $3; break;
+            case 5: $$ = $1 == $3; break;
+            case 6: $$ = $1 != $3; break;
+            case 7: $$ = $1 > $3; break;
+            case 8: $$ = $1 < $3; break;
+            case 9: $$ = $1 >= $3; break;
+            case 10: $$ = $1 <= $3; break;
+            case 11: $$ = (int)$1 % (int)$3; break;
+            case 12: $$ = $3; break;
+            case 13: $$ = $1 + $3; break;
+            case 14: $$ = $1 - $3; break;
+            case 15: $$ = $1 * $3; break;
+            case 16: $$ = $1 / $3; break;
+            case 17: $$ = $1 + 1; break;
+            case 18: $$ = $1 - 1; break;
+        }
+    }
     | oper_val num { 
         switch($1) {
             case 2: $$ = -$2; break;
@@ -191,6 +215,55 @@ var:
     IDENTIFIERS { $$ = strdup(yytext);}
     ;
 
+// Κανόνας για πίνακες
+arr:    
+    OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1; val_com=0}
+    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2; val_com=0}
+    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0} 
+    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0} //concat array
+    ;
+
+// Βοηθητικοί κανόνες για κόμματα (STRINGS, NUMBERS, VARIABLES)
+help_str: 
+    STRINGS
+    | STRINGS SYMBOL help_str {val_com++;}
+    ;
+help_num: 
+    num 
+    | num SYMBOL help_num {val_com++;}
+    ;
+help_var: 
+    var
+    | var SYMBOL help_var {var_com++;}
+    ;
+help_arr:
+    arr
+    | arr SYMBOL help_arr {val_arr_com++;}
+    ;
+// Για διαφορετικούς τύπους αναθέσεις
+help_assign:
+    arr SYMBOL num {val_ass_com++;}
+    | arr SYMBOL STRINGS {val_ass_com++;}
+    | arr SYMBOL var {val_ass_com++;}
+
+    | var SYMBOL num {val_ass_com++;}
+    | var SYMBOL arr {val_ass_com++;}
+    | var SYMBOL STRINGS {val_ass_com++;}
+
+    | STRINGS SYMBOL num {val_ass_com++;}
+    | STRINGS SYMBOL var {val_ass_com++;}
+    | STRINGS SYMBOL arr {val_ass_com++;}
+
+    | num SYMBOL STRINGS {val_ass_com++;}
+    | num SYMBOL var {val_ass_com++;}
+    | num SYMBOL arr {val_ass_com++;}
+
+    | help_assign SYMBOL num {val_ass_com++;}
+    | help_assign SYMBOL STRINGS {val_ass_com++;}
+    | help_assign SYMBOL var {val_ass_com++;}
+    | help_assign SYMBOL arr {val_ass_com++;}
+    ;
+
 // Κανόνας για δήλωση
 declaration:
     keyword_val var {if($1 != 1) yyerror("Invalid declaration type");}
@@ -202,55 +275,25 @@ declaration:
 
 // Κανόνες για ανάθεση τιμών 
 assignment: 
-    help_var oper_val help_num {if($2 == 12) $$ = $3; else yyerror("Invalid assignment");}
-    | help_var oper_val help_arr {if($2 == 12) $$ = 1; else yyerror("Invalid assignment");}
-    | help_var oper_val help_var {if($2 == 12) $$ = 1; else yyerror("Invalid assignment");}
-    | help_var oper_val help_str {if($2 == 12) $$ = 1; else yyerror("Invalid assignment");}
-
-    // Multiple types (up to 2) 
-    /* | help_arr oper_val help_num help_arr {if($2 == 12) ; else yyerror("Invalid assignment");}
-    | help_arr oper_val help_num help_var {if($2 == 12) ; else yyerror("Invalid assignment");}
-    | help_arr oper_val help_num help_str {if($2 == 12) ; else yyerror("Invalid assignment");}
-
-    | help_arr oper_val help_arr help_arr {if($2 == 12) ; else yyerror("Invalid assignment");}
-    | help_arr oper_val help_arr help_var {if($2 == 12) ; else yyerror("Invalid assignment");}
-    | help_arr oper_val help_arr help_num {if($2 == 12) ; else yyerror("Invalid assignment");}
-
-    | help_arr oper_val help_var help_arr {if($2 == 12) ; else yyerror("Invalid assignment");}
-    | help_arr oper_val help_var help_var {if($2 == 12) ; else yyerror("Invalid assignment");}
-    | help_arr oper_val help_var help_num {if($2 == 12) ; else yyerror("Invalid assignment");} */
+    help_var oper_val help_num {if($2 != 12 || var_com != val_com)  yyerror("Invalid assignment1"); var_com = 0; val_com = 0;}
+    | help_var oper_val help_arr {if($2 != 12 || val_arr_com) yyerror("Invalid assignment2"); var_com = 0; val_arr_com = 0;}
+    | help_var oper_val help_var {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment3"); var_com = 0; val_com = 0;}
+    | help_var oper_val help_str {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment4"); var_com = 0; val_com = 0;}
+    | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment5"); var_com = 0; val_ass_com = 0;}
     ;
-// Κανόνας για πίνακες
-arr:    
-    OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1;}
-    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2;}
-    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3;} 
-    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4;}
-    ;
-
-// Βοηθητικοί κανόνες για κόμματα (STRINGS, NUMBERS, VARIABLES)
-help_str: 
-    STRINGS
-    | help_str SYMBOL STRINGS
-    ;
-help_num: 
-    num { $$ = $1;}
-    | help_num SYMBOL num
-    ;
-help_var: 
-    var
-    | help_var SYMBOL var
-    ;
-help_arr:
-    arr
-    | help_arr SYMBOL arr
-    ;
-// Βοηθητικοί κανόνες για συναρτήσεις
+ 
+// Βοηθητικοί κανόνες για συναρτήσεις print και cmp
 help_print:
-    help_cmp SYMBOL var
+    var SYMBOL num
+    | num SYMBOL var
+    | STRINGS SYMBOL num
+    | num SYMBOL STRINGS
+    | help_cmp SYMBOL var
     | help_cmp SYMBOL STRINGS
+    | help_cmp SYMBOL num
     | help_print SYMBOL var
     | help_print SYMBOL STRINGS
+    | help_print SYMBOL num
     ;
 help_cmp:
     var SYMBOL var
@@ -258,22 +301,23 @@ help_cmp:
     | STRINGS SYMBOL var
     | var SYMBOL STRINGS
     ;
-// Κανόνας για την συνάρτηση len και την print
+// Κανόνας για την συνάρτηση scan, len και την print (όταν όρισμα είναι ένα)
 scan_len_print: 
     keyword_val OPEN_PARENTHESIS var CLOSE_PARENTHESIS { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call"); printf("SCAN "); $$ = $1}
     | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  {if ($1 != 4) yyerror("Invalid function call"); printf("SCAN "); $$ = $1;}
     | keyword_val OPEN_PARENTHESIS STRINGS CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); printf("SCAN "); $$ = $1;}
     ;
-// Κανόνας για την συνάρτηση cmp
+// Κανόνας για την συνάρτηση cmp και την print (όταν ορίσματα είναι δύο)
 cmp_print: 
     keyword_val OPEN_PARENTHESIS help_cmp CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1; printf("CMP ");}
     ;
-// Κανόνας για την συνάρτηση print. 
+// Κανόνας για την συνάρτηση print 
 print: 
     keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call"); else printf("PRINT ");}
     | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 5) yyerror("Invalid function call"); else printf("PRINT ");}
     | keyword_val OPEN_PARENTHESIS help_print CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call"); else printf("PRINT ");} 
     ;
+// Κανόνας για την κλήση συναρτήσεων
 func_call:
     scan_len_print
     | cmp_print
@@ -313,7 +357,13 @@ int main(int argc,char **argv) {
 	int parse = yyparse();    
 
     if (parse == 0)
+    {
         fprintf(stderr, "Successful parsing.\n");
+        printf("Correct Words: %d\n", cor_words);
+        printf("Correct Expressions: %d\n", cor_expr);
+        printf("Incorrect Words: %d\n", inc_words);
+        printf("Incorrect Expressions: %d\n", inc_expr);
+    }
     else
         fprintf(stderr, "Error found.\n");
     return 0;
