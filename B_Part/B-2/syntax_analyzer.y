@@ -32,6 +32,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         extern int line; // Μετρητής γραμμών κώδικα
         // Μετρητές για μέτρηση των κομμάτων
         int var_com = 0, val_com = 0, val_arr_com = 0, val_ass_com = 0;
+        char* func_arg;
         int errflag=0; // Μετρητής σφαλμάτων
         extern int cor_words; // μετρήτης σωστών λέξεων (flex)
         int cor_expr = 0;
@@ -54,7 +55,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 
 /* Orismos proteraiothtwn sta tokens */
 %type <dval> num assignment expr help_num
-%type <sval> operator keyword declaration var 
+%type <sval> operator keyword declaration var str func_decl
 %type <ival> oper_val keyword_val scan_len_print cmp_print arr 
 /* %type <sval> func_call */
 
@@ -74,12 +75,14 @@ program:
     ;
 valid:
     END
-    | num END { printf("Result: %f\n", $1); }
-    | operator END {printf("Operator: %s\n", $1);}
+    /* | num END { printf("Result: %f\n", $1); }
+    | operator END {printf("Operator: %s\n", $1);} */
     | declaration END {printf("Valid declaration\n"); cor_expr++;}
     | assignment END {printf("Valid assignment\n"); cor_expr++;}
     | func_call END {printf("Valid function call\n"); cor_expr++;}
+    | func_decl END {printf("Valid function declaration\n"); cor_expr++;}
     | EOP   { print_report(cor_words); }
+    | UNKNOWN_TOKEN {inc_words++;}
     ;
 keyword: 
     KEYWORD { $$ = strdup(yytext); cor_words++;}
@@ -91,19 +94,14 @@ operator:
 keyword_val:
     keyword{
         // for type of variables
-        if(!strcmp($1, "int") || !strcmp($1, "float") || !strcmp($1, "const") || !strcmp($1, "double"))
-            $$ = 1;    
-        if(!strcmp($1, "const") || !strcmp($1, "long"))
-            $$ = 2;
+        if(!strcmp($1, "int") || !strcmp($1, "float") || !strcmp($1, "const") || !strcmp($1, "double")) $$ = 1;    
+        if(!strcmp($1, "const") || !strcmp($1, "long")) $$ = 2;
         // for functions
-        if(!strcmp($1, "scan"))
-            $$ = 3;
-        if(!strcmp($1, "len"))
-            $$ = 4;
-        if(!strcmp($1, "cmp"))
-            $$ = 5;
-        if(!strcmp($1, "print"))
-            $$ = 6;
+        if(!strcmp($1, "scan")) $$ = 3;
+        if(!strcmp($1, "len")) $$ = 4;
+        if(!strcmp($1, "cmp")) $$ = 5;
+        if(!strcmp($1, "print")) $$ = 6;
+        if(!strcmp($1, "func")) $$ = 7;
     }
 // Rule for operators
 oper_val:
@@ -214,7 +212,9 @@ num:
 var: 
     IDENTIFIERS { $$ = strdup(yytext); cor_words++;}
     ;
-
+str:
+    STRINGS { $$ = strdup(yytext); cor_words++;}
+    ;
 // Κανόνας για πίνακες
 arr:    
     OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1; val_com=0;}
@@ -223,10 +223,10 @@ arr:
     | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0;} //concat array
     ;
 
-// Βοηθητικοί κανόνες για κόμματα (STRINGS, NUMBERS, VARIABLES)
+// Βοηθητικοί κανόνες για κόμματα (str, NUMBERS, VARIABLES)
 help_str: 
-    STRINGS {cor_words++;}
-    | STRINGS SYMBOL help_str {val_com++;}
+    str
+    | str SYMBOL help_str {val_com++;}
     ;
 help_num: 
     num 
@@ -243,23 +243,23 @@ help_arr:
 // Για διαφορετικούς τύπους αναθέσεις
 help_assign:
     arr SYMBOL num {val_ass_com++;}
-    | arr SYMBOL STRINGS {val_ass_com++;}
+    | arr SYMBOL str {val_ass_com++;}
     | arr SYMBOL var {val_ass_com++;}
 
     | var SYMBOL num {val_ass_com++;}
     | var SYMBOL arr {val_ass_com++;}
-    | var SYMBOL STRINGS {val_ass_com++;}
+    | var SYMBOL str {val_ass_com++;}
 
-    | STRINGS SYMBOL num {val_ass_com++;}
-    | STRINGS SYMBOL var {val_ass_com++;}
-    | STRINGS SYMBOL arr {val_ass_com++;}
+    | str SYMBOL num {val_ass_com++;}
+    | str SYMBOL var {val_ass_com++;}
+    | str SYMBOL arr {val_ass_com++;}
 
-    | num SYMBOL STRINGS {val_ass_com++;}
+    | num SYMBOL str {val_ass_com++;}
     | num SYMBOL var {val_ass_com++;}
     | num SYMBOL arr {val_ass_com++;}
 
     | help_assign SYMBOL num {val_ass_com++;}
-    | help_assign SYMBOL STRINGS {val_ass_com++;}
+    | help_assign SYMBOL str {val_ass_com++;}
     | help_assign SYMBOL var {val_ass_com++;}
     | help_assign SYMBOL arr {val_ass_com++;}
     ;
@@ -286,55 +286,82 @@ assignment:
 help_print:
     var SYMBOL num
     | num SYMBOL var
-    | STRINGS SYMBOL num
-    | num SYMBOL STRINGS
+    | str SYMBOL num
+    | num SYMBOL str
     | help_cmp SYMBOL var
-    | help_cmp SYMBOL STRINGS
+    | help_cmp SYMBOL str
     | help_cmp SYMBOL num
     | help_print SYMBOL var
-    | help_print SYMBOL STRINGS
+    | help_print SYMBOL str
     | help_print SYMBOL num
     ;
 help_cmp:
     var SYMBOL var
-    | STRINGS SYMBOL STRINGS
-    | STRINGS SYMBOL var
-    | var SYMBOL STRINGS
+    | str SYMBOL str
+    | str SYMBOL var
+    | var SYMBOL str
     ;
 // Κανόνας για την συνάρτηση scan, len και την print (όταν όρισμα είναι ένα)
 scan_len_print: 
-    keyword_val OPEN_PARENTHESIS var CLOSE_PARENTHESIS { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call"); printf("SCAN "); $$ = $1;}
-    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  {if ($1 != 4) yyerror("Invalid function call"); printf("SCAN "); $$ = $1;}
-    | keyword_val OPEN_PARENTHESIS STRINGS CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); printf("SCAN "); $$ = $1;}
+    keyword_val OPEN_PARENTHESIS var CLOSE_PARENTHESIS { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  {if ($1 != 4) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS str CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call");}
     ;
 // Κανόνας για την συνάρτηση cmp και την print (όταν ορίσματα είναι δύο)
 cmp_print: 
-    keyword_val OPEN_PARENTHESIS help_cmp CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); $$ = $1; printf("CMP ");}
+    keyword_val OPEN_PARENTHESIS help_cmp CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call");}
     ;
 // Κανόνας για την συνάρτηση print 
 print: 
-    keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call"); else printf("PRINT ");}
-    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 5) yyerror("Invalid function call"); else printf("PRINT ");}
-    | keyword_val OPEN_PARENTHESIS help_print CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call"); else printf("PRINT ");} 
+    keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call"); }
+    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 5) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS help_print CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call");} 
     ;
+
 // Κανόνας για την κλήση συναρτήσεων
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ΠΡΟΣΟΧΗ: ΕΔΩ ΠΡΕΠΕΙ ΝΑ ΠΡΟΣΤΕΘΟΥΝ ΚΑΙ ΟΙ ΚΑΝΟΝΕΣ ΓΙΑ ΤΗΝ ΚΛΗΣΗ ΣΥΝΑΡΤΗΣΕΩΝ ΜΕ ΠΕΡΙΣΣΟΤΕΡΑ ΑΠΟ ΕΝΑ ΟΡΙΣΜΑΤΑ
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+*/
 func_call:
     scan_len_print
     | cmp_print
     | print
+    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS { cor_expr++;} //κλήση συνάρτησης με όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");}
+    ;
+//  Κανόνας για παράμετρους συναρτήσεων
+arguments:
+    declaration
+    | declaration SYMBOL arguments
+    ;
+
+// Εδώ ορίζεται τι θεωρείται ορισμός μιας συνάρτησης (δουλέυει με ότι εχει το declaration, μήπως χωριστούν κάποια από τα πεδία του)
+func_decl:
+    keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER{if($1 != 7) yyerror("Invalid function definition"); cor_expr++; func_arg = $2}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body{if ($1 != 7) yyerror("Invalid function definition"); cor_expr++; func_arg = $2}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body{if ($1 != 7) yyerror("Invalid function definition"); cor_expr++; func_arg = $2}
     ;
 
 // Κανόνας για άνοιγμα/κλείσιμο σώματος {} συναρτήσεων
-/* body  : OPEN_BRACKET all CLOSE_BRACKET
-      | OPEN_BRACKET END all CLOSE_BRACKET
-      | OPEN_BRACKET all END CLOSE_BRACKET
-      | OPEN_BRACKET END all END CLOSE_BRACKET
-      ; */
+body:
+    OPEN_BRACKET all CLOSE_BRACKET
+    | OPEN_BRACKET END all CLOSE_BRACKET
+    | OPEN_BRACKET all END CLOSE_BRACKET
+    | OPEN_BRACKET END all END CLOSE_BRACKET
+    ;
+// Κανόνας για στοιχεία στο body συνάρτησης
+all:
+    func_call DELIMITER
+    | assignment DELIMITER
+    | declaration DELIMITER
+    | all func_call DELIMITER
+    | all assignment DELIMITER
+    | all declaration DELIMITER
+    | all END func_call DELIMITER
+    | all END assignment DELIMITER
+    | all END declaration DELIMITER
+    ;
 
-// Βοηθητικός κανόνας για χρήση σε άλλους κανόνες
-/* all:
-    |
-    ; */
 %%
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
    apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h
