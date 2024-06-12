@@ -81,6 +81,8 @@ valid:
     | assignment END {printf("Valid assignment\n"); cor_expr++;}
     | func_call END {printf("Valid function call\n"); cor_expr++;}
     | func_decl END {printf("Valid function declaration\n"); cor_expr++;}
+    | if_grammar END {printf("Valid if statement\n"); cor_expr++;}
+    | body END {printf("Valid body\n");}
     | EOP   { print_report(cor_words); }
     | UNKNOWN_TOKEN {inc_words++;}
     ;
@@ -102,48 +104,31 @@ keyword_val:
         if(!strcmp($1, "cmp")) $$ = 5;
         if(!strcmp($1, "print")) $$ = 6;
         if(!strcmp($1, "func")) $$ = 7;
+        // for conditionals
+        if(!strcmp($1, "if")) $$ = 8;
     }
 // Rule for operators
 oper_val:
     operator { 
-        if(!strcmp($1, "+"))
-            $$ = 1;
-        if(!strcmp($1, "-"))
-            $$ = 2;
-        if(!strcmp($1, "*"))
-            $$ = 3;
-        if(!strcmp($1, "/"))
-            $$ = 4;
-        if (!strcmp($1, "=="))
-            $$ = 5;
-        if (!strcmp($1, "!="))
-           $$ = 6;
-        if (!strcmp($1, ">"))
-            $$ = 7;
-        if (!strcmp($1, "<"))
-            $$ = 8;
-        if (!strcmp($1, ">="))
-            $$ = 9;
-        if (!strcmp($1, "<="))
-            $$ = 10;  
-        if(!strcmp($1, "%"))
-            $$ = 11;
-        if(!strcmp($1, "="))
-            $$ = 12;
-        if (!strcmp($1, "+="))
-            $$ = 13;
-        if (!strcmp($1, "-="))
-            $$ = 14;
-        if (!strcmp($1, "*="))
-            $$ = 15;
-        if (!strcmp($1, "/="))
-            $$ = 16;
-        if (!strcmp($1, "++"))
-            $$ = 17;
-        if (!strcmp($1, "--"))
-            $$ = 18;
-        if (!strcmp($1, "&"))
-            $$ = 19;
+        if(!strcmp($1, "+")) $$ = 1;
+        if(!strcmp($1, "-")) $$ = 2;
+        if(!strcmp($1, "*")) $$ = 3;
+        if(!strcmp($1, "/")) $$ = 4;
+        if (!strcmp($1, "==")) $$ = 5;
+        if (!strcmp($1, "!=")) $$ = 6;
+        if (!strcmp($1, ">")) $$ = 7;
+        if (!strcmp($1, "<")) $$ = 8;
+        if (!strcmp($1, ">=")) $$ = 9;
+        if (!strcmp($1, "<=")) $$ = 10;  
+        if(!strcmp($1, "%")) $$ = 11;
+        if(!strcmp($1, "=")) $$ = 12;
+        if (!strcmp($1, "+=")) $$ = 13;
+        if (!strcmp($1, "-=")) $$ = 14;
+        if (!strcmp($1, "*=")) $$ = 15;
+        if (!strcmp($1, "/=")) $$ = 16;
+        if (!strcmp($1, "++")) $$ = 17;
+        if (!strcmp($1, "--")) $$ = 18;
+        if (!strcmp($1, "&")) $$ = 19;
     }
 // Rules for expressions
 expr:
@@ -211,6 +196,13 @@ num:
 // Κανόνες για μεταβλητές
 var: 
     IDENTIFIERS { $$ = strdup(yytext); cor_words++;}
+    ;
+// Κανόνες για πράξεις μεταβλητών
+var_oper:
+    var oper_val num {}
+    | num oper_val var {}
+    | var oper_val var {}
+    | expr oper_val var {}
     ;
 str:
     STRINGS { $$ = strdup(yytext); cor_words++;}
@@ -327,7 +319,7 @@ func_call:
     scan_len_print
     | cmp_print
     | print
-    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS { cor_expr++;} //κλήση συνάρτησης με όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");}
+    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS {} //κλήση συνάρτησης με όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");}
     ;
 //  Κανόνας για παράμετρους συναρτήσεων
 arguments:
@@ -337,9 +329,9 @@ arguments:
 
 // Εδώ ορίζεται τι θεωρείται ορισμός μιας συνάρτησης (δουλέυει με ότι εχει το declaration, μήπως χωριστούν κάποια από τα πεδία του)
 func_decl:
-    keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER{if($1 != 7) yyerror("Invalid function definition"); cor_expr++; func_arg = $2}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body{if ($1 != 7) yyerror("Invalid function definition"); cor_expr++; func_arg = $2}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body{if ($1 != 7) yyerror("Invalid function definition"); cor_expr++; func_arg = $2}
+    keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER{if($1 != 7) yyerror("Invalid function definition"); func_arg = $2}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2}
     ;
 
 // Κανόνας για άνοιγμα/κλείσιμο σώματος {} συναρτήσεων
@@ -361,6 +353,14 @@ all:
     | all END assignment DELIMITER
     | all END declaration DELIMITER
     ;
+// Κανόνας για την δομή if 
+if_grammar:
+    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS body {if ($1 != 8) yyerror("Invalid if statement");}
+    | keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS body keyword_val body{if ($1 != 8) yyerror("Invalid if statement");}
+    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS body {if ($1 != 8) yyerror("Invalid if statement");}
+    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS body keyword_val body{if ($1 != 8) yyerror("Invalid if statement");}
+    ;
+// Κανόνας για την δομή while
 
 %%
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
