@@ -2,6 +2,6 @@ Valid function declaration
 #END-OF-FILE#
 -------Report:-------
 Correct Words: 14
-Correct Expressions: 1
+Correct Expressions: 6
 Incorrect Words: 0
 Incorrect Expressions: 0
