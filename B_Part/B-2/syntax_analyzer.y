@@ -26,7 +26,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         extern char *yytext;
         extern void yyerror(char *);
         extern int yylex(void);
-        void print_report(int);
+        void print_report(void);
         FILE *yyin;
 
         extern int line; // Μετρητής γραμμών κώδικα
@@ -49,16 +49,13 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 
 %token <dval> INTEGER FLOAT
 %token <sval> OPERATORS IDENTIFIERS STRINGS KEYWORD
-%token  SYMBOL OPEN_PARENTHESIS CLOSE_PARENTHESIS
-%token OPEN_BRACE CLOSE_BRACE END EOP  
-%token UNKNOWN_TOKEN DELIMITER OPEN_BRACKET CLOSE_BRACKET
+%token  SYMBOL OPEN_PARENTHESIS CLOSE_PARENTHESIS OPEN_BRACE CLOSE_BRACE END EOP UNKNOWN_TOKEN DELIMITER OPEN_BRACKET CLOSE_BRACKET
 
-/* Orismos proteraiothtwn sta tokens */
 %type <dval> num assignment expr help_num
 %type <sval> operator keyword declaration var str func_decl
 %type <ival> oper_val keyword_val scan_len_print cmp_print arr if_while_grammar help_for
-/* %type <sval> func_call */
 
+/* Orismos proteraiothtwn sta tokens */
 %left '+' '-'
 %left '*' '/'
 %right '='
@@ -75,16 +72,16 @@ program:
     ;
 valid:
     END
-    | num END { printf("Result: %f\n", $1); }
-    | operator END {printf("Operator: %s\n", $1);}
-    | declaration END {printf("Valid declaration\n"); cor_expr++;}
-    | assignment END {printf("Valid assignment\n"); cor_expr++;}
-    | func_call END {printf("Valid function call\n"); cor_expr++;}
-    | func_decl END {printf("Valid function declaration\n"); cor_expr++;}
-    | if_while_grammar END {printf("Valid if/while statement\n"); cor_expr++;}
-    | for_grammar END {printf("Valid for statement\n"); cor_expr++;}
-    | body END {printf("Valid body\n");}
-    | EOP   { print_report(cor_words); }
+    /* | num END { printf("Result: %f\n", $1); }
+    | operator END {printf("Operator: %s\n", $1);} */
+    | declaration END {printf("Valid declaration\n");}
+    | assignment END {printf("Valid assignment\n");}
+    | func_call END {printf("Valid function call\n");}
+    | func_decl END {printf("Valid function declaration\n");}
+    | if_while_grammar END {printf("Valid if/while statement\n");}
+    | for_grammar END {printf("Valid for statement\n");}
+    /* | body END {printf("Valid body\n");} */
+    | EOP   { print_report(); }
     | UNKNOWN_TOKEN {inc_words++;}
     ;
 keyword: 
@@ -259,21 +256,21 @@ help_assign:
 
 // Κανόνας για δήλωση
 declaration:
-    keyword_val var {if($1 != 1) yyerror("Invalid declaration type");}
-    | keyword_val var oper_val num { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type");}
-    | keyword_val keyword_val var { if ($1 != 2 || $2 != 1) yyerror("Invalid declaration type");}
-    | keyword_val keyword_val var oper_val num { if ($1 != 2 || $2 != 1 || $4 != 12) yyerror("Invalid declaration type");}
-    | keyword_val var oper_val arr {if ($1 != 1 || $3 != 12 ) yyerror("Invalid declaration type");} 
+    keyword_val var {if($1 != 1) yyerror("Invalid declaration type"); cor_expr++;}
+    | keyword_val var oper_val num { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;}
+    | keyword_val keyword_val var { if ($1 != 2 || $2 != 1) yyerror("Invalid declaration type"); cor_expr++;}
+    | keyword_val keyword_val var oper_val num { if ($1 != 2 || $2 != 1 || $4 != 12) yyerror("Invalid declaration type"); cor_expr++;}
+    | keyword_val var oper_val arr {if ($1 != 1 || $3 != 12 ) yyerror("Invalid declaration type"); cor_expr++;} 
     ;
 
 // Κανόνες για ανάθεση τιμών 
 assignment: 
-    help_var oper_val help_num {if($2 != 12 || var_com != val_com)  yyerror("Invalid assignment"); var_com = 0; val_com = 0;}
-    | help_var oper_val help_arr {if($2 != 12 || val_arr_com) yyerror("Invalid assignment"); var_com = 0; val_arr_com = 0;}
-    | help_var oper_val help_var {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0;}
-    | help_var oper_val help_str {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0;}
-    | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0;}
-    | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // α = α + b; //ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ
+    help_var oper_val help_num {if($2 != 12 || var_com != val_com)  yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
+    | help_var oper_val help_arr {if($2 != 12 || val_arr_com) yyerror("Invalid assignment"); var_com = 0; val_arr_com = 0; cor_expr++;}
+    | help_var oper_val help_var {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
+    | help_var oper_val help_str {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
+    | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0; cor_expr++;}
+    /* | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // π.χ α = α + b; //!!!ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ ΑΜΑ ΤΟ ΒΑΛΩ ΧΑΛΑΕΙ ΤΟ num = 1; */
     ;
  
 // Βοηθητικοί κανόνες για συναρτήσεις print και cmp και για πολλώνν τύπων με κόμματα χωρισμένα
@@ -308,23 +305,23 @@ cmp_print:
     ;
 // Κανόνας για την συνάρτηση print (όταν τα όρισματα είναι 3)
 print: 
-    keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call"); }
+    keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call");}
     | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 5) yyerror("Invalid function call");}
     | keyword_val OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call");} 
     ;
 
 // Κανόνας για την κλήση συναρτήσεων 
 func_call:
-    scan_len_print
-    | cmp_print
-    | print
+    scan_len_print {cor_expr++;}
+    | cmp_print {cor_expr++;}
+    | print {cor_expr++;}
     // Κλήση συνάρτησης οριμένη από χρήστη
-    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS {} //κλήση συνάρτησης με όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");} -> ελέγχος αν υπάρχει συνάρτηση (δεν ξέρω πώς ακριβώς προαιρετικό)
-    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 1 όρισμα 
-    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 1 όρισμα 
-    | var OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 2 όρισματα
-    | var OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 3 όρισματα
-    | var OPEN_PARENTHESIS CLOSE_PARENTHESIS {} //κλήση συνάρτησης με κανένα όρισμα
+    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");} -> ελέγχος αν υπάρχει συνάρτηση (δεν ξέρω πώς ακριβώς προαιρετικό)
+    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 1 όρισμα 
+    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 1 όρισμα 
+    | var OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 2 όρισματα
+    | var OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 3 όρισματα
+    | var OPEN_PARENTHESIS CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με κανένα όρισμα
     ;
 //  Κανόνας για παράμετρους συναρτήσεων
 arguments:
@@ -334,13 +331,13 @@ arguments:
 
 // Εδώ ορίζεται τι θεωρείται ορισμός μιας συνάρτησης (δουλέυει με ότι εχει το declaration, μήπως χωριστούν κάποια από τα πεδία του)
 func_decl:
-    keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER{if($1 != 7) yyerror("Invalid function definition"); func_arg = $2;}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2;}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2;}
+    keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER{if($1 != 7) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2; cor_expr++; }
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
     // Void συνάρτηση
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2;}
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2;}
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
     ;
 
 // Κανόνας για άνοιγμα/κλείσιμο σώματος {} συναρτήσεων
@@ -377,20 +374,20 @@ all:
 // Κανόνας για την δομή if και while
 if_while_grammar:
     // $$ = $1 θέτω με το keyword που πήρε για να ξέρω αμα έιναι η if για να ξέρω αν να βάλω την else
-    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1;} 
-    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1;}
-    | if_while_grammar keyword_val cond_body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement");}
-    | if_while_grammar END keyword_val cond_body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement");} 
+    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;} 
+    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;}
+    | if_while_grammar keyword_val cond_body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
+    | if_while_grammar END keyword_val cond_body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;} 
     ;
 // Τι μπορεί να πάρει η for για ανάθεση στο πρώτο και τρίτο όρο
 help_for:
-    var oper_val{if($2 != 17 && $2 != 18) yyerror("Invalid --/++ operator");}
-    | var oper_val num{}
+    var oper_val{if($2 != 17 && $2 != 18) yyerror("Invalid --/++ operator"); cor_expr++;}
+    | var oper_val num{cor_expr++;}
     ;
-//Κανόνας για την δομή for !!! ΘΕΛΕΙ ΔΟΥΛΕΙΑ ΑΚΟΜΑ
+//Κανόνας για την δομή for 
 for_grammar:
-    keyword_val OPEN_PARENTHESIS help_for DELIMITER expr DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement");}
-    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body{if($1 != 11) yyerror("Invalid for statement");}
+    keyword_val OPEN_PARENTHESIS help_for DELIMITER expr DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); cor_expr++;}
+    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body{if($1 != 11) yyerror("Invalid for statement"); cor_expr++;}
     ;
 
 %%
@@ -402,7 +399,7 @@ void yyerror(char *s) {
     exit(1);
 }
 
-void print_report(int cor_words) {
+void print_report() {
     printf("-------Report:-------\n");
     printf("Correct Words: %d\n", cor_words);
     printf("Correct Expressions: %d\n", cor_expr);
