@@ -522,20 +522,20 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    73,    73,    74,    77,    80,    81,    82,    83,    84,
-      85,    87,    88,    91,    94,    98,   118,   142,   162,   184,
-     193,   194,   195,   199,   203,   204,   205,   206,   209,   213,
-     214,   215,   216,   221,   222,   225,   226,   229,   230,   233,
-     234,   238,   239,   240,   242,   243,   244,   246,   247,   248,
-     250,   251,   252,   254,   255,   256,   257,   262,   263,   264,
-     265,   266,   271,   272,   273,   274,   275,   276,   281,   282,
-     283,   284,   285,   286,   287,   288,   289,   290,   291,   294,
-     295,   296,   297,   301,   302,   303,   307,   311,   312,   313,
-     318,   319,   320,   322,   323,   324,   325,   326,   327,   331,
-     332,   337,   338,   339,   341,   342,   343,   348,   349,   350,
-     351,   355,   356,   357,   361,   362,   363,   364,   365,   366,
-     367,   368,   369,   370,   371,   372,   373,   374,   375,   380,
-     381,   382,   383,   387,   388,   392,   393
+       0,    70,    70,    71,    74,    77,    78,    79,    80,    81,
+      82,    84,    85,    88,    91,    95,   115,   139,   159,   181,
+     190,   191,   192,   196,   200,   201,   202,   203,   206,   210,
+     211,   212,   213,   218,   219,   222,   223,   226,   227,   230,
+     231,   235,   236,   237,   239,   240,   241,   243,   244,   245,
+     247,   248,   249,   251,   252,   253,   254,   259,   260,   261,
+     262,   263,   268,   269,   270,   271,   272,   273,   278,   279,
+     280,   281,   282,   283,   284,   285,   286,   287,   288,   291,
+     292,   293,   294,   298,   299,   300,   304,   308,   309,   310,
+     315,   316,   317,   319,   320,   321,   322,   323,   324,   328,
+     329,   334,   335,   336,   338,   339,   340,   345,   346,   347,
+     348,   352,   353,   354,   358,   359,   360,   361,   362,   363,
+     364,   365,   366,   367,   368,   369,   370,   371,   372,   377,
+     378,   379,   380,   384,   385,   389,   390
 };
 #endif
 
@@ -1636,57 +1636,57 @@ yyreduce:
   switch (yyn)
     {
         case 5:
-#line 80 "syntax_analyzer.y"
+#line 77 "syntax_analyzer.y"
     {printf("Valid declaration\n");;}
     break;
 
   case 6:
-#line 81 "syntax_analyzer.y"
+#line 78 "syntax_analyzer.y"
     {printf("Valid assignment\n");;}
     break;
 
   case 7:
-#line 82 "syntax_analyzer.y"
+#line 79 "syntax_analyzer.y"
     {printf("Valid function call\n");;}
     break;
 
   case 8:
-#line 83 "syntax_analyzer.y"
+#line 80 "syntax_analyzer.y"
     {printf("Valid function declaration\n");;}
     break;
 
   case 9:
-#line 84 "syntax_analyzer.y"
+#line 81 "syntax_analyzer.y"
     {printf("Valid if/while statement\n");;}
     break;
 
   case 10:
-#line 85 "syntax_analyzer.y"
+#line 82 "syntax_analyzer.y"
     {printf("Valid for statement\n");;}
     break;
 
   case 11:
-#line 87 "syntax_analyzer.y"
+#line 84 "syntax_analyzer.y"
     { print_report(); ;}
     break;
 
   case 12:
-#line 88 "syntax_analyzer.y"
+#line 85 "syntax_analyzer.y"
     {inc_words++;;}
     break;
 
   case 13:
-#line 91 "syntax_analyzer.y"
+#line 88 "syntax_analyzer.y"
     { (yyval.sval) = strdup(yytext); cor_words++;;}
     break;
 
   case 14:
-#line 94 "syntax_analyzer.y"
+#line 91 "syntax_analyzer.y"
     { (yyval.sval) = strdup(yytext); cor_words++;;}
     break;
 
   case 15:
-#line 98 "syntax_analyzer.y"
+#line 95 "syntax_analyzer.y"
     {
         // for type of variables
         if(!strcmp((yyvsp[(1) - (1)].sval), "int") || !strcmp((yyvsp[(1) - (1)].sval), "float") || !strcmp((yyvsp[(1) - (1)].sval), "const") || !strcmp((yyvsp[(1) - (1)].sval), "double")) (yyval.ival) = 1;    
@@ -1707,7 +1707,7 @@ yyreduce:
     break;
 
   case 16:
-#line 118 "syntax_analyzer.y"
+#line 115 "syntax_analyzer.y"
     { 
         if(!strcmp((yyvsp[(1) - (1)].sval), "+")) (yyval.ival) = 1;
         if(!strcmp((yyvsp[(1) - (1)].sval), "-")) (yyval.ival) = 2;
@@ -1732,7 +1732,7 @@ yyreduce:
     break;
 
   case 17:
-#line 142 "syntax_analyzer.y"
+#line 139 "syntax_analyzer.y"
     {
         switch((yyvsp[(2) - (3)].ival)) {
             case 1: (yyval.dval) = (yyvsp[(1) - (3)].dval) + (yyvsp[(3) - (3)].dval); break;
@@ -1756,7 +1756,7 @@ yyreduce:
     break;
 
   case 18:
-#line 162 "syntax_analyzer.y"
+#line 159 "syntax_analyzer.y"
     {
         switch((yyvsp[(2) - (3)].ival)) {
             case 1: (yyval.dval) = (yyvsp[(1) - (3)].dval) + (yyvsp[(3) - (3)].dval); break;
@@ -1782,7 +1782,7 @@ yyreduce:
     break;
 
   case 19:
-#line 184 "syntax_analyzer.y"
+#line 181 "syntax_analyzer.y"
     { 
         switch((yyvsp[(1) - (2)].ival)) {
             case 2: (yyval.dval) = -(yyvsp[(2) - (2)].dval); break;
@@ -1792,372 +1792,372 @@ yyreduce:
     break;
 
   case 20:
-#line 193 "syntax_analyzer.y"
+#line 190 "syntax_analyzer.y"
     { (yyval.dval) = atof(yytext); cor_words++;;}
     break;
 
   case 21:
-#line 194 "syntax_analyzer.y"
+#line 191 "syntax_analyzer.y"
     { (yyval.dval) = atof(yytext); cor_words++;;}
     break;
 
   case 22:
-#line 195 "syntax_analyzer.y"
+#line 192 "syntax_analyzer.y"
     { (yyval.dval) = (yyvsp[(1) - (1)].dval);;}
     break;
 
   case 23:
-#line 199 "syntax_analyzer.y"
+#line 196 "syntax_analyzer.y"
     { (yyval.sval) = strdup(yytext); cor_words++;;}
     break;
 
   case 24:
-#line 203 "syntax_analyzer.y"
+#line 200 "syntax_analyzer.y"
     {;}
     break;
 
   case 25:
-#line 204 "syntax_analyzer.y"
+#line 201 "syntax_analyzer.y"
     {;}
     break;
 
   case 26:
-#line 205 "syntax_analyzer.y"
+#line 202 "syntax_analyzer.y"
     {;}
     break;
 
   case 27:
-#line 206 "syntax_analyzer.y"
+#line 203 "syntax_analyzer.y"
     {;}
     break;
 
   case 28:
-#line 209 "syntax_analyzer.y"
+#line 206 "syntax_analyzer.y"
     { (yyval.sval) = strdup(yytext); cor_words++;;}
     break;
 
   case 29:
-#line 213 "syntax_analyzer.y"
+#line 210 "syntax_analyzer.y"
     { (yyval.ival) = 1; val_com=0;;}
     break;
 
   case 30:
-#line 214 "syntax_analyzer.y"
+#line 211 "syntax_analyzer.y"
     { (yyval.ival) = 2; val_com=0;;}
     break;
 
   case 31:
-#line 215 "syntax_analyzer.y"
+#line 212 "syntax_analyzer.y"
     { (yyval.ival) = 3; val_com=0;;}
     break;
 
   case 32:
-#line 216 "syntax_analyzer.y"
+#line 213 "syntax_analyzer.y"
     {if ((yyvsp[(2) - (3)].ival) != 1) yyerror("Invalid arr"); (yyval.ival) = 4; val_com=0;;}
     break;
 
   case 34:
-#line 222 "syntax_analyzer.y"
+#line 219 "syntax_analyzer.y"
     {val_com++;;}
     break;
 
   case 36:
-#line 226 "syntax_analyzer.y"
+#line 223 "syntax_analyzer.y"
     {val_com++;;}
     break;
 
   case 38:
-#line 230 "syntax_analyzer.y"
+#line 227 "syntax_analyzer.y"
     {var_com++;;}
     break;
 
   case 40:
-#line 234 "syntax_analyzer.y"
+#line 231 "syntax_analyzer.y"
     {val_arr_com++;;}
     break;
 
   case 41:
-#line 238 "syntax_analyzer.y"
+#line 235 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 42:
-#line 239 "syntax_analyzer.y"
+#line 236 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 43:
-#line 240 "syntax_analyzer.y"
+#line 237 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 44:
-#line 242 "syntax_analyzer.y"
+#line 239 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 45:
-#line 243 "syntax_analyzer.y"
+#line 240 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 46:
-#line 244 "syntax_analyzer.y"
+#line 241 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 47:
-#line 246 "syntax_analyzer.y"
+#line 243 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 48:
-#line 247 "syntax_analyzer.y"
+#line 244 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 49:
-#line 248 "syntax_analyzer.y"
+#line 245 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 50:
-#line 250 "syntax_analyzer.y"
+#line 247 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 51:
-#line 251 "syntax_analyzer.y"
+#line 248 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 52:
-#line 252 "syntax_analyzer.y"
+#line 249 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 53:
-#line 254 "syntax_analyzer.y"
+#line 251 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 54:
-#line 255 "syntax_analyzer.y"
+#line 252 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 55:
-#line 256 "syntax_analyzer.y"
+#line 253 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 56:
-#line 257 "syntax_analyzer.y"
+#line 254 "syntax_analyzer.y"
     {val_ass_com++;;}
     break;
 
   case 57:
-#line 262 "syntax_analyzer.y"
+#line 259 "syntax_analyzer.y"
     {if((yyvsp[(1) - (2)].ival) != 1) yyerror("Invalid declaration type"); cor_expr++;;}
     break;
 
   case 58:
-#line 263 "syntax_analyzer.y"
+#line 260 "syntax_analyzer.y"
     { if ((yyvsp[(1) - (4)].ival) != 1 || (yyvsp[(3) - (4)].ival) != 12) yyerror("Invalid declaration type"); cor_expr++;;}
     break;
 
   case 59:
-#line 264 "syntax_analyzer.y"
+#line 261 "syntax_analyzer.y"
     { if ((yyvsp[(1) - (3)].ival) != 2 || (yyvsp[(2) - (3)].ival) != 1) yyerror("Invalid declaration type"); cor_expr++;;}
     break;
 
   case 60:
-#line 265 "syntax_analyzer.y"
+#line 262 "syntax_analyzer.y"
     { if ((yyvsp[(1) - (5)].ival) != 2 || (yyvsp[(2) - (5)].ival) != 1 || (yyvsp[(4) - (5)].ival) != 12) yyerror("Invalid declaration type"); cor_expr++;;}
     break;
 
   case 61:
-#line 266 "syntax_analyzer.y"
+#line 263 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (4)].ival) != 1 || (yyvsp[(3) - (4)].ival) != 12 ) yyerror("Invalid declaration type"); cor_expr++;;}
     break;
 
   case 62:
-#line 271 "syntax_analyzer.y"
+#line 268 "syntax_analyzer.y"
     {if((yyvsp[(2) - (3)].ival) != 12 || var_com != val_com)  yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;;}
     break;
 
   case 63:
-#line 272 "syntax_analyzer.y"
+#line 269 "syntax_analyzer.y"
     {if((yyvsp[(2) - (3)].ival) != 12 || val_arr_com) yyerror("Invalid assignment"); var_com = 0; val_arr_com = 0; cor_expr++;;}
     break;
 
   case 64:
-#line 273 "syntax_analyzer.y"
+#line 270 "syntax_analyzer.y"
     {if((yyvsp[(2) - (3)].ival) != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;;}
     break;
 
   case 65:
-#line 274 "syntax_analyzer.y"
+#line 271 "syntax_analyzer.y"
     {if((yyvsp[(2) - (3)].ival) != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;;}
     break;
 
   case 66:
-#line 275 "syntax_analyzer.y"
+#line 272 "syntax_analyzer.y"
     {if((yyvsp[(2) - (3)].ival) != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0; cor_expr++;;}
     break;
 
   case 67:
-#line 276 "syntax_analyzer.y"
+#line 273 "syntax_analyzer.y"
     {if((yyvsp[(2) - (3)].ival) != 12) yyerror("Invalid assignment");;}
     break;
 
   case 83:
-#line 301 "syntax_analyzer.y"
+#line 298 "syntax_analyzer.y"
     { if ((yyvsp[(1) - (4)].ival) != 3 && (yyvsp[(1) - (4)].ival) != 4 && (yyvsp[(1) - (4)].ival) != 6) yyerror("Invalid function call");;}
     break;
 
   case 84:
-#line 302 "syntax_analyzer.y"
+#line 299 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (4)].ival) != 4) yyerror("Invalid function call");;}
     break;
 
   case 85:
-#line 303 "syntax_analyzer.y"
+#line 300 "syntax_analyzer.y"
     { if ((yyvsp[(1) - (4)].ival) != 4 && (yyvsp[(1) - (4)].ival) != 6) yyerror("Invalid function call");;}
     break;
 
   case 86:
-#line 307 "syntax_analyzer.y"
+#line 304 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (4)].ival) != 5 && (yyvsp[(1) - (4)].ival) != 6) yyerror("Invalid function call");;}
     break;
 
   case 87:
-#line 311 "syntax_analyzer.y"
+#line 308 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (4)].ival) != 6 && (yyvsp[(3) - (4)].ival) == 4) yyerror("Invalid function call");;}
     break;
 
   case 88:
-#line 312 "syntax_analyzer.y"
+#line 309 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (4)].ival) != 6 && (yyvsp[(3) - (4)].ival) == 5) yyerror("Invalid function call");;}
     break;
 
   case 89:
-#line 313 "syntax_analyzer.y"
+#line 310 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (4)].ival) != 6) yyerror("Invalid function call");;}
     break;
 
   case 90:
-#line 318 "syntax_analyzer.y"
+#line 315 "syntax_analyzer.y"
     {cor_expr++;;}
     break;
 
   case 91:
-#line 319 "syntax_analyzer.y"
+#line 316 "syntax_analyzer.y"
     {cor_expr++;;}
     break;
 
   case 92:
-#line 320 "syntax_analyzer.y"
+#line 317 "syntax_analyzer.y"
     {cor_expr++;;}
     break;
 
   case 93:
-#line 322 "syntax_analyzer.y"
+#line 319 "syntax_analyzer.y"
     {cor_expr++;;}
     break;
 
   case 94:
-#line 323 "syntax_analyzer.y"
+#line 320 "syntax_analyzer.y"
     {cor_expr++;;}
     break;
 
   case 95:
-#line 324 "syntax_analyzer.y"
+#line 321 "syntax_analyzer.y"
     {cor_expr++;;}
     break;
 
   case 96:
-#line 325 "syntax_analyzer.y"
+#line 322 "syntax_analyzer.y"
     {cor_expr++;;}
     break;
 
   case 97:
-#line 326 "syntax_analyzer.y"
+#line 323 "syntax_analyzer.y"
     {cor_expr++;;}
     break;
 
   case 98:
-#line 327 "syntax_analyzer.y"
+#line 324 "syntax_analyzer.y"
     {cor_expr++;;}
     break;
 
   case 101:
-#line 337 "syntax_analyzer.y"
+#line 334 "syntax_analyzer.y"
     {if((yyvsp[(1) - (6)].ival) != 7) yyerror("Invalid function definition"); func_arg = (yyvsp[(2) - (6)].sval); cor_expr++;;}
     break;
 
   case 102:
-#line 338 "syntax_analyzer.y"
+#line 335 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (6)].ival) != 7) yyerror("Invalid function definition"); func_arg = (yyvsp[(2) - (6)].sval); cor_expr++; ;}
     break;
 
   case 103:
-#line 339 "syntax_analyzer.y"
+#line 336 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (7)].ival) != 7) yyerror("Invalid function definition"); func_arg = (yyvsp[(2) - (7)].sval); cor_expr++;;}
     break;
 
   case 104:
-#line 341 "syntax_analyzer.y"
+#line 338 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (6)].ival) != 7 || (yyvsp[(4) - (6)].ival) != 12) yyerror("Invalid function definition"); func_arg = (yyvsp[(2) - (6)].sval); cor_expr++;;}
     break;
 
   case 105:
-#line 342 "syntax_analyzer.y"
+#line 339 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (6)].ival) != 7 || (yyvsp[(4) - (6)].ival) != 12) yyerror("Invalid function definition"); func_arg = (yyvsp[(2) - (6)].sval); cor_expr++;;}
     break;
 
   case 106:
-#line 343 "syntax_analyzer.y"
+#line 340 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (7)].ival) != 7 || (yyvsp[(4) - (7)].ival) != 12) yyerror("Invalid function definition"); func_arg = (yyvsp[(2) - (7)].sval); cor_expr++;;}
     break;
 
   case 129:
-#line 380 "syntax_analyzer.y"
+#line 377 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (5)].ival) != 8 && (yyvsp[(1) - (5)].ival) != 10) yyerror("Invalid if/while statement"); (yyval.ival) = (yyvsp[(1) - (5)].ival); cor_expr++;;}
     break;
 
   case 130:
-#line 381 "syntax_analyzer.y"
+#line 378 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (5)].ival) != 8 && (yyvsp[(1) - (5)].ival) != 10) yyerror("Invalid if/while statement"); (yyval.ival) = (yyvsp[(1) - (5)].ival); cor_expr++;;}
     break;
 
   case 131:
-#line 382 "syntax_analyzer.y"
+#line 379 "syntax_analyzer.y"
     {if ((yyvsp[(2) - (3)].ival) != 9 || (yyvsp[(1) - (3)].ival) != 8) yyerror("Invalid if/while statement"); cor_expr++;;}
     break;
 
   case 132:
-#line 383 "syntax_analyzer.y"
+#line 380 "syntax_analyzer.y"
     {if ((yyvsp[(3) - (4)].ival) != 9 || (yyvsp[(1) - (4)].ival) != 8) yyerror("Invalid if/while statement"); cor_expr++;;}
     break;
 
   case 133:
-#line 387 "syntax_analyzer.y"
+#line 384 "syntax_analyzer.y"
     {if((yyvsp[(2) - (2)].ival) != 17 && (yyvsp[(2) - (2)].ival) != 18) yyerror("Invalid --/++ operator"); cor_expr++;;}
     break;
 
   case 134:
-#line 388 "syntax_analyzer.y"
+#line 385 "syntax_analyzer.y"
     {cor_expr++;;}
     break;
 
   case 135:
-#line 392 "syntax_analyzer.y"
+#line 389 "syntax_analyzer.y"
     {if((yyvsp[(1) - (9)].ival) != 11) yyerror("Invalid for statement"); cor_expr++;;}
     break;
 
   case 136:
-#line 393 "syntax_analyzer.y"
+#line 390 "syntax_analyzer.y"
     {if((yyvsp[(1) - (9)].ival) != 11) yyerror("Invalid for statement"); cor_expr++;;}
     break;
 
@@ -2377,7 +2377,7 @@ yyreturn:
 }
 
 
-#line 396 "syntax_analyzer.y"
+#line 393 "syntax_analyzer.y"
 
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
    apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h

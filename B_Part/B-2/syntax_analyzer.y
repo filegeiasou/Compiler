@@ -49,16 +49,13 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 
 %token <dval> INTEGER FLOAT
 %token <sval> OPERATORS IDENTIFIERS STRINGS KEYWORD
-%token  SYMBOL OPEN_PARENTHESIS CLOSE_PARENTHESIS
-%token OPEN_BRACE CLOSE_BRACE END EOP  
-%token UNKNOWN_TOKEN DELIMITER OPEN_BRACKET CLOSE_BRACKET
+%token  SYMBOL OPEN_PARENTHESIS CLOSE_PARENTHESIS OPEN_BRACE CLOSE_BRACE END EOP UNKNOWN_TOKEN DELIMITER OPEN_BRACKET CLOSE_BRACKET
 
-/* Orismos proteraiothtwn sta tokens */
 %type <dval> num assignment expr help_num
 %type <sval> operator keyword declaration var str func_decl
 %type <ival> oper_val keyword_val scan_len_print cmp_print arr if_while_grammar help_for
-/* %type <sval> func_call */
 
+/* Orismos proteraiothtwn sta tokens */
 %left '+' '-'
 %left '*' '/'
 %right '='
@@ -273,7 +270,7 @@ assignment:
     | help_var oper_val help_var {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
     | help_var oper_val help_str {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
     | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0; cor_expr++;}
-    | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // α = α + b; //ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ
+    | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // α = α + b; //!!!ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ
     ;
  
 // Βοηθητικοί κανόνες για συναρτήσεις print και cmp και για πολλώνν τύπων με κόμματα χωρισμένα
@@ -387,7 +384,7 @@ help_for:
     var oper_val{if($2 != 17 && $2 != 18) yyerror("Invalid --/++ operator"); cor_expr++;}
     | var oper_val num{cor_expr++;}
     ;
-//Κανόνας για την δομή for !!! ΘΕΛΕΙ ΔΟΥΛΕΙΑ ΑΚΟΜΑ
+//Κανόνας για την δομή for 
 for_grammar:
     keyword_val OPEN_PARENTHESIS help_for DELIMITER expr DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); cor_expr++;}
     | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body{if($1 != 11) yyerror("Invalid for statement"); cor_expr++;}
