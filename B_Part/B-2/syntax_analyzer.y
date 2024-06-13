@@ -276,20 +276,21 @@ assignment:
     | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0;}
     ;
  
-// Βοηθητικοί κανόνες για συναρτήσεις print και cmp
-help_print:
+// Βοηθητικοί κανόνες για συναρτήσεις print και cmp και για πολλώνν τύπων με κόμματα χωρισμένα
+help_3args:
     var SYMBOL num
     | num SYMBOL var
     | str SYMBOL num
     | num SYMBOL str
-    | help_cmp SYMBOL var
-    | help_cmp SYMBOL str
-    | help_cmp SYMBOL num
-    | help_print SYMBOL var
-    | help_print SYMBOL str
-    | help_print SYMBOL num
+    | num SYMBOL num
+    | help_2args SYMBOL var
+    | help_2args SYMBOL str
+    | help_2args SYMBOL num
+    | help_3args SYMBOL var
+    | help_3args SYMBOL str
+    | help_3args SYMBOL num
     ;
-help_cmp:
+help_2args:
     var SYMBOL var
     | str SYMBOL str
     | str SYMBOL var
@@ -303,25 +304,26 @@ scan_len_print:
     ;
 // Κανόνας για την συνάρτηση cmp και την print (όταν ορίσματα είναι δύο)
 cmp_print: 
-    keyword_val OPEN_PARENTHESIS help_cmp CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call");}
+    keyword_val OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call");}
     ;
-// Κανόνας για την συνάρτηση print 
+// Κανόνας για την συνάρτηση print (όταν τα όρισματα είναι 3)
 print: 
     keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call"); }
     | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 5) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS help_print CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call");} 
+    | keyword_val OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call");} 
     ;
 
-// Κανόνας για την κλήση συναρτήσεων
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-ΠΡΟΣΟΧΗ: ΕΔΩ ΠΡΕΠΕΙ ΝΑ ΠΡΟΣΤΕΘΟΥΝ ΚΑΙ ΟΙ ΚΑΝΟΝΕΣ ΓΙΑ ΤΗΝ ΚΛΗΣΗ ΣΥΝΑΡΤΗΣΕΩΝ ΜΕ ΠΕΡΙΣΣΟΤΕΡΑ ΑΠΟ ΕΝΑ ΟΡΙΣΜΑΤΑ
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-*/
+// Κανόνας για την κλήση συναρτήσεων 
 func_call:
     scan_len_print
     | cmp_print
     | print
-    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS {} //κλήση συνάρτησης με όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");}
+    // Κλήση συνάρτησης οριμένη από χρήστη
+    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS {} //κλήση συνάρτησης με όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");} -> ελέγχος αν υπάρχει συνάρτηση (δεν ξέρω πώς ακριβώς προαιρετικό)
+    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 1 όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");}
+    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 1 όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");}
+    | var OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 2 όρισματα
+    | var OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 3 όρισματα
     ;
 //  Κανόνας για παράμετρους συναρτήσεων
 arguments:
