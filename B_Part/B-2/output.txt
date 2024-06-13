@@ -1,4 +1,4 @@
-Valid for statement
+Valid function declaration
 #END-OF-FILE#
 -------Report:-------
 Correct Words: 14

@@ -34,7 +34,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         int var_com = 0, val_com = 0, val_arr_com = 0, val_ass_com = 0;
         char* func_arg;
         int errflag=0; // Μετρητής σφαλμάτων
-        extern int cor_words; // μετρήτης σωστών λέξεων (flex)
+        int cor_words; // μετρήτης σωστών λέξεων (flex)
         int cor_expr = 0;
         int inc_words = 0;
         int inc_expr = 0;
@@ -110,7 +110,9 @@ keyword_val:
         if(!strcmp($1, "else")) $$ = 9;
         if(!strcmp($1, "while")) $$ = 10;
         if(!strcmp($1, "for")) $$ = 11;
+        if(!strcmp($1, "void")) $$ = 12;
     }
+    ;
 // Rule for operators
 oper_val:
     operator { 
@@ -134,6 +136,7 @@ oper_val:
         if (!strcmp($1, "--")) $$ = 18;
         if (!strcmp($1, "&")) $$ = 19;
     }
+    ;
 // Rules for expressions
 expr:
     num oper_val num {
@@ -181,13 +184,9 @@ expr:
     | oper_val num { 
         switch($1) {
             case 2: $$ = -$2; break;
+            //case 19: $$ = $2; break;
         }
     }
-    /* | oper_val num {
-        switch($1) {
-            case 19: $$ = $2; break;
-        }
-    } */
     ;
 // Κανόνες για αριθμούς
 num:
@@ -274,6 +273,7 @@ assignment:
     | help_var oper_val help_var {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0;}
     | help_var oper_val help_str {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0;}
     | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0;}
+    | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // α = α + b; //ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ
     ;
  
 // Βοηθητικοί κανόνες για συναρτήσεις print και cmp και για πολλώνν τύπων με κόμματα χωρισμένα
@@ -320,10 +320,11 @@ func_call:
     | print
     // Κλήση συνάρτησης οριμένη από χρήστη
     | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS {} //κλήση συνάρτησης με όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");} -> ελέγχος αν υπάρχει συνάρτηση (δεν ξέρω πώς ακριβώς προαιρετικό)
-    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 1 όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");}
-    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 1 όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");}
+    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 1 όρισμα 
+    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 1 όρισμα 
     | var OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 2 όρισματα
     | var OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {} //κλήση συνάρτησης με 3 όρισματα
+    | var OPEN_PARENTHESIS CLOSE_PARENTHESIS {} //κλήση συνάρτησης με κανένα όρισμα
     ;
 //  Κανόνας για παράμετρους συναρτήσεων
 arguments:
@@ -333,9 +334,13 @@ arguments:
 
 // Εδώ ορίζεται τι θεωρείται ορισμός μιας συνάρτησης (δουλέυει με ότι εχει το declaration, μήπως χωριστούν κάποια από τα πεδία του)
 func_decl:
-    keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER{if($1 != 7) yyerror("Invalid function definition"); func_arg = $2}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2}
+    keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER{if($1 != 7) yyerror("Invalid function definition"); func_arg = $2;}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2;}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2;}
+    // Void συνάρτηση
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2;}
     ;
 
 // Κανόνας για άνοιγμα/κλείσιμο σώματος {} συναρτήσεων
@@ -349,6 +354,7 @@ body:
 cond_body:
     body
     | END body
+    | body END
     ;
 // Κανόνας για στοιχεία στο body συνάρτησης (εδω οι δομές θέλουν δουλειά)
 all:
@@ -371,8 +377,8 @@ all:
 // Κανόνας για την δομή if και while
 if_while_grammar:
     // $$ = $1 θέτω με το keyword που πήρε για να ξέρω αμα έιναι η if για να ξέρω αν να βάλω την else
-    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1} 
-    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1}
+    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1;} 
+    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1;}
     | if_while_grammar keyword_val cond_body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement");}
     | if_while_grammar END keyword_val cond_body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement");} 
     ;
@@ -383,12 +389,8 @@ help_for:
     ;
 //Κανόνας για την δομή for !!! ΘΕΛΕΙ ΔΟΥΛΕΙΑ ΑΚΟΜΑ
 for_grammar:
-    keyword_val OPEN_PARENTHESIS help_for DELIMITER expr DELIMITER help_for CLOSE_PARENTHESIS cond_body {
-        if($1 != 11) yyerror("Invalid for statement");
-    }
-    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body{
-        if($1 != 11) yyerror("Invalid for statement");
-    }
+    keyword_val OPEN_PARENTHESIS help_for DELIMITER expr DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement");}
+    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body{if($1 != 11) yyerror("Invalid for statement");}
     ;
 
 %%
