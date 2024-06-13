@@ -1,0 +1,4 @@
+if(var == 100)
+{a = 1;}
+else 
+{print(a);}
