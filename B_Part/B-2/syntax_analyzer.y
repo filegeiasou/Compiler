@@ -26,7 +26,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         extern char *yytext;
         extern void yyerror(char *);
         extern int yylex(void);
-        void print_report(int);
+        void print_report(void);
         FILE *yyin;
 
         extern int line; // Μετρητής γραμμών κώδικα
@@ -84,7 +84,7 @@ valid:
     | if_while_grammar END {printf("Valid if/while statement\n");}
     | for_grammar END {printf("Valid for statement\n");}
     /* | body END {printf("Valid body\n");} */
-    | EOP   { print_report(cor_words); }
+    | EOP   { print_report(); }
     | UNKNOWN_TOKEN {inc_words++;}
     ;
 keyword: 
@@ -402,7 +402,7 @@ void yyerror(char *s) {
     exit(1);
 }
 
-void print_report(int cor_words) {
+void print_report() {
     printf("-------Report:-------\n");
     printf("Correct Words: %d\n", cor_words);
     printf("Correct Expressions: %d\n", cor_expr);
