@@ -1,0 +1,5 @@
+func myAdd(int num1, int num2){
+    int sum;
+    sum = a + b; 
+    print("Sum is: ", sum);
+}

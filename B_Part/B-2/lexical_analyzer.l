@@ -30,7 +30,6 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
     void handle_comment(); // definition of function to handle multiline comments
 
     int line = 1; // Current line counter
-    int cor_words = 0; // Counter for correct words
 
 %}
 
