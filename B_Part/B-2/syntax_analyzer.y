@@ -270,7 +270,7 @@ assignment:
     | help_var oper_val help_var {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
     | help_var oper_val help_str {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
     | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0; cor_expr++;}
-    | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // α = α + b; //!!!ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ
+    /* | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // π.χ α = α + b; //!!!ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ ΑΜΑ ΤΟ ΒΑΛΩ ΧΑΛΑΕΙ ΤΟ num = 1; */
     ;
  
 // Βοηθητικοί κανόνες για συναρτήσεις print και cmp και για πολλώνν τύπων με κόμματα χωρισμένα

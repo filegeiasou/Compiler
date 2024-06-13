@@ -1,5 +1,5 @@
 func myAdd(int num1, int num2){
     int sum;
-    sum = a + b; 
+    sum = 1 + 1; 
     print("Sum is: ", sum);
 }
