@@ -94,7 +94,7 @@ operator:
 keyword_val:
     keyword{
         // for type of variables
-        if(!strcmp($1, "int") || !strcmp($1, "float") || !strcmp($1, "const") || !strcmp($1, "double")) $$ = 1;    
+        if(!strcmp($1, "int") || !strcmp($1, "float") || !strcmp($1, "double")) $$ = 1;    
         if(!strcmp($1, "const") || !strcmp($1, "long")) $$ = 2;
         // for functions
         if(!strcmp($1, "scan")) $$ = 3;
@@ -230,37 +230,59 @@ help_arr:
     arr
     | arr SYMBOL help_arr {val_arr_com++;}
     ;
+help_var_oper:
+    var_oper
+    | var_oper SYMBOL help_var_oper {var_com++;}
+    ;
 // Για διαφορετικούς τύπους αναθέσεις
 help_assign:
     arr SYMBOL num {val_ass_com++;}
     | arr SYMBOL str {val_ass_com++;}
     | arr SYMBOL var {val_ass_com++;}
+    | arr SYMBOL var_oper {val_ass_com++;}
 
     | var SYMBOL num {val_ass_com++;}
     | var SYMBOL arr {val_ass_com++;}
     | var SYMBOL str {val_ass_com++;}
+    | var SYMBOL var_oper {val_ass_com++;}
 
     | str SYMBOL num {val_ass_com++;}
     | str SYMBOL var {val_ass_com++;}
     | str SYMBOL arr {val_ass_com++;}
+    | str SYMBOL var_oper {val_ass_com++;}
 
     | num SYMBOL str {val_ass_com++;}
     | num SYMBOL var {val_ass_com++;}
     | num SYMBOL arr {val_ass_com++;}
+    | num SYMBOL var_oper {val_ass_com++;}
+
+    | var_oper SYMBOL str {val_ass_com++;}
+    | var_oper SYMBOL var {val_ass_com++;}
+    | var_oper SYMBOL arr {val_ass_com++;}
+    | var_oper SYMBOL num {val_ass_com++;}
 
     | help_assign SYMBOL num {val_ass_com++;}
     | help_assign SYMBOL str {val_ass_com++;}
     | help_assign SYMBOL var {val_ass_com++;}
     | help_assign SYMBOL arr {val_ass_com++;}
+    | help_assign SYMBOL var_oper {val_ass_com++;}
     ;
 
 // Κανόνας για δήλωση
 declaration:
+    // int val
     keyword_val var {if($1 != 1) yyerror("Invalid declaration type"); cor_expr++;}
+    // int a = 1 or b 
     | keyword_val var oper_val num { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;}
+    | keyword_val var oper_val var { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;}
+    // Long int a = 1  or a = b
     | keyword_val keyword_val var { if ($1 != 2 || $2 != 1) yyerror("Invalid declaration type"); cor_expr++;}
     | keyword_val keyword_val var oper_val num { if ($1 != 2 || $2 != 1 || $4 != 12) yyerror("Invalid declaration type"); cor_expr++;}
+    | keyword_val keyword_val var oper_val var { if ($1 != 2 || $2 != 1 || $4 != 12) yyerror("Invalid declaration type"); cor_expr++;}
+    // int a = [1,2]
     | keyword_val var oper_val arr {if ($1 != 1 || $3 != 12 ) yyerror("Invalid declaration type"); cor_expr++;} 
+    // int a = a + b or a + 1, 1 + a etc.
+    | keyword_val var oper_val var_oper {if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} 
     ;
 
 // Κανόνες για ανάθεση τιμών 
@@ -269,6 +291,7 @@ assignment:
     | help_var oper_val help_arr {if($2 != 12 || val_arr_com) yyerror("Invalid assignment"); var_com = 0; val_arr_com = 0; cor_expr++;}
     | help_var oper_val help_var {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
     | help_var oper_val help_str {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
+    | help_var oper_val help_var_oper {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
     | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0; cor_expr++;}
     /* | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // π.χ α = α + b; //!!!ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ ΑΜΑ ΤΟ ΒΑΛΩ ΧΑΛΑΕΙ ΤΟ num = 1; */
     ;
@@ -316,11 +339,11 @@ func_call:
     | cmp_print {cor_expr++;}
     | print {cor_expr++;}
     // Κλήση συνάρτησης οριμένη από χρήστη
-    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με όρισμα {if(strcmp($1,func_arg)) yyerror("Invalid function call");} -> ελέγχος αν υπάρχει συνάρτηση (δεν ξέρω πώς ακριβώς προαιρετικό)
-    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 1 όρισμα 
-    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 1 όρισμα 
+    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με όρισμα var {if(strcmp($1,func_arg)) yyerror("Invalid function call");} -> ελέγχος αν υπάρχει συνάρτηση (δεν ξέρω πώς ακριβώς προαιρετικό)
+    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 1 όρισμα num
+    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 1 όρισμα str
     | var OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 2 όρισματα
-    | var OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 3 όρισματα
+    | var OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 3 όρισματα και άνω
     | var OPEN_PARENTHESIS CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με κανένα όρισμα
     ;
 //  Κανόνας για παράμετρους συναρτήσεων
@@ -380,7 +403,7 @@ if_while_grammar:
     keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;} 
     | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;}
     | if_while_grammar keyword_val cond_body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
-    | if_while_grammar END keyword_val cond_body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;} 
+    | if_while_grammar END keyword_val cond_body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
     ;
 // Τι μπορεί να πάρει η for για ανάθεση στο πρώτο και τρίτο όρο
 help_for:

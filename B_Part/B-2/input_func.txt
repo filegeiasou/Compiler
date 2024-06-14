@@ -4,13 +4,9 @@ func myfunc(int a, int b){
     a = 1;
     a, b = 1,2;
     print(len(a));
-    while(i == 0)
-    {
-        i = 0
-    }
-    if(var == 0)
-    {print(a);}
-    else{
+    while(a == 1)
+    {print(a);
         a = 1;
-    }
+        int a = a + b;
+        }
 }
