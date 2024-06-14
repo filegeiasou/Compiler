@@ -1,3 +1,4 @@
+## Count for shift/reduce: 14
 ### Works for these files
 - input_for.txt
 - input_if.txt
