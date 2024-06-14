@@ -372,10 +372,9 @@ body:
     ;
 //!!!!  ΕΔΩ ΕΧΕΙ ΓΑΜΗΘΕΙ ΜΕ ΤΑ END ΚΑΙ ΔΕΝ ΔΟΥΛΕΥΕΙ ΤΟ BODY με πολλές δομές, κανονικά θέλει με Whitespace αλλα γαμιεται και αυτο
 cond_body:
-    body
-    | END body {printf("1C");}
-    | body END {printf("2C");}
-    | END body END {printf("3C");}
+    END body {printf("1C");}
+    /* | body END {printf("2C");}  IF YOU HAVE THIS YOU NEED TWO LINES BUT WITHOUT THIS YOU DO NOT IN FILE
+    | END body END {printf("3C");} */
     ;
 // Κανόνας για στοιχεία στο body συνάρτησης !!!! ΚΑΙ ΕΔΩ ΜΕ ΤΟ END
 all:
@@ -400,9 +399,16 @@ all:
 // Κανόνας για την δομή if και while
 if_while_grammar:
     // $$ = $1 θέτω με το keyword που πήρε για να ξέρω αμα έιναι η if για να ξέρω αν να βάλω την else
-    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;} 
+    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;} 
+    | keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;} 
+
+    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;}
     | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;}
+
+    | if_while_grammar keyword_val body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
     | if_while_grammar keyword_val cond_body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
+
+    | if_while_grammar END keyword_val body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
     | if_while_grammar END keyword_val cond_body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
     ;
 // Τι μπορεί να πάρει η for για ανάθεση στο πρώτο και τρίτο όρο

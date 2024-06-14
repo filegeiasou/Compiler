@@ -1,12 +1,11 @@
-func myfunc(int a, int b){
+func myfunc(int a, int b)
+{
     print(a);
     int a;
     a = 1;
     a, b = 1,2;
     print(len(a));
-    while(a == 1)
-    {print(a);
-        a = 1;
-        int a = a + b;
-        }
+    if(var == 100)
+    {print(a);}
+    
 }

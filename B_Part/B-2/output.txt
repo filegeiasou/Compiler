@@ -1,7 +1,1 @@
-3C5Valid function declaration
-#END-OF-FILE#
--------Report:-------
-Correct Words: 36
-Correct Expressions: 12
-Incorrect Words: 0
-Incorrect Expressions: 0
+1C
