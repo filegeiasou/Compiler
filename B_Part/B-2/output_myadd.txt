@@ -1,0 +1,7 @@
+Valid function declaration
+#END-OF-FILE#
+-------Report:-------
+Correct Words: 16
+Correct Expressions: 6
+Incorrect Words: 0
+Incorrect Expressions: 0
