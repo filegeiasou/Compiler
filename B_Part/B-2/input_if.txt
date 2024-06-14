@@ -1,4 +1,2 @@
-if(var == 100)
-{a = 1;}
-else 
-{print(a);}
+if(a == 100)
+{int a = 1;}

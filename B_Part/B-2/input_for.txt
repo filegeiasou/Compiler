@@ -1,5 +1,4 @@
 for(i = 0; i < 10; i++) 
 {
-    print(a);
-    a = 1;
+    int a = 1;
 }
