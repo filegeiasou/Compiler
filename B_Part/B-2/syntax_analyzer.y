@@ -347,29 +347,32 @@ body:
     | OPEN_BRACKET all END CLOSE_BRACKET
     | OPEN_BRACKET END all END CLOSE_BRACKET
     ;
-   
+//!!!!  ΕΔΩ ΕΧΕΙ ΓΑΜΗΘΕΙ ΜΕ ΤΑ END ΚΑΙ ΔΕΝ ΔΟΥΛΕΥΕΙ ΤΟ BODY με πολλές δομές, κανονικά θέλει με Whitespace αλλα γαμιεται και αυτο
 cond_body:
     body
-    | END body
-    | body END
+    | END body {printf("1C");}
+    | body END {printf("2C");}
+    | END body END {printf("3C");}
     ;
-// Κανόνας για στοιχεία στο body συνάρτησης (εδω οι δομές θέλουν δουλειά)
+// Κανόνας για στοιχεία στο body συνάρτησης !!!! ΚΑΙ ΕΔΩ ΜΕ ΤΟ END
 all:
     func_call DELIMITER
     | assignment DELIMITER
     | declaration DELIMITER
-    | if_while_grammar
-    | for_grammar
+    | if_while_grammar {printf("1");}
+    | for_grammar {printf("2");}
+
     | all func_call DELIMITER
     | all assignment DELIMITER
     | all declaration DELIMITER
-    | all if_while_grammar
-    | all for_grammar
+    | all if_while_grammar {printf("3");}
+    | all for_grammar {printf("4");}
+
     | all END func_call DELIMITER
     | all END assignment DELIMITER
     | all END declaration DELIMITER
-    | all END if_while_grammar
-    | all END for_grammar
+    | all END if_while_grammar {printf("5");}
+    | all END for_grammar {printf("6");}
     ;
 // Κανόνας για την δομή if και while
 if_while_grammar:
