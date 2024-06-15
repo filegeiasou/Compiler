@@ -77,9 +77,9 @@ valid:
     | declaration END {printf("Valid declaration\n");}
     | assignment END {printf("Valid assignment\n");}
     | func_call END {printf("Valid function call\n");}
-    | func_decl END {printf("Valid function declaration\n");}
-    | if_while_grammar END {printf("Valid if/while statement\n");}
-    | for_grammar END {printf("Valid for statement\n");}
+    | func_decl {printf("Valid function declaration\n");}
+    | if_while_grammar {printf("Valid if/while statement\n");}
+    | for_grammar {printf("Valid for statement\n");}
     /* | body END {printf("Valid body\n");} */
     | EOP   { print_report(); }
     | UNKNOWN_TOKEN {inc_words++;}
@@ -401,6 +401,7 @@ all:
 if_while_grammar:
     // $$ = $1 θέτω με το keyword που πήρε για να ξέρω αμα έιναι η if για να ξέρω αν να βάλω την else
     keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;} 
+
     | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;}
     | if_while_grammar keyword_val cond_body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
     | if_while_grammar END keyword_val cond_body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
