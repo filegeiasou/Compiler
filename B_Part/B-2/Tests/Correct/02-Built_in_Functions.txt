@@ -1,0 +1,18 @@
+
+scan(x);
+scan(var);
+
+len([10, 20, 30, 40, 50]);
+len("This is a test string");
+len(arr);
+
+cmp("test", "strings");
+cmp(string1, string2);
+
+print("Hello World");
+print(myVar, "-", 50);
+
+print(cmp(str1, str2));
+print(len("Test string"));
+print(len([10, 20]));
+print(pin[0]);
