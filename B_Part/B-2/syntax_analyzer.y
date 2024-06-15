@@ -93,16 +93,13 @@ program:
     ;
 valid:
     END
-    /* | num END { printf("Result: %f\n", $1); }
-    | operator END {printf("Operator: %s\n", $1);} */
-    | declaration END {printf("Valid declaration\n");}
-    | assignment END {printf("Valid assignment\n");}
-    | func_call END {printf("Valid function call\n");}
+    | declaration DELIMITER END {printf("Valid declaration\n");}
+    | assignment DELIMITER END {printf("Valid assignment\n");}
+    | func_call DELIMITER END {printf("Valid function call\n");}
     | func_decl {printf("Valid function declaration\n");}
     | if_while_grammar {printf("Valid if/while statement\n");}
     | for_grammar {printf("Valid for statement\n");}
-    /* | body END {printf("Valid body\n");} */
-    | EOP   { print_report(); }
+    | EOP   { print_report();}
     | UNKNOWN_TOKEN {inc_words++;}
     ;
 keyword: 
