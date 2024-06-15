@@ -1,4 +1,4 @@
-## Count for shift/reduce: 14
+## Count for shift/reduce: 17
 ### Works for these files
 - input_if.txt
 - input_while.txt
