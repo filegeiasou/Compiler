@@ -90,12 +90,13 @@ keyword:
 operator:
     OPERATORS { $$ = strdup(yytext); cor_words++;}
     ;
-// Rule of keywords
+
+// Rule for keywords.
 keyword_val:
     keyword{
-        // for type of variables
-        if(!strcmp($1, "int") || !strcmp($1, "float") || !strcmp($1, "double")) $$ = 1;    
-        if(!strcmp($1, "const") || !strcmp($1, "long")) $$ = 2;
+        // regarding the type of variables.
+        if(!strcmp($1, "int") || !strcmp($1, "float") || !strcmp($1, "double")) $$ = 1; // these regard the main type of the variable like int.
+        if(!strcmp($1, "const") || !strcmp($1, "long")) $$ = 2; // these regard the keyword the is before the type and they are assigned a different value
         // for functions
         if(!strcmp($1, "scan")) $$ = 3;
         if(!strcmp($1, "len")) $$ = 4;
@@ -110,43 +111,46 @@ keyword_val:
         if(!strcmp($1, "void")) $$ = 12;
     }
     ;
-// Rule for operators
+
+// Rule for operators. Every operator is assigned a different value,
+// so it can be recognized in different parts of program below.
 oper_val:
     operator { 
-        if(!strcmp($1, "+")) $$ = 1;
-        if(!strcmp($1, "-")) $$ = 2;
-        if(!strcmp($1, "*")) $$ = 3;
-        if(!strcmp($1, "/")) $$ = 4;
+        if (!strcmp($1, "+"))  $$ = 1;
+        if (!strcmp($1, "-"))  $$ = 2;
+        if (!strcmp($1, "*"))  $$ = 3;
+        if (!strcmp($1, "/"))  $$ = 4;
         if (!strcmp($1, "==")) $$ = 5;
         if (!strcmp($1, "!=")) $$ = 6;
-        if (!strcmp($1, ">")) $$ = 7;
-        if (!strcmp($1, "<")) $$ = 8;
+        if (!strcmp($1, ">"))  $$ = 7;
+        if (!strcmp($1, "<"))  $$ = 8;
         if (!strcmp($1, ">=")) $$ = 9;
         if (!strcmp($1, "<=")) $$ = 10;  
-        if(!strcmp($1, "%")) $$ = 11;
-        if(!strcmp($1, "=")) $$ = 12;
+        if (!strcmp($1, "%"))  $$ = 11;
+        if (!strcmp($1, "="))  $$ = 12;
         if (!strcmp($1, "+=")) $$ = 13;
         if (!strcmp($1, "-=")) $$ = 14;
         if (!strcmp($1, "*=")) $$ = 15;
         if (!strcmp($1, "/=")) $$ = 16;
         if (!strcmp($1, "++")) $$ = 17;
         if (!strcmp($1, "--")) $$ = 18;
-        if (!strcmp($1, "&")) $$ = 19;
+        if (!strcmp($1, "&"))  $$ = 19;
     }
     ;
+
 // Rules for expressions
 expr:
     num oper_val num {
         switch($2) {
-            case 1: $$ = $1 + $3; break;
-            case 2: $$ = $1 - $3; break;
-            case 3: $$ = $1 * $3; break;
-            case 4: $$ = $1 / $3; break;
-            case 5: $$ = $1 == $3; break;
-            case 6: $$ = $1 != $3; break;
-            case 7: $$ = $1 > $3; break;
-            case 8: $$ = $1 < $3; break;
-            case 9: $$ = $1 >= $3; break;
+            case 1:  $$ = $1 + $3; break;
+            case 2:  $$ = $1 - $3; break;
+            case 3:  $$ = $1 * $3; break;
+            case 4:  $$ = $1 / $3; break;
+            case 5:  $$ = $1 == $3; break;
+            case 6:  $$ = $1 != $3; break;
+            case 7:  $$ = $1 > $3; break;
+            case 8:  $$ = $1 < $3; break;
+            case 9:  $$ = $1 >= $3; break;
             case 10: $$ = $1 <= $3; break;
             case 11: $$ = (int)$1 % (int)$3; break;
             case 12: $$ = $3; break;
@@ -158,15 +162,15 @@ expr:
     } 
     | expr oper_val num {
         switch($2) {
-            case 1: $$ = $1 + $3; break;
-            case 2: $$ = $1 - $3; break;
-            case 3: $$ = $1 * $3; break;
-            case 4: $$ = $1 / $3; break;
-            case 5: $$ = $1 == $3; break;
-            case 6: $$ = $1 != $3; break;
-            case 7: $$ = $1 > $3; break;
-            case 8: $$ = $1 < $3; break;
-            case 9: $$ = $1 >= $3; break;
+            case 1:  $$ = $1 + $3; break;
+            case 2:  $$ = $1 - $3; break;
+            case 3:  $$ = $1 * $3; break;
+            case 4:  $$ = $1 / $3; break;
+            case 5:  $$ = $1 == $3; break;
+            case 6:  $$ = $1 != $3; break;
+            case 7:  $$ = $1 > $3; break;
+            case 8:  $$ = $1 < $3; break;
+            case 9:  $$ = $1 >= $3; break;
             case 10: $$ = $1 <= $3; break;
             case 11: $$ = (int)$1 % (int)$3; break;
             case 12: $$ = $3; break;
@@ -185,35 +189,41 @@ expr:
         }
     }
     ;
-// Κανόνες για αριθμούς
+
+// Rules regarding numbers
 num:
     INTEGER { $$ = atof(yytext); cor_words++;} 
     | FLOAT { $$ = atof(yytext); cor_words++;}
     | expr  { $$ = $1;}
     ;
-// Κανόνες για μεταβλητές
+
+// Rule for variables
 var: 
     IDENTIFIERS { $$ = strdup(yytext); cor_words++;}
     ;
-// Κανόνες για πράξεις μεταβλητών
+
+// Rules for operations between variables
 var_oper:
-    var oper_val num {}
-    | num oper_val var {}
-    | var oper_val var {}
-    | expr oper_val var {}
+    var oper_val num    {} // e.g a + 1 
+    | num oper_val var  {} // e.g 1 + a
+    | var oper_val var  {} // e.g a + b
+    | expr oper_val var {} // e.g a + b *c
     ;
+
+// Rule for strings
 str:
     STRINGS { $$ = strdup(yytext); cor_words++;}
     ;
-// Κανόνας για πίνακες
+
+// Rules for arrays
 arr:    
-    OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1; val_com=0;}
-    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2; val_com=0;}
-    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0;} 
-    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0;} //concat array
+    OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1; val_com=0;} // array with strings (e.g ["str1", "str2"] etc.)
+    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2; val_com=0;} // array with different types of numbers
+    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0;} // array with an index. For example array[0].
+    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0;} // array concatination (e.g [1, 2, 3] + [4, 5, 6])
     ;
 
-// Βοηθητικοί κανόνες για κόμματα (str, NUMBERS, VARIABLES)
+// Assisting rules for the comma symbol (str, numbers, variables, arrays).
 help_str: 
     str
     | str SYMBOL help_str {val_com++;}
@@ -234,7 +244,12 @@ help_var_oper:
     var_oper
     | var_oper SYMBOL help_var_oper {var_com++;}
     ;
-// Για διαφορετικούς τύπους αναθέσεις
+    
+// The rule below regards different types of assignment.
+// When we want to assign multiple variables in one line.
+// For example x1, list1, string = 0, [A, B, C], "HELLO";
+// ** NOTE: This is for the right side of the equation.
+// The whole assignment rule is mentioned below.
 help_assign:
     arr SYMBOL num {val_ass_com++;}
     | arr SYMBOL str {val_ass_com++;}
@@ -268,35 +283,48 @@ help_assign:
     | help_assign SYMBOL var_oper {val_ass_com++;}
     ;
 
-// Κανόνας για δήλωση
+// The group of rules below regard the declaration of a variable.
 declaration:
-    // int val
+    
+    // This covers the case of basic variable declation. e.g int varName
     keyword_val var {if($1 != 1) yyerror("Invalid declaration type"); cor_expr++;}
-    // int a = 1 or b 
-    | keyword_val var oper_val num { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;}
-    | keyword_val var oper_val var { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;}
+    
+    // The two rules below identify the assignation of a variable with a number
+    // as well as the assignation of a variable with another variable.
+    | keyword_val var oper_val num { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} // int a = 1
+    | keyword_val var oper_val var { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} // int a = b
+
     // Long int a = 1  or a = b
+    // The three rules identify the keyword long or short, so we can write const int or long int.
+    // Same as above, it covers the case of just the declaration of a variable (long int a;),
+    // the assignation with a number like long int a = 5 and lastly the assignation of a variable with another variable
+    // like long int a = b.
     | keyword_val keyword_val var { if ($1 != 2 || $2 != 1) yyerror("Invalid declaration type"); cor_expr++;}
     | keyword_val keyword_val var oper_val num { if ($1 != 2 || $2 != 1 || $4 != 12) yyerror("Invalid declaration type"); cor_expr++;}
     | keyword_val keyword_val var oper_val var { if ($1 != 2 || $2 != 1 || $4 != 12) yyerror("Invalid declaration type"); cor_expr++;}
-    // int a = [1,2]
+    
+    // this rule identifies the assignation of a variable with an array (e.g int a = [1,2])
     | keyword_val var oper_val arr {if ($1 != 1 || $3 != 12 ) yyerror("Invalid declaration type"); cor_expr++;} 
-    // int a = a + b or a + 1, 1 + a etc.
+    
+    // this enables us to declare and assign a variable to an operation of other variables or numbers.
+    // For example we can do this: int a = a + b or a + 1, 1 + a etc.
     | keyword_val var oper_val var_oper {if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} 
     ;
 
-// Κανόνες για ανάθεση τιμών 
-assignment: 
-    help_var oper_val help_num {if($2 != 12 || var_com != val_com)  yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
-    | help_var oper_val help_arr {if($2 != 12 || val_arr_com) yyerror("Invalid assignment"); var_com = 0; val_arr_com = 0; cor_expr++;}
-    | help_var oper_val help_var {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
-    | help_var oper_val help_str {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
-    | help_var oper_val help_var_oper {if($2 != 12 || var_com != val_com) yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
-    | help_var oper_val help_assign {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0; cor_expr++;}
+// Rules for value assignment
+assignment:
+    
+    help_var oper_val help_num        {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
+    | help_var oper_val help_arr      {if($2 != 12 || val_arr_com)            yyerror("Invalid assignment"); var_com = 0; val_arr_com = 0; cor_expr++;}
+    | help_var oper_val help_var      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
+    | help_var oper_val help_str      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
+    | help_var oper_val help_var_oper {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); var_com = 0; val_com = 0; cor_expr++;}
+    | help_var oper_val help_assign   {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); var_com = 0; val_ass_com = 0; cor_expr++;}
     /* | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // π.χ α = α + b; //!!!ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ ΑΜΑ ΤΟ ΒΑΛΩ ΧΑΛΑΕΙ ΤΟ num = 1; */
     ;
  
-// Βοηθητικοί κανόνες για συναρτήσεις print και cmp και για πολλώνν τύπων με κόμματα χωρισμένα
+// Assisting rules for the built-in print function. It can identify multiple, either same of different,
+// parameters inside the parenthesis of the function. For example print(x, "=", 100); 
 help_3args:
     var SYMBOL num
     | num SYMBOL var
@@ -310,114 +338,145 @@ help_3args:
     | help_3args SYMBOL str
     | help_3args SYMBOL num
     ;
+
+// This set of rules is generally similar to the one above. This regards the function cmp,
+// that can only take 2 arguments instead of multiple like print.
 help_2args:
     var SYMBOL var
     | str SYMBOL str
     | str SYMBOL var
     | var SYMBOL str
     ;
-// Κανόνας για την συνάρτηση scan, len και την print (όταν όρισμα είναι ένα)
+
+/* The rules mentioned above (help_3args and help_2args) are helpful for the part inside the parenthesis */
+/* of the functions. The whole part of the function, keyword parenthesis as well as the parameteres are  */
+/* implemented below. */
+
+// These rule are for the functions scan, len and print, only when the number of parameters is 1.
+// The function scan and len, by themselves, only need 1 argument. So the rules below cover that case.
+// So they enable us to do scan(x), len("this is a test string") and print("Hello World") etc.
 scan_len_print: 
-    keyword_val OPEN_PARENTHESIS var CLOSE_PARENTHESIS { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  {if ($1 != 4) yyerror("Invalid function call");}
+    keyword_val   OPEN_PARENTHESIS var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  { if ($1 != 4) yyerror("Invalid function call");}
     | keyword_val OPEN_PARENTHESIS str CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call");}
     ;
-// Κανόνας για την συνάρτηση cmp και την print (όταν ορίσματα είναι δύο)
+
+// Rule for the functions cmp and print, when the number of parameters given is 2.
+// Function cmp only accepts 2 parameters anyway like cmp(str1, str2). This also covers the case of
+// print(a, b) for example.
 cmp_print: 
     keyword_val OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call");}
     ;
-// Κανόνας για την συνάρτηση print (όταν τα όρισματα είναι 3)
+
+// Rules for the print function when the nubmer of parameters is 3.
 print: 
-    keyword_val OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 5) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {if ($1 != 6) yyerror("Invalid function call");} 
+    keyword_val   OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS      {if ($1 != 6 && $3 == 5) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS     {if ($1 != 6) yyerror("Invalid function call");} 
     ;
 
-// Κανόνας για την κλήση συναρτήσεων 
+// Set of rules for function calls.
 func_call:
     scan_len_print {cor_expr++;}
-    | cmp_print {cor_expr++;}
-    | print {cor_expr++;}
-    // Κλήση συνάρτησης οριμένη από χρήστη
-    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με όρισμα var {if(strcmp($1,func_arg)) yyerror("Invalid function call");} -> ελέγχος αν υπάρχει συνάρτηση (δεν ξέρω πώς ακριβώς προαιρετικό)
-    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 1 όρισμα num
-    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 1 όρισμα str
-    | var OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 2 όρισματα
-    | var OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με 3 όρισματα και άνω
-    | var OPEN_PARENTHESIS CLOSE_PARENTHESIS {cor_expr++;} //κλήση συνάρτησης με κανένα όρισμα
+    | cmp_print    {cor_expr++;}
+    | print        {cor_expr++;}
+
+    // The rules below regard the calls for the user defined functions.
+    // For example myFunc(params).
+    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS        {cor_expr++;} // function call with a variable as a parameter
+    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS        {cor_expr++;} // function call with 1 num parameter
+    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS        {cor_expr++;} // function call with 1 str parameter
+    | var OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {cor_expr++;} // function call with 2 parameters
+    | var OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {cor_expr++;} // function call with 3 parameters or more
+    | var OPEN_PARENTHESIS CLOSE_PARENTHESIS            {cor_expr++;} // function call with no parameters
     ;
-//  Κανόνας για παράμετρους συναρτήσεων
+
+// Rule for the arguments of a function.
+// This basically identifies expressions like myFunc(int a, int b)
 arguments:
     declaration
     | declaration SYMBOL arguments
     ;
 
-// Εδώ ορίζεται τι θεωρείται ορισμός μιας συνάρτησης (δουλέυει με ότι εχει το declaration, μήπως χωριστούν κάποια από τα πεδία του)
+// The group of rules below regard the function declaration.
+// It can identify the simple declaration without a body like func myFunc(int a, int b).
+// It also identifies every pattern of brackets (single line, multi-line etc.).
+// This is done using the group of rules uner the label body:
+// that is described below.
 func_decl:
-    keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER{if($1 != 7) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2; cor_expr++; }
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body{if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
-    // Void συνάρτηση
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body{if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
+    keyword_val var   OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER   {if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body        {if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body    {if ($1 != 7) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
+
+    // This is for the parameter void (myFunc(void))
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body      {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body  {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); func_arg = $2; cor_expr++;}
     ;
 
-// Κανόνας για άνοιγμα/κλείσιμο σώματος {} συναρτήσεων
+// These rules below regards every possible pattern of the brackets.
 body:
     OPEN_BRACKET all CLOSE_BRACKET
     | OPEN_BRACKET END all CLOSE_BRACKET
     | OPEN_BRACKET all END CLOSE_BRACKET
     | OPEN_BRACKET END all END CLOSE_BRACKET
     ;
-//!!!!  ΕΔΩ ΕΧΕΙ ΓΑΜΗΘΕΙ ΜΕ ΤΑ END ΚΑΙ ΔΕΝ ΔΟΥΛΕΥΕΙ ΤΟ BODY με πολλές δομές, κανονικά θέλει με Whitespace αλλα γαμιεται και αυτο
+
+// This group of rules is for the body of the conditional statements like if and while.
 cond_body:
     body
-    | END body {printf("1C");}
-    | body END {printf("2C");}  //IF YOU HAVE THIS YOU NEED TWO LINES BUT WITHOUT THIS YOU DO NOT IN FILE
+    | END body     {printf("1C");}
+    | body END     {printf("2C");}
     | END body END {printf("3C");}
     ;
-// Κανόνας για στοιχεία στο body συνάρτησης !!!! ΚΑΙ ΕΔΩ ΜΕ ΤΟ END
+
+// Rules regarding everything inside the body of the function.
 all:
     func_call DELIMITER
     | assignment DELIMITER
     | declaration DELIMITER
     | if_while_grammar {printf("111111");}
-    | for_grammar {printf("222222");}
+    | for_grammar      {printf("222222");}
 
     | all func_call DELIMITER
     | all assignment DELIMITER
     | all declaration DELIMITER
     | all if_while_grammar {printf("33333");}
-    | all for_grammar {printf("44444");}
+    | all for_grammar      {printf("44444");}
 
     | all END func_call DELIMITER
     | all END assignment DELIMITER
     | all END declaration DELIMITER
     | all END if_while_grammar {printf("55555");}
-    | all END for_grammar {printf("66666");}
+    | all END for_grammar      {printf("66666");}
     ;
-// Κανόνας για την δομή if και while
+
+// Rules for if and while condition. The rules for both are included under one label,
+// because they are very similar in terms of syntax.
 if_while_grammar:
     // $$ = $1 θέτω με το keyword που πήρε για να ξέρω αμα έιναι η if για να ξέρω αν να βάλω την else
     keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;} 
 
     | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;}
-    | if_while_grammar keyword_val cond_body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
-    | if_while_grammar END keyword_val cond_body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
+    | if_while_grammar keyword_val cond_body {if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
+    | if_while_grammar END keyword_val cond_body {if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
     ;
-// Τι μπορεί να πάρει η for για ανάθεση στο πρώτο και τρίτο όρο
+
+// Assisting rule for the for loop that identifies the first and third part of the condition.
+// For example if we have for(i = 0; i < 5; i++), it checks for the i = 0 and i++ parts.
 help_for:
-    var oper_val{if($2 != 17 && $2 != 18) yyerror("Invalid --/++ operator"); cor_expr++;}
-    | var oper_val num{cor_expr++;}
+    var oper_val       {if($2 != 17 && $2 != 18) yyerror("Invalid --/++ operator"); cor_expr++;}
+    | var oper_val num {cor_expr++;}
     ;
-//Κανόνας για την δομή for 
+
+// Main grammar rules for the for loop.
 for_grammar:
-    keyword_val OPEN_PARENTHESIS help_for DELIMITER expr DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); cor_expr++;}
-    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body{if($1 != 11) yyerror("Invalid for statement"); cor_expr++;}
+    keyword_val   OPEN_PARENTHESIS help_for DELIMITER expr     DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); cor_expr++;}
+    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); cor_expr++;}
     ;
 
 %%
+
 /* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
    apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h
    synarthsh epi ths ousias typwnei mhnyma lathous sthn othonh. */
@@ -426,6 +485,8 @@ void yyerror(char *s) {
     exit(1);
 }
 
+// Function that prints a report containing several details about the result of the syntax analyzer
+// and what it identified.
 void print_report() {
     printf("-------Report:-------\n");
     printf("Correct Words: %d\n", cor_words);
@@ -434,17 +495,19 @@ void print_report() {
     printf("Incorrect Expressions: %d\n", inc_expr);
 }
 
-/* H synarthsh main pou apotelei kai to shmeio ekkinhshs tou programmatos.
-   Sthn sygkekrimenh periptwsh apla kalei thn synarthsh yyparse tou Bison
-   gia na ksekinhsei h syntaktikh analysh. */
+// The main function checks if the arguments given are correct.
+// If the number of arguments given is 2 then the program received the input from a txt file.
+// If not, then it just takes the input from the user through the terminal.
+// Then the function calls the yyparse() method, that basically connects the syntax analyzer
+// and the lexer. It breaks the input into tokens that we have defined on the lexical analyzer.
 int main(int argc,char **argv) {
 
     if(argc == 2)
-	    yyin=fopen(argv[1],"r");
+	    yyin = fopen(argv[1], "r"); // open the text file given as input
 	else
-		yyin=stdin;
-	int parse = yyparse();   
+		yyin = stdin; // get input from the user's terminal
 
+	int parse = yyparse();
     if (parse == 0)
         fprintf(stderr, "Successful parsing.\n");  
     else
