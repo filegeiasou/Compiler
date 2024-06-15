@@ -120,4 +120,5 @@ void handle_comment()
 int yyerror (const char *msg)
 {
     fprintf(yyout, "\tLine %d at lexeme \'%s\' : %s\n",line, yytext, msg); 
+    return 1;
 }

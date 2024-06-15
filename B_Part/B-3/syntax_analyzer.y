@@ -35,34 +35,38 @@ Execution Instructions: Type make into the console. Alternatively you can type t
                                 flex lexical_analyzer.l
                                 gcc -o syntax_analyzer syntax_analyzer.tab.c lex.yy.c -lm
                                 ./syntax_analyzer input_file.txt
+    
+    Unimplemented syntax rules:
+                        - 2.1.2.1 Grammar rules for Physical Lines (Κανόνες σύνδεσης φυσικών γραμμών)
 */
 
 %{
-/* Orismoi kai dhlwseis glwssas C. Otidhpote exei na kanei me orismo h arxikopoihsh
-metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to shmeio */
+        // Including all the necessary C libraries
         #include <stdio.h>
         #include <math.h>
         #include <stdlib.h>
         #include <string.h>
+
+        // Definition of function and variables required for the program.
         extern char *yytext;
         extern void yyerror(char *);
         extern int yylex(void);
         void print_report(void);
         extern FILE *yyin;
 
-        extern int line; // Μετρητής γραμμών κώδικα
-        // Μετρητές για μέτρηση των κομμάτων
+        extern int line; // line counter
+         // Counters for the comma (,) symbol (defined as SYMBOL in the lexer)
         int var_com = 0, val_com = 0, val_arr_com = 0, val_ass_com = 0;
         char* func_arg;
-        int errflag=0; // Μετρητής σφαλμάτων
-        extern int cor_words; // μετρήτης σωστών λέξεων (flex)
-        int cor_expr = 0;
-        extern int inc_words;
-        int inc_expr;
+        int errflag=0;           // error counter
+        extern int cor_words;   // correct word counter (flex)
+        int cor_expr = 0;      // correct expressions counter
+        extern int inc_words; // incorrect words counter
+        int inc_expr;        // incorrect expressions counter
         int par_warn=0;
 %}
 
-/* Orismos twn anagnwrisimwn lektikwn monadwn. */
+/* Definition of the identifiable lectical units. */
 %union {
     int ival;
     double dval;
@@ -77,21 +81,21 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
 %type <sval> operator keyword declaration var str func_decl
 %type <ival> oper_val keyword_val scan_len_print cmp_print arr if_while_grammar help_for
 
-/* Orismos proteraiothtwn sta tokens */
+/* Definition of the priorities between operations */
 %left '+' '-'
 %left '*' '/'
 %right '='
 %start program
 
 %%
-/* Orismos twn grammatikwn kanonwn. Kathe fora pou antistoixizetai enas grammatikos
-   kanonas me ta dedomena eisodou, ekteleitai o kwdikas C pou brisketai anamesa sta
-   agkistra. H anamenomenh syntaksh einai:
-				onoma : kanonas { kwdikas C } */
+/* Between the two percentage signs (%%) are all the grammar rules for the syntax analysis.
+   Everytime there is a match for a grammar rule, the C code inside the brackets is executed (if there is code).
+   The expected syntax is:
+        name : grammar rule { C code } */
 
 program:
     | program valid
-    | program error END {inc_expr++;} // Αν υπάρχει λάθος στο πρόγραμμα
+    | program error END {inc_expr++;} // If there is error on the program
     ;
 valid:
     END
@@ -118,12 +122,14 @@ keyword_val:
         if(!strcmp($1, "int") ) $$ = 1;   
         if(!strcmp($1, "float") || !strcmp($1, "double")) $$ = 13;
         if(!strcmp($1, "const") || !strcmp($1, "long")) $$ = 2; // these regard the keyword the is before the type and they are assigned a different value
+
         // for functions
         if(!strcmp($1, "scan")) $$ = 3;
         if(!strcmp($1, "len")) $$ = 4;
         if(!strcmp($1, "cmp")) $$ = 5;
         if(!strcmp($1, "print")) $$ = 6;
         if(!strcmp($1, "func")) $$ = 7;
+
         // for conditionals
         if(!strcmp($1, "if")) $$ = 8;
         if(!strcmp($1, "else")) $$ = 9;
@@ -228,7 +234,6 @@ expr:
     | oper_val num { 
         switch($1) {
             case 2: $$ = -$2; break;
-            //case 19: $$ = $2; break;
         }
     }
     ;
@@ -258,7 +263,7 @@ str:
     STRINGS { $$ = strdup(yytext); }
     ;
 
-// Βοηθητικοί κανόνες για αριθμούς (INTEGER, FLOAT) με κόμματα
+// Assisting rules for number (INTEGER, FLOAT) with commas (SYMBOL)
 help_int:
     INTEGER
     | INTEGER SYMBOL help_int {val_com++;}
@@ -349,6 +354,7 @@ declaration:
     | keyword_val var oper_val FLOAT { if ($1 != 13 || $3 != 12) yyerror("Invalid declaration type");else cor_expr++;} // float a = 1.1
     | keyword_val var oper_val var { if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type");else cor_expr++;}// int a = b
     | keyword_val var oper_val var operator { if ($1 != 1 && $1 != 13 || $3 != 12 ) yyerror("Invalid declaration type"); else {par_warn++; cor_expr++; printf("Warning: Unknown token found in expression\n");}} // WARNING
+
     // Long int a = 1  or a = b
     // The three rules identify the keyword long or short, so we can write const int or long int.
     // Same as above, it covers the case of just the declaration of a variable (long int a;),
@@ -360,6 +366,9 @@ declaration:
     | keyword_val keyword_val var oper_val var { if ($1 != 2 || $2 != 1 && $2 != 13 || $4 != 12) yyerror("Invalid declaration type");else cor_expr++;}
     
     // this rule identifies the assignation of a variable with an array (e.g int a = [1,2])
+    // It also checks that the elements, inside the array, are the correct type.
+    // For example: int arr = [1, 4.2, 2] is not acceptable. Every element has to be int or float
+    // depending on the declaration type.
     | keyword_val var oper_val arr {
         if($1 != $4)//same type of array and variable
             yyerror("Invalid declaration type");  
@@ -374,12 +383,11 @@ declaration:
 assignment:
     
     help_var oper_val help_num        {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment");else cor_expr++; var_com = 0; val_com = 0; }
-    | help_var oper_val help_arr      {if($2 != 12 || val_arr_com)            yyerror("Invalid assignment");else cor_expr++; var_com = 0; val_arr_com = 0; }
+    | help_var oper_val help_arr      {if($2 != 12 || var_com != val_arr_com) yyerror("Invalid assignment");else cor_expr++; var_com = 0; val_arr_com = 0; }
     | help_var oper_val help_var      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment");else cor_expr++; var_com = 0; val_com = 0; }
     | help_var oper_val help_str      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment");else cor_expr++; var_com = 0; val_com = 0; }
     | help_var oper_val help_var_oper {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment");else cor_expr++; var_com = 0; val_com = 0; }
     | help_var oper_val help_assign   {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment");else cor_expr++; var_com = 0; val_ass_com = 0; }
-    /* | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // π.χ α = α + b; //!!!ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ ΑΜΑ ΤΟ ΒΑΛΩ ΧΑΛΑΕΙ ΤΟ num = 1; */
     ;
  
 // Assisting rules for the built-in print function. It can identify multiple, either same of different,
@@ -416,7 +424,11 @@ help_2args:
 // So they enable us to do scan(x), len("this is a test string") and print("Hello World") etc.
 scan_len_print: 
     keyword_val   OPEN_PARENTHESIS var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  { if ($1 != 4) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  { 
+        if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); 
+        if ($1 == 4 && $3 == 3) yyerror("Invalid function call");
+        if ($1 == 6 && $3 != 3) yyerror("Invalid function call");
+    } 
     | keyword_val OPEN_PARENTHESIS str CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call");}
     ;
 
@@ -514,7 +526,9 @@ all:
 // Rules for if and while condition. The rules for both are included under one label,
 // because they are very similar in terms of syntax.
 if_while_grammar:
-    // $$ = $1 θέτω με το keyword που πήρε για να ξέρω αμα έιναι η if για να ξέρω αν να βάλω την else
+
+    // $$ = $1. Here it's basically checking for an if statement, in order to know if there should be an else statement.
+    // If there is a while statement for example, it shouldn't check for an else because the while loop can't have an else condition.
     keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement");else cor_expr++; $$ = $1;} 
 
     | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); else cor_expr++; $$ = $1;}
@@ -537,9 +551,8 @@ for_grammar:
 
 %%
 
-/* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. Sygkekrimena kaleitai
-   apo thn yyparse otan yparksei kapoio syntaktiko lathos. Sthn parakatw periptwsh h
-   synarthsh epi ths ousias typwnei mhnyma lathous sthn othonh. */
+/* The yyerror function is used for the reporting of any errors. It is called by yyparse
+   whenever there is a syntax error. It prints an error message to the terminal and then exits. */
 /* void yyerror(char *s) {
     fprintf(stderr, "Error: %s\n", s);
     exit(1);

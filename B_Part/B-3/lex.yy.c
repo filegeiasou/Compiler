@@ -1,5 +1,5 @@
 
-#line 3 "lex.yy.c"
+#line 2 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -637,7 +637,7 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
     int lex_warn = 0; // Counter for the number of characters ignored
     int cor_words = 0; // Counter for the number of correct words
     int inc_words=0; // Counter for the number of incorrect words
-#line 641 "lex.yy.c"
+#line 640 "lex.yy.c"
 /* Below are the names and the corresponding regular expression for each token.
    With the use of names we can make it easier to use these regular expressions,
    instead of having to write them all the time, making the program confusing. */
@@ -645,7 +645,7 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
    The return command allows the return of a numerical value through the yylex() function,
    allowing us to return numerican values that we have defined in the token.h file. */
-#line 649 "lex.yy.c"
+#line 648 "lex.yy.c"
 
 #define INITIAL 0
 #define REALLYEND 1
@@ -866,7 +866,7 @@ YY_DECL
 	{
 #line 63 "lexical_analyzer.l"
 
-#line 870 "lex.yy.c"
+#line 869 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1048,7 +1048,7 @@ YY_RULE_SETUP
 #line 90 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 1052 "lex.yy.c"
+#line 1051 "lex.yy.c"
 case YY_STATE_EOF(error):
 	yyterminate();
 
@@ -2087,5 +2087,6 @@ void handle_comment()
 int yyerror (const char *msg)
 {
     fprintf(yyout, "\tLine %d at lexeme \'%s\' : %s\n",line, yytext, msg); 
+    return 1;
 }
 
