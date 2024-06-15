@@ -1,6 +1,8 @@
 int ;
 float int a;
 
+int a = 1.1;
+
 int int_arr = [1, 5.4, 3];
 float f_arr = [4, 3, 2.5];
 int arr = [1, "var", 5];
