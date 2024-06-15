@@ -1,19 +1,40 @@
-/* Onoma arxeiou:       simple-bison-code.y
-   Perigrafh:           Ypodeigma gia anaptyksh syntaktikou analyth me xrhsh tou ergaleiou Bison
-   Syggrafeas:          Ergasthrio Metaglwttistwn, Tmhma Mhxanikwn Plhroforikhs kai Ypologistwn,
-                        Panepisthmio Dytikhs Attikhs
-   Sxolia:              To paron programma ylopoiei (me th xrhsh Bison) enan aplo syntaktiko analyth
-			pou anagnwrizei thn prosthesh akeraiwn arithmwn (dekadikou systhmatos) & metablhtwn
-			kai ektypwnei to apotelesma sthn othonh (thewrontas oti oi metablhtes exoun
-			panta thn timh 0). Leitourgei autonoma, dhladh xwris Flex kai anagnwrizei kena
-			(space & tab), akeraious (dekadikou systhmatos) kai onomata metablhtwn ths glwssas
-			Uni-C enw diaxeirizetai tous eidikous xarakthres neas grammhs '\n' (new valid)
-			kai 'EOF' (end of file). Kathara gia logous debugging typwnei sthn othonh otidhpote
-			epistrefei h synarthsh yylex().
-   Odhgies ekteleshs:   Dinete "make" xwris ta eisagwgika ston trexonta katalogo. Enallaktika:
-			bison -o simple-bison-code.c simple-bison-code.y
-                        gcc -o simple-bison-code simple-bison-code.c
-                        ./simple-bison-code
+/* 
+   File name:           syntax_analyzer.y
+
+   Description:         Syntax analyzer using Bison Tool
+
+   Authors:             Dimitrios Kontoulis(21390095), Aggelos Konstantinos Mentzelos(21390132),
+                        Efrsosini Barsou(21390021), Leonidas Alexopoulos(21390006)
+                        Compilers Lab, Department of Informatics and Computer Engineering,
+                        University of West Attica
+
+   Comments:            The program implemented below implements (using the Bison tool) a syntax analyzer.
+                        It checks if the code given as input to it is, in terms of syntax, correct. It works
+                        with the lexer (Lexical Analyzer) in order to retrieve the required tokens for the analysis.
+                        When the analysis is over, it prints a report that contains some details about the whole
+                        analysis procedure, such as what is correct and what isn't. It can identify the following:
+                            * Variable declaration and assignment
+                            * Arrays
+                            * Built-in functions which are scan, len, cmp and print.
+                            * Custom, User-defined functions.
+                            * Comparisons
+                            * Array Concatenation
+                            * Conditional Statements like if
+                            * while and for loops
+
+Execution Instructions: Type make into the console. Alternatively you can type the following commands:
+                            bison -d syntax_analyzer.y
+                            flex lexical_analyzer.l
+                            gcc -o syntax_analyzer syntax_analyzer.tab.c lex.yy.c -lm
+                            ./syntax_analyzer
+
+                        If you want to give a text file as input, you should either
+                            1) change the Makefile and type "make" again, or
+                            2) modify the commands above like so:
+                                bison -d syntax_analyzer.y
+                                flex lexical_analyzer.l
+                                gcc -o syntax_analyzer syntax_analyzer.tab.c lex.yy.c -lm
+                                ./syntax_analyzer input_file.txt
 */
 
 %{
