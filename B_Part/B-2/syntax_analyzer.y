@@ -116,7 +116,8 @@ operator:
 keyword_val:
     keyword{
         // regarding the type of variables.
-        if(!strcmp($1, "int") || !strcmp($1, "float") || !strcmp($1, "double")) $$ = 1; // these regard the main type of the variable like int.
+        if(!strcmp($1, "int") ) $$ = 1;   
+        if(!strcmp($1, "float") || !strcmp($1, "double")) $$ = 13;
         if(!strcmp($1, "const") || !strcmp($1, "long")) $$ = 2; // these regard the keyword the is before the type and they are assigned a different value
         // for functions
         if(!strcmp($1, "scan")) $$ = 3;
@@ -236,12 +237,23 @@ str:
     STRINGS { $$ = strdup(yytext); cor_words++;}
     ;
 
+// Βοηθητικοί κανόνες για αριθμούς (INTEGER, FLOAT) με κόμματα
+help_int:
+    INTEGER
+    | INTEGER SYMBOL help_int {val_com++;}
+    ;
+help_float:
+    FLOAT
+    | FLOAT SYMBOL help_float {val_com++;}
+    ;
+
 // Rules for arrays
 arr:    
-    OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1; val_com=0;} // array with strings (e.g ["str1", "str2"] etc.)
-    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2; val_com=0;} // array with different types of numbers
-    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0;} // array with an index. For example array[0].
-    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0;} // array concatination (e.g [1, 2, 3] + [4, 5, 6])
+    OPEN_BRACE help_int CLOSE_BRACE  { $$ = 1; val_com=0; }
+    | OPEN_BRACE help_float CLOSE_BRACE  { $$ = 13; val_com=0;}
+    | OPEN_BRACE help_str CLOSE_BRACE   { $$ = 2; val_com=0;}
+    | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0;} 
+    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0;} //concat array
     ;
 
 // Assisting rules for the comma symbol (str, numbers, variables, arrays).
@@ -308,28 +320,32 @@ help_assign:
 declaration:
     
     // This covers the case of basic variable declation. e.g int varName
-    keyword_val var {if($1 != 1) yyerror("Invalid declaration type"); cor_expr++;}
+    keyword_val var {if($1 != 1 && $1 != 13) yyerror("Invalid declaration type"); cor_expr++;} // 1, 13 int, float, double
     
     // The two rules below identify the assignation of a variable with a number
     // as well as the assignation of a variable with another variable.
-    | keyword_val var oper_val num { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} // int a = 1
-    | keyword_val var oper_val var { if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} // int a = b
-
+    | keyword_val var oper_val INTEGER { if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} // int a = 1
+    | keyword_val var oper_val FLOAT { if ($1 != 13 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} // float a = 1.1
+    | keyword_val var oper_val var { if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;}// int a = b
     // Long int a = 1  or a = b
     // The three rules identify the keyword long or short, so we can write const int or long int.
     // Same as above, it covers the case of just the declaration of a variable (long int a;),
     // the assignation with a number like long int a = 5 and lastly the assignation of a variable with another variable
     // like long int a = b.
-    | keyword_val keyword_val var { if ($1 != 2 || $2 != 1) yyerror("Invalid declaration type"); cor_expr++;}
-    | keyword_val keyword_val var oper_val num { if ($1 != 2 || $2 != 1 || $4 != 12) yyerror("Invalid declaration type"); cor_expr++;}
-    | keyword_val keyword_val var oper_val var { if ($1 != 2 || $2 != 1 || $4 != 12) yyerror("Invalid declaration type"); cor_expr++;}
+    | keyword_val keyword_val var { if ($1 != 2 || $2 != 1 && $2 != 13) yyerror("Invalid declaration type"); cor_expr++;}
+    | keyword_val keyword_val var oper_val INTEGER { if ($1 != 2 || $2 != 1 && $2 != 13 || $4 != 12) yyerror("Invalid declaration type1"); cor_expr++;}
+    | keyword_val keyword_val var oper_val FLOAT { if ($1 != 2 || $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); cor_expr++;}
+    | keyword_val keyword_val var oper_val var { if ($1 != 2 || $2 != 1 && $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); cor_expr++;}
     
     // this rule identifies the assignation of a variable with an array (e.g int a = [1,2])
-    | keyword_val var oper_val arr {if ($1 != 1 || $3 != 12 ) yyerror("Invalid declaration type"); cor_expr++;} 
+    | keyword_val var oper_val arr {
+        if($1 != $4)//same type of array and variable
+            yyerror("Invalid declaration type");  
+        else if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} 
     
     // this enables us to declare and assign a variable to an operation of other variables or numbers.
     // For example we can do this: int a = a + b or a + 1, 1 + a etc.
-    | keyword_val var oper_val var_oper {if ($1 != 1 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} 
+    | keyword_val var oper_val var_oper {if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} 
     ;
 
 // Rules for value assignment
