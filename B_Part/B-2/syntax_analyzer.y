@@ -74,6 +74,7 @@ valid:
     END
     /* | num END { printf("Result: %f\n", $1); }
     | operator END {printf("Operator: %s\n", $1);} */
+    | arr END {printf("Valid array\n");}
     | declaration END {printf("Valid declaration\n");}
     | assignment END {printf("Valid assignment\n");}
     | func_call END {printf("Valid function call\n");}
@@ -205,10 +206,20 @@ var_oper:
 str:
     STRINGS { $$ = strdup(yytext); cor_words++;}
     ;
+// Βοηθητικοί κανόνες για αριθμούς (INTEGER, FLOAT) με κόμματα
+help_int:
+    INTEGER
+    | INTEGER SYMBOL help_int {val_com++;}
+    ;
+help_float:
+    FLOAT
+    | FLOAT SYMBOL help_int {val_com++;}
+    ;
 // Κανόνας για πίνακες
 arr:    
     OPEN_BRACE help_str CLOSE_BRACE   { $$ = 1; val_com=0;}
-    | OPEN_BRACE help_num CLOSE_BRACE  { $$ = 2; val_com=0;}
+    | OPEN_BRACE help_int CLOSE_BRACE  { $$ = 2; val_com=0;}
+    | OPEN_BRACE help_float CLOSE_BRACE  { $$ = 2; val_com=0;}
     | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0;} 
     | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0;} //concat array
     ;
