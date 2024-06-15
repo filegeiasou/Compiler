@@ -48,7 +48,7 @@ metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to 
         extern void yyerror(char *);
         extern int yylex(void);
         void print_report(void);
-        FILE *yyin;
+        extern FILE *yyin;
 
         extern int line; // Μετρητής γραμμών κώδικα
         // Μετρητές για μέτρηση των κομμάτων
