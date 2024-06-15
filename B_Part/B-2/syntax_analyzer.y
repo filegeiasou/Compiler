@@ -37,12 +37,10 @@ Execution Instructions: Type make into the console. Alternatively you can type t
                                 ./syntax_analyzer input_file.txt
     
     Unimplemented syntax rules:
-                        - 2.1.2.1 Κανόνες σύνδεσης φυσικών γραμμών
+                        - 2.1.2.1 Grammar rules for Physical Lines (Κανόνες σύνδεσης φυσικών γραμμών)
 */
 
 %{
-        /* Orismoi kai dhlwseis glwssas C. Otidhpote exei na kanei me orismo h arxikopoihsh
-        metablhtwn & synarthsewn, arxeia header kai dhlwseis #define mpainei se auto to shmeio */
 
         // Including all the necessary C libraries
         #include <stdio.h>
