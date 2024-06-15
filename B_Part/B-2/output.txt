@@ -1,1 +1,7 @@
-1C
+3C55555Valid function declaration
+#END-OF-FILE#
+-------Report:-------
+Correct Words: 22
+Correct Expressions: 7
+Incorrect Words: 0
+Incorrect Expressions: 0

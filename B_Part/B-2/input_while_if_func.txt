@@ -1,0 +1,9 @@
+
+{ 
+    int a = 0;
+    while(a != 100)
+    {
+        print(a);
+        int a = a + 1;
+    }
+}
