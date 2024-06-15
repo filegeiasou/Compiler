@@ -372,43 +372,37 @@ body:
     ;
 //!!!!  ΕΔΩ ΕΧΕΙ ΓΑΜΗΘΕΙ ΜΕ ΤΑ END ΚΑΙ ΔΕΝ ΔΟΥΛΕΥΕΙ ΤΟ BODY με πολλές δομές, κανονικά θέλει με Whitespace αλλα γαμιεται και αυτο
 cond_body:
-    END body {printf("1C");}
-    /* | body END {printf("2C");}  IF YOU HAVE THIS YOU NEED TWO LINES BUT WITHOUT THIS YOU DO NOT IN FILE
-    | END body END {printf("3C");} */
+    body
+    | END body {printf("1C");}
+    | body END {printf("2C");}  //IF YOU HAVE THIS YOU NEED TWO LINES BUT WITHOUT THIS YOU DO NOT IN FILE
+    | END body END {printf("3C");}
     ;
 // Κανόνας για στοιχεία στο body συνάρτησης !!!! ΚΑΙ ΕΔΩ ΜΕ ΤΟ END
 all:
     func_call DELIMITER
     | assignment DELIMITER
     | declaration DELIMITER
-    | if_while_grammar {printf("1");}
-    | for_grammar {printf("2");}
+    | if_while_grammar {printf("111111");}
+    | for_grammar {printf("222222");}
 
     | all func_call DELIMITER
     | all assignment DELIMITER
     | all declaration DELIMITER
-    | all if_while_grammar {printf("3");}
-    | all for_grammar {printf("4");}
+    | all if_while_grammar {printf("33333");}
+    | all for_grammar {printf("44444");}
 
     | all END func_call DELIMITER
     | all END assignment DELIMITER
     | all END declaration DELIMITER
-    | all END if_while_grammar {printf("5");}
-    | all END for_grammar {printf("6");}
+    | all END if_while_grammar {printf("55555");}
+    | all END for_grammar {printf("66666");}
     ;
 // Κανόνας για την δομή if και while
 if_while_grammar:
     // $$ = $1 θέτω με το keyword που πήρε για να ξέρω αμα έιναι η if για να ξέρω αν να βάλω την else
-    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;} 
-    | keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;} 
-
-    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;}
+    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;} 
     | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); $$ = $1; cor_expr++;}
-
-    | if_while_grammar keyword_val body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
     | if_while_grammar keyword_val cond_body{if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
-
-    | if_while_grammar END keyword_val body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
     | if_while_grammar END keyword_val cond_body{if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); cor_expr++;}
     ;
 // Τι μπορεί να πάρει η for για ανάθεση στο πρώτο και τρίτο όρο
