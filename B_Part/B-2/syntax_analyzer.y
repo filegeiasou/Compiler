@@ -122,21 +122,23 @@ operator:
 keyword_val:
     keyword{
         // regarding the type of variables.
-        if(!strcmp($1, "int") ) $$ = 1;   
-        if(!strcmp($1, "float") || !strcmp($1, "double")) $$ = 13;
-        if(!strcmp($1, "const") || !strcmp($1, "long")) $$ = 2; // these regard the keyword the is before the type and they are assigned a different value
+        if(!strcmp($1, "int") )  $$ = 1;   
+        if(!strcmp($1, "float")  || !strcmp($1, "double")) $$ = 13;
+        if(!strcmp($1, "const")  || !strcmp($1, "long"))   $$ = 2; // these regard the keyword the is before the type and they are assigned a different value
+        
         // for functions
-        if(!strcmp($1, "scan")) $$ = 3;
-        if(!strcmp($1, "len")) $$ = 4;
-        if(!strcmp($1, "cmp")) $$ = 5;
+        if(!strcmp($1, "scan"))  $$ = 3;
+        if(!strcmp($1, "len"))   $$ = 4;
+        if(!strcmp($1, "cmp"))   $$ = 5;
         if(!strcmp($1, "print")) $$ = 6;
-        if(!strcmp($1, "func")) $$ = 7;
+        if(!strcmp($1, "func"))  $$ = 7;
+        
         // for conditionals
-        if(!strcmp($1, "if")) $$ = 8;
-        if(!strcmp($1, "else")) $$ = 9;
+        if(!strcmp($1, "if"))    $$ = 8;
+        if(!strcmp($1, "else"))  $$ = 9;
         if(!strcmp($1, "while")) $$ = 10;
-        if(!strcmp($1, "for")) $$ = 11;
-        if(!strcmp($1, "void")) $$ = 12;
+        if(!strcmp($1, "for"))   $$ = 11;
+        if(!strcmp($1, "void"))  $$ = 12;
     }
     ;
 
@@ -356,7 +358,7 @@ declaration:
     
     // this enables us to declare and assign a variable to an operation of other variables or numbers.
     // For example we can do this: int a = a + b or a + 1, 1 + a etc.
-    | keyword_val var oper_val var_oper {if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;} 
+    | keyword_val var oper_val var_oper {if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); cor_expr++;}
     ;
 
 // Rules for value assignment
