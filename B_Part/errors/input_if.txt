@@ -1,0 +1,10 @@
+while 5 agg (int a);
+func 5 agg ( int a );
+print(a);#
+int a = a + 1;
+k = 5 @ - 1;
+int k;
+int k = a ! ; 
+a | b ;
+a = b;
+a = b + c;
