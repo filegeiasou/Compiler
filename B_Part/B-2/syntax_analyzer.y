@@ -405,10 +405,13 @@ help_2args:
 // So they enable us to do scan(x), len("this is a test string") and print("Hello World") etc.
 scan_len_print: 
     keyword_val   OPEN_PARENTHESIS var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  { if ($1 != 4) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  { 
+        if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); 
+        if ($1 == 4 && $3 == 3) yyerror("Invalid function call");
+        if ($1 == 6 && $3 != 3) yyerror("Invalid function call");
+    } 
     | keyword_val OPEN_PARENTHESIS str CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call");}
     ;
-
 // Rule for the functions cmp and print, when the number of parameters given is 2.
 // Function cmp only accepts 2 parameters anyway like cmp(str1, str2). This also covers the case of
 // print(a, b) for example.
