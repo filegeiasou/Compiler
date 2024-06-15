@@ -1,0 +1,8 @@
+int a;
+double var;
+float c;
+
+int a = 5;
+float b = 7.62;
+double average = 5.48;
+
