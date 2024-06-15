@@ -1,0 +1,13 @@
+int ;
+float int a;
+
+int int_arr = [1, 5.4, 3];
+float f_arr = [4, 3, 2.5];
+int arr = [1, "var", 5];
+
+int 1var;
+float const v;
+
+double 5.5 = var;
+
+int long sum;
