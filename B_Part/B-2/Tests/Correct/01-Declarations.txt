@@ -4,5 +4,16 @@ float c;
 
 int a = 5;
 float b = 7.62;
-double average = 5.48;
+double c = d;
 
+int sum = a + b;
+double average = sum/count;
+float f = c/d;
+
+const int id;
+const int p = 2;
+long float speed = 5.5;
+long double price = price1 + price2;
+
+int arr = [2, 4, 6, 8];
+float f_array = [1.7, 4.7, 8.2];
