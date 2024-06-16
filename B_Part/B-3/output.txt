@@ -1,8 +1,6 @@
-	Line 1 at lexeme ';' : Invalid function definition
-Valid function declaration
 Warning: Unknown token found in func declaration
 Valid function declaration
-Unrecognized character(s) encountered!	Line 3 at lexeme '#' : syntax error
+Unrecognized character(s) encountered!	Line 2 at lexeme '#' : syntax error
 		1 character(s) ignored so far 
 Valid declaration
 Unrecognized character(s) encountered!		2 character(s) ignored so far 
@@ -11,13 +9,13 @@ Valid assignment
 Valid declaration
 Warning: Unknown token found in expression
 Valid declaration
-Unrecognized character(s) encountered!	Line 7 at lexeme '|' : syntax error
-		3 character(s) ignored so far 
+	Line 7 at lexeme ';' : syntax error
 Valid assignment
-Valid assignment
+Unrecognized character(s) encountered!	Line 10 at lexeme '@' : syntax error
+		4 character(s) ignored so far 
 #END-OF-FILE#
 -------Report:-------
-Correct Words: 50
+Correct Words: 53
 Correct Expressions: 10
 Incorrect Words: 3
-Incorrect Expressions: 2
+Incorrect Expressions: 3

@@ -636,8 +636,9 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
     int line = 1; // Current line counter
     int lex_warn = 0; // Counter for the number of characters ignored
     int cor_words = 0; // Counter for the number of correct words
-    int inc_words=0; // Counter for the number of incorrect words
-#line 640 "lex.yy.c"
+    int inc_words = 0; // Counter for the number of incorrect words
+
+#line 641 "lex.yy.c"
 /* Below are the names and the corresponding regular expression for each token.
    With the use of names we can make it easier to use these regular expressions,
    instead of having to write them all the time, making the program confusing. */
@@ -645,7 +646,7 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
    The return command allows the return of a numerical value through the yylex() function,
    allowing us to return numerican values that we have defined in the token.h file. */
-#line 648 "lex.yy.c"
+#line 649 "lex.yy.c"
 
 #define INITIAL 0
 #define REALLYEND 1
@@ -864,9 +865,9 @@ YY_DECL
 		}
 
 	{
-#line 63 "lexical_analyzer.l"
+#line 64 "lexical_analyzer.l"
 
-#line 869 "lex.yy.c"
+#line 870 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -925,130 +926,130 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 64 "lexical_analyzer.l"
+#line 65 "lexical_analyzer.l"
 { handle_comment(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 65 "lexical_analyzer.l"
+#line 66 "lexical_analyzer.l"
 { /* ignore line comments */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 66 "lexical_analyzer.l"
-{cor_words++; return DELIMITER; }
+#line 67 "lexical_analyzer.l"
+{ cor_words++; return DELIMITER; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 67 "lexical_analyzer.l"
-{cor_words++; return INTEGER;}
+#line 68 "lexical_analyzer.l"
+{ cor_words++; return INTEGER;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 68 "lexical_analyzer.l"
-{cor_words++; return FLOAT;}
+#line 69 "lexical_analyzer.l"
+{ cor_words++; return FLOAT;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 69 "lexical_analyzer.l"
-{cor_words++; return STRINGS;}
+#line 70 "lexical_analyzer.l"
+{ cor_words++; return STRINGS;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 70 "lexical_analyzer.l"
+#line 71 "lexical_analyzer.l"
 { /* don't return anything */ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 71 "lexical_analyzer.l"
-{cor_words++; return OPERATORS;}
+#line 72 "lexical_analyzer.l"
+{ cor_words++; return OPERATORS;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 72 "lexical_analyzer.l"
-{cor_words++; return KEYWORD;}
+#line 73 "lexical_analyzer.l"
+{ cor_words++; return KEYWORD;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 73 "lexical_analyzer.l"
-{cor_words++; return IDENTIFIERS;}
+#line 74 "lexical_analyzer.l"
+{ cor_words++; return IDENTIFIERS;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 74 "lexical_analyzer.l"
+#line 75 "lexical_analyzer.l"
 { return OPEN_BRACKET; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 75 "lexical_analyzer.l"
+#line 76 "lexical_analyzer.l"
 { return CLOSE_BRACKET; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 76 "lexical_analyzer.l"
+#line 77 "lexical_analyzer.l"
 { return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 77 "lexical_analyzer.l"
+#line 78 "lexical_analyzer.l"
 { return CLOSE_PARENTHESIS; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 78 "lexical_analyzer.l"
+#line 79 "lexical_analyzer.l"
 { return OPEN_BRACE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 79 "lexical_analyzer.l"
+#line 80 "lexical_analyzer.l"
 { return CLOSE_BRACE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 80 "lexical_analyzer.l"
+#line 81 "lexical_analyzer.l"
 { return SYMBOL; }
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 81 "lexical_analyzer.l"
-{  line++; return END; }
+#line 82 "lexical_analyzer.l"
+{ line++; return END; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 82 "lexical_analyzer.l"
-{inc_words++ ;printf ("Unrecognized character(s) encountered!"); lex_warn++; BEGIN(error); return UNKNOWN_TOKEN;}
+#line 83 "lexical_analyzer.l"
+{ inc_words++ ;printf ("Unrecognized character(s) encountered!"); lex_warn++; BEGIN(error); return UNKNOWN_TOKEN;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 83 "lexical_analyzer.l"
-{BEGIN(0);printf("\t\t%d character(s) ignored so far \n",lex_warn); }
+#line 84 "lexical_analyzer.l"
+{ BEGIN(0); printf("\t\t%d character(s) ignored so far \n",lex_warn); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 84 "lexical_analyzer.l"
-{lex_warn++;}
+#line 85 "lexical_analyzer.l"
+{ lex_warn++;}
 	YY_BREAK
 case 22:
 /* rule 22 can match eol */
 YY_RULE_SETUP
-#line 85 "lexical_analyzer.l"
-{BEGIN(0); printf("\t\t%d character(s) ignored so far \n",lex_warn );   return END; }
+#line 86 "lexical_analyzer.l"
+{ BEGIN(0); printf("\t\t%d character(s) ignored so far \n",lex_warn ); line++;  return END; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 87 "lexical_analyzer.l"
+#line 88 "lexical_analyzer.l"
 { BEGIN(REALLYEND); printf("#END-OF-FILE#\n"); return EOP; }
 	YY_BREAK
 case YY_STATE_EOF(REALLYEND):
-#line 88 "lexical_analyzer.l"
-{yyterminate();}
+#line 89 "lexical_analyzer.l"
+{ yyterminate();}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 90 "lexical_analyzer.l"
+#line 91 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 1051 "lex.yy.c"
+#line 1052 "lex.yy.c"
 case YY_STATE_EOF(error):
 	yyterminate();
 
@@ -2053,8 +2054,14 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 90 "lexical_analyzer.l"
+#line 91 "lexical_analyzer.l"
 
+
+int yyerror (const char *msg)
+{
+    fprintf(yyout, "\tLine %d at lexeme '%s' : %s\n",line, yytext, msg); 
+    return 0;
+}
 
 // Implementation of function that handles multi-line comments
 void handle_comment()
@@ -2083,10 +2090,3 @@ void handle_comment()
         }
     }
 }
-
-int yyerror (const char *msg)
-{
-    fprintf(yyout, "\tLine %d at lexeme \'%s\' : %s\n",line, yytext, msg); 
-    return 1;
-}
-

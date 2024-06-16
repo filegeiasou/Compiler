@@ -93,6 +93,7 @@ WHITESPACE        [ \t]+
 int yyerror (const char *msg)
 {
     fprintf(yyout, "\tLine %d at lexeme '%s' : %s\n",line, yytext, msg); 
+    return 0;
 }
 
 // Implementation of function that handles multi-line comments
