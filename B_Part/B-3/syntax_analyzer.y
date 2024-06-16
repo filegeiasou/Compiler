@@ -58,7 +58,6 @@ Execution Instructions: Type make into the console. Alternatively you can type t
         extern int line; // line counter
         // Counters for the comma (,) symbol (defined as SYMBOL in the lexer)
         int var_com = 0, val_com = 0, val_arr_com = 0, val_ass_com = 0;
-        char* func_arg;
         int errflag = 0;   // error counter
         extern int cor_words;  // correct word counter (flex)
         int cor_expr = 0;      // correct expressions counter
@@ -454,9 +453,9 @@ print:
 
 // Set of rules for function calls.
 func_call:
-    scan_len_print {}
-    | cmp_print    {}
-    | print        {}
+    scan_len_print 
+    | cmp_print    
+    | print        
 
     // The rules below regard the calls for the user defined functions.
     // For example myFunc(params).
