@@ -1,19 +1,18 @@
+Valid Declaration
 Warning: Number found in func declaration
-Valid function declaration
-Warning: Keyword found in print/scan/len
-Valid function call
-Unrecognized character(s) encountered!		1 character(s) ignored so far 
+Warning: Invalid Keyword found in print
 Warning: Unknown token found in expression
-Valid assignment
-Warning: Unknown token found in expression
-Valid declaration
-Valid declaration
-Valid declaration
-	Line 7 at lexeme ';' : syntax error
+Warning: Len/cmp not used correctly 
+Unrecognized character(s) encountered!
+Valid Declaration
+	Line 5 at lexeme '@' : syntax error
+		1 character(s) ignored so far 
+	Line 6 at lexeme ';' : Invalid assignment
+Warning:Concat failed keeping first array
+	Line 7 at lexeme ';' : Invalid declaration type
 #END-OF-FILE#
-Valid assignment
 -------Report:-------
-Correct Words: 47
-Correct Expressions: 8
+Correct Words: 58
+Correct Expressions: 2
 Incorrect Words: 1
-Incorrect Expressions: 1
+Incorrect Expressions: 6

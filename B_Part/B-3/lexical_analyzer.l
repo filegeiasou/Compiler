@@ -80,7 +80,7 @@ WHITESPACE        [ \t]+
 {CLOSE_BRACE}       { cor_words++; return CLOSE_BRACE; }
 {SYMBOL}            { cor_words++; return SYMBOL; }
 \n                  { line++; return END; }
-.                   { inc_words++ ;printf ("Unrecognized character(s) encountered!"); lex_warn++; BEGIN(error); return UNKNOWN_TOKEN;}
+.                   { inc_words++ ;printf ("Unrecognized character(s) encountered!\n"); lex_warn++; BEGIN(error); return UNKNOWN_TOKEN;}
 <error>[ \t]+       { BEGIN(0); printf("\t\t%d character(s) ignored so far \n",lex_warn); }
 <error>.            { lex_warn++;}
 <error>\n           { BEGIN(0); printf("\t\t%d character(s) ignored so far \n",lex_warn ); line++;  return END; }

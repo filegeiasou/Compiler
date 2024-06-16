@@ -95,18 +95,18 @@ Execution Instructions: Type make into the console. Alternatively you can type t
         name : grammar rule { C code } */
 program:
     | program valid
-    | program error END {inc_expr++;} // If there is error on the program
+| program error END{inc_expr++; yyerrok;}  // If there is error on the program
     ;
 valid:
     END
-    | declaration DELIMITER END {printf("Valid declaration\n");}
-    | assignment  DELIMITER END {printf("Valid assignment\n");}
-    | func_call   DELIMITER END {printf("Valid function call\n");}
-    | declaration DELIMITER     {printf("Valid declaration\n");}
-    | assignment  DELIMITER     {printf("Valid assignment\n");}
-    | func_decl                 {printf("Valid function declaration\n");}
+    | declaration DELIMITER END 
+    | assignment  DELIMITER END 
+    | func_call   DELIMITER END 
+    | declaration DELIMITER     
+    | assignment  DELIMITER     
+    | func_decl                 
     | if_while_grammar          
-    | for_grammar               {printf("Valid for statement\n");}
+    | for_grammar               
     | EOP                       { print_report();}
     | UNKNOWN_TOKEN 
     ;
@@ -190,28 +190,6 @@ expr:
             case 16: $$ = $1 / $3; break;
         }
     }
-    | num UNKNOWN_TOKEN oper_val num {
-        printf("Warning: Unknown token found in expression\n");
-        par_warn++;
-        switch($3) {
-            case 1:  $$ = $1 + $4; break;
-            case 2:  $$ = $1 - $4; break;
-            case 3:  $$ = $1 * $4; break;
-            case 4:  $$ = $1 / $4; break;
-            case 5:  $$ = $1 == $4; break;
-            case 6:  $$ = $1 != $4; break;
-            case 7:  $$ = $1 > $4; break;
-            case 8:  $$ = $1 < $4; break;
-            case 9:  $$ = $1 >= $4; break;
-            case 10: $$ = $1 <= $4; break;
-            case 11: $$ = (int)$1 % (int)$4; break;
-            case 12: $$ = $4; break;
-            case 13: $$ = $1 + $4; break;
-            case 14: $$ = $1 - $4; break;
-            case 15: $$ = $1 * $4; break;
-            case 16: $$ = $1 / $4; break;
-        }
-    }
     | expr oper_val num {
         switch($2) {
             case 1:  $$ = $1 + $3; break;
@@ -284,7 +262,15 @@ arr:
     | OPEN_BRACE help_float CLOSE_BRACE  { $$ = 13; val_com=0;}
     | OPEN_BRACE help_str CLOSE_BRACE   { $$ = 2; val_com=0;}
     | var OPEN_BRACE INTEGER CLOSE_BRACE { $$ = 3; val_com=0;} 
-    | arr oper_val arr {if ($2 != 1) yyerror("Invalid arr"); $$ = 4; val_com=0;} //concat array
+    | arr oper_val arr {
+        if($2 == 2)
+        {
+            printf("Warning:Concat failed keeping first array\n");
+            par_warn++; inc_expr++;
+        }
+        else if ($2 != 1) 
+            yyerror("Invalid arr"); 
+        $$ = 4; val_com=0;} //concat array
     ;
 
 // Assisting rules for the comma symbol (str, numbers, variables, arrays).
@@ -351,24 +337,24 @@ help_assign:
 declaration:
     
     // This covers the case of basic variable declation. e.g int varName
-    keyword_val var {if($1 != 1 && $1 != 13) yyerror("Invalid declaration type"); else cor_expr++;} // 1, 13 int, float, double
+    keyword_val var {if($1 != 1 && $1 != 13) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}} // 1, 13 int, float, double
     
     // The rules below identify the assignation of a variable with a number
     // as well as the assignation of a variable with another variable.
-    | keyword_val var oper_val INTEGER { if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else cor_expr++;} // int a = 1
-    | keyword_val var oper_val FLOAT { if ($1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else cor_expr++;} // float a = 1.1
-    | keyword_val var oper_val var { if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else cor_expr++;}// int a = b
-    | keyword_val var oper_val var operator { if ($1 != 1 && $1 != 13 || $3 != 12 ) yyerror("Invalid declaration type"); else {par_warn++; cor_expr++; printf("Warning: Unknown token found in expression\n");}} // WARNING
+    | keyword_val var oper_val INTEGER { if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}} // int a = 1
+    | keyword_val var oper_val FLOAT { if ($1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}} // float a = 1.1
+    | keyword_val var oper_val var { if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}// int a = b
+    | keyword_val var oper_val var operator { if ($1 != 1 && $1 != 13 || $3 != 12 ) yyerror("Invalid declaration type"); else {par_warn++; inc_expr++; printf("Warning: Unknown token found in expression\n");}} // WARNING
 
     // Long int a = 1 or a = b
     // The rules below identify the keyword long or contt, so we can write const int or long int.
     // Same as above, it covers the case of just the declaration of a variable (long int a;),
     // the assignation with a number like long int a = 5 and lastly the assignation of a variable
     // with another variable like long int a = b. It works for float numbers as well like const float a = 2.5.
-    | keyword_val keyword_val var { if ($1 != 2 || $2 != 1 && $2 != 13) yyerror("Invalid declaration type"); else cor_expr++;}
-    | keyword_val keyword_val var oper_val INTEGER { if ($1 != 2 || $2 != 1 && $2 != 13 || $4 != 12) yyerror("Invalid declaration type1"); else cor_expr++;}
-    | keyword_val keyword_val var oper_val FLOAT { if ($1 != 2 || $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); else cor_expr++;}
-    | keyword_val keyword_val var oper_val var { if ($1 != 2 || $2 != 1 && $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); else cor_expr++;}
+    | keyword_val keyword_val var { if ($1 != 2 || $2 != 1 && $2 != 13) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
+    | keyword_val keyword_val var oper_val INTEGER { if ($1 != 2 || $2 != 1 && $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
+    | keyword_val keyword_val var oper_val FLOAT { if ($1 != 2 || $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
+    | keyword_val keyword_val var oper_val var { if ($1 != 2 || $2 != 1 && $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
     
     // this rule identifies the assignation of a variable with an array (e.g int a = [1,2])
     // It also checks that the elements, inside the array, are the correct type.
@@ -377,22 +363,35 @@ declaration:
     | keyword_val var oper_val arr {
         if($1 != $4) // same type of array and variable
             yyerror("Invalid declaration type");  
-        else if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else cor_expr++;}
+        else if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
     
     // this enables us to declare and assign a variable to an operation of other variables or numbers.
     // For example we can do this: int a = a + b or a + 1, 1 + a etc.
-    | keyword_val var oper_val var_oper {if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else cor_expr++;}
+    | keyword_val var oper_val var_oper {if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
     ;
 
 // Rules for value assignment
 assignment:
     
-    help_var oper_val help_num        {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else cor_expr++; var_com = 0; val_com = 0; }
-    | help_var oper_val help_arr      {if($2 != 12 || val_arr_com)            yyerror("Invalid assignment"); else cor_expr++; var_com = 0; val_arr_com = 0; }
-    | help_var oper_val help_var      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else cor_expr++; var_com = 0; val_com = 0; }
-    | help_var oper_val help_str      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else cor_expr++; var_com = 0; val_com = 0; }
-    | help_var oper_val help_var_oper {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else cor_expr++; var_com = 0; val_com = 0; }
-    | help_var oper_val help_assign   {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); else cor_expr++; var_com = 0; val_ass_com = 0; }
+    help_var oper_val help_num        {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment");} var_com = 0; val_com = 0; }
+    | help_var oper_val help_arr      {
+        if($2 == 12 && var_com < val_arr_com) 
+        {
+            printf("Warning: Remaining elements not assigned\n"); 
+            par_warn++; inc_expr++;
+        }
+        else if($2 != 12 || var_com != val_arr_com) 
+            yyerror("Invalid assignment"); 
+        else 
+        {
+            cor_expr++;
+            printf("Valid assignment");
+        }
+        var_com = 0; val_arr_com = 0; }
+    | help_var oper_val help_var      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment");} var_com = 0; val_com = 0; }
+    | help_var oper_val help_str      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment");} var_com = 0; val_com = 0; }
+    | help_var oper_val help_var_oper {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment");} var_com = 0; val_com = 0; }
+    | help_var oper_val help_assign   {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment");} var_com = 0; val_ass_com = 0; }
     ;
  
 // Assisting rules for the built-in print function. It can identify multiple, either same of different,
@@ -429,7 +428,6 @@ help_2args:
 // So they enable us to do scan(x), len("this is a test string") and print("Hello World") etc.
 scan_len_print: 
     keyword_val   OPEN_PARENTHESIS var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");else {printf("Valid function call\n"); cor_expr++;}}
-    | keyword_val OPEN_PARENTHESIS keyword_val var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call"); else {printf("Warning: Keyword found in print/scan/len\n"); par_warn++;cor_expr++;}}
     | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  { 
         if ($1 != 4 && $1 != 6) yyerror("Invalid function call\n"); 
         else if ($1 == 4 && $3 == 3) yyerror("Invalid function call\n");
@@ -450,6 +448,18 @@ print:
     keyword_val   OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call"); else {printf("Valid function call\n"); cor_expr++;}}
     | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS      {if ($1 != 6 && $3 == 5) yyerror("Invalid function call"); else {printf("Valid function call\n"); cor_expr++;}}
     | keyword_val OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS     {if ($1 != 6) yyerror("Invalid function call"); else {printf("Valid function call\n"); cor_expr++;}} 
+    | keyword_val OPEN_PARENTHESIS keyword_val var CLOSE_PARENTHESIS  { 
+        if ($1 != 3 && $1 != 4 && $1 != 6)
+            yyerror("Invalid function call"); 
+        else if($3 == 4 || $3 == 5)
+        {
+            printf("Warning: Len/cmp not used correctly \n"); par_warn++; inc_expr++;
+        }
+        else 
+        {
+            printf("Warning: Invalid Keyword found in print\n"); par_warn++; inc_expr++;
+        }
+        }
     ;
 
 // Set of rules for function calls.
@@ -481,15 +491,15 @@ arguments:
 // This is done using the group of rules uner the label body:
 // that is described below.
 func_decl:
-    keyword_val   var   OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER   {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++;}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body          {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++;}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body      {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++;}
-    | keyword_val num var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER {if ($1 != 7) yyerror("Invalid function definition"); else {par_warn++; cor_expr++; printf("Warning: Number found in func declaration\n");} }
+    keyword_val   var   OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER   {if ($1 != 7) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body          {if ($1 != 7) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body      {if ($1 != 7) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
+    | keyword_val num var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER {if ($1 != 7) yyerror("Invalid function definition"); else {par_warn++; inc_expr++; printf("Warning: Number found in func declaration\n");} }
 
     // This is for the parameter void (myFunc(void))
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++;}
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body      {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++;}
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body  {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body      {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body  {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
     ;
 
 // These rules below regards every possible pattern of the brackets.
@@ -558,8 +568,8 @@ help_for:
 
 // Main grammar rules for the for loop.
 for_grammar:
-    keyword_val   OPEN_PARENTHESIS help_for DELIMITER expr     DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else cor_expr++;}
-    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else cor_expr++;}
+    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else {cor_expr++;printf("Valid for statement\n");}}
+    keyword_val   OPEN_PARENTHESIS help_for DELIMITER expr     DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else {cor_expr++;printf("Valid for statement\n");}}
     ;
 
 %%

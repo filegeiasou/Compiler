@@ -1,8 +1,7 @@
 func 5 agg ( int a );
-len(len a);
-k = 5 @ - 1;
+print(break a);
 int k = a ! ; 
-int a = a + 1;
-int i;
-a = b +  ;
-a = b + c;
+print (len a);
+int a = a @ + 1;
+x1 , x2 = [1,2];
+int a = [1,2] - [3,4];

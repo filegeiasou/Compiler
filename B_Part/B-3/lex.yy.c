@@ -1018,7 +1018,7 @@ YY_RULE_SETUP
 case 19:
 YY_RULE_SETUP
 #line 83 "lexical_analyzer.l"
-{ inc_words++ ;printf ("Unrecognized character(s) encountered!"); lex_warn++; BEGIN(error); return UNKNOWN_TOKEN;}
+{ inc_words++ ;printf ("Unrecognized character(s) encountered!\n"); lex_warn++; BEGIN(error); return UNKNOWN_TOKEN;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
