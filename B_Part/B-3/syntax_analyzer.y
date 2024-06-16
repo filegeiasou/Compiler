@@ -394,7 +394,6 @@ assignment:
     | help_var oper_val help_str      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else cor_expr++; var_com = 0; val_com = 0; }
     | help_var oper_val help_var_oper {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else cor_expr++; var_com = 0; val_com = 0; }
     | help_var oper_val help_assign   {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); else cor_expr++; var_com = 0; val_ass_com = 0; }
-    /* | var oper_val var_oper {if($2 != 12) yyerror("Invalid assignment");} // π.χ α = α + b; //!!!ΚΑΝΟΝΙΚΑ ΘΕΛΕΙ ΚΑΙ ΤΗΝ ΟΜΑΔΟΠΟΙΗΣΗ ΑΜΑ ΤΟ ΒΑΛΩ ΧΑΛΑΕΙ ΤΟ num = 1; */
     ;
  
 // Assisting rules for the built-in print function. It can identify multiple, either same of different,
@@ -503,9 +502,9 @@ body:
 // This group of rules is for the body of the conditional statements like if and while.
 cond_body:
     body
-    | END body     {printf("1C");}
-    | body END     {printf("2C");}
-    | END body END {printf("3C");}
+    | END body     
+    | body END     
+    | END body END 
     ;
 
 // Rules regarding everything inside the body of the function.
@@ -513,20 +512,20 @@ all:
     func_call DELIMITER
     | assignment DELIMITER
     | declaration DELIMITER
-    | if_while_grammar {printf("111111");}
-    | for_grammar      {printf("222222");}
+    | if_while_grammar 
+    | for_grammar     
 
     | all func_call DELIMITER
     | all assignment DELIMITER
     | all declaration DELIMITER
-    | all if_while_grammar {printf("33333");}
-    | all for_grammar      {printf("44444");}
+    | all if_while_grammar 
+    | all for_grammar    
 
     | all END func_call DELIMITER
     | all END assignment DELIMITER
     | all END declaration DELIMITER
-    | all END if_while_grammar {printf("55555");}
-    | all END for_grammar      {printf("66666");}
+    | all END if_while_grammar 
+    | all END for_grammar     
     ;
 
 // Rules for if and while condition. The rules for both are included under one label,
