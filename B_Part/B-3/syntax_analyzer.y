@@ -484,7 +484,7 @@ func_decl:
     keyword_val   var   OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER   {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++; func_arg = $2;}
     | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body          {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++; func_arg = $2;}
     | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body      {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++; func_arg = $2;}
-    | keyword_val num var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER {if ($1 != 7) yyerror("Invalid function definition");else {par_warn++; cor_expr++; printf("Warning: Unknown token found in func declaration\n");} func_arg = $2; }
+    | keyword_val num var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER {if ($1 != 7) yyerror("Invalid function definition"); else {par_warn++; cor_expr++; printf("Warning: Unknown token found in func declaration\n");} func_arg = $3; }
 
     // This is for the parameter void (myFunc(void))
     | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++; func_arg = $2;}
