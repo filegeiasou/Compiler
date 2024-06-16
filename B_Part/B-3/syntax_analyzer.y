@@ -544,14 +544,14 @@ if_while_grammar:
 // Assisting rule for the for loop that identifies the first and third part of the condition.
 // For example if we have for(i = 0; i < 5; i++), it checks for the i = 0 and i++ parts.
 help_for:
-    var oper_val       {if($2 != 17 && $2 != 18) yyerror("Invalid --/++ operator"); cor_expr++;}
+    var oper_val       {if($2 != 17 && $2 != 18) yyerror("Invalid --/++ operator"); else cor_expr++;}
     | var oper_val num {cor_expr++;}
     ;
 
 // Main grammar rules for the for loop.
 for_grammar:
-    keyword_val   OPEN_PARENTHESIS help_for DELIMITER expr     DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); cor_expr++;}
-    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); cor_expr++;}
+    keyword_val   OPEN_PARENTHESIS help_for DELIMITER expr     DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else cor_expr++;}
+    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else cor_expr++;}
     | keyword_val OPEN_PARENTHESIS help_for DELIMITER expr DELIMITER help_for UNKNOWN_TOKEN CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement");else {cor_expr++; par_warn++; printf("Warning: Unknown token found in for statement\n");}}
     ;
 
