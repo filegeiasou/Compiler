@@ -101,11 +101,11 @@ valid:
     END
     | declaration DELIMITER END {printf("Valid declaration\n");}
     | assignment  DELIMITER END {printf("Valid assignment\n");}
-    | func_call   DELIMITER END {printf("Valid function call\n");}
+    | func_call   DELIMITER END 
     | declaration DELIMITER     {printf("Valid declaration\n");}
     | assignment  DELIMITER     {printf("Valid assignment\n");}
     | func_decl                 {printf("Valid function declaration\n");}
-    | if_while_grammar          {printf("Valid if/while statement\n");}
+    | if_while_grammar          
     | for_grammar               {printf("Valid for statement\n");}
     | EOP                       { print_report();}
     | UNKNOWN_TOKEN 
@@ -428,27 +428,27 @@ help_2args:
 // The function scan and len, by themselves, only need 1 argument. So the rules below cover that case.
 // So they enable us to do scan(x), len("this is a test string") and print("Hello World") etc.
 scan_len_print: 
-    keyword_val   OPEN_PARENTHESIS var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");else cor_expr++;}
+    keyword_val   OPEN_PARENTHESIS var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");else {printf("Valid function call"); cor_expr++;}}
     | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  { 
         if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); 
         else if ($1 == 4 && $3 == 3) yyerror("Invalid function call");
         else if ($1 == 6 && $3 != 3) yyerror("Invalid function call"); 
-        else cor_expr++;
+        else {printf("Valid Function call"); cor_expr++;}
     } 
-    | keyword_val OPEN_PARENTHESIS str CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); else cor_expr++;}
+    | keyword_val OPEN_PARENTHESIS str CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); else {printf("Valid function call"); cor_expr++;}}
     ;
 // Rule for the functions cmp and print, when the number of parameters given is 2.
 // Function cmp only accepts 2 parameters anyway like cmp(str1, str2). This also covers the case of
 // print(a, b) for example.
 cmp_print: 
-    keyword_val OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); else cor_expr++;}
+    keyword_val OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); else {printf("Valid function call"); cor_expr++;}}
     ;
 
 // Rules for the print function when the nubmer of parameters is 3.
 print: 
-    keyword_val   OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call"); else cor_expr++;}
-    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS      {if ($1 != 6 && $3 == 5) yyerror("Invalid function call"); else cor_expr++;}
-    | keyword_val OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS     {if ($1 != 6) yyerror("Invalid function call"); else cor_expr++;} 
+    keyword_val   OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call"); else {printf("Valid function call"); cor_expr++;}}
+    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS      {if ($1 != 6 && $3 == 5) yyerror("Invalid function call"); else {printf("Valid function call"); cor_expr++;}}
+    | keyword_val OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS     {if ($1 != 6) yyerror("Invalid function call"); else {printf("Valid function call"); cor_expr++;}} 
     ;
 
 // Set of rules for function calls.
@@ -459,12 +459,12 @@ func_call:
 
     // The rules below regard the calls for the user defined functions.
     // For example myFunc(params).
-    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS        {cor_expr++;} // function call with a variable as a parameter
-    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS        {cor_expr++;} // function call with 1 num parameter
-    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS        {cor_expr++;} // function call with 1 str parameter
-    | var OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {cor_expr++;} // function call with 2 parameters
-    | var OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {cor_expr++;} // function call with 3 parameters or more
-    | var OPEN_PARENTHESIS CLOSE_PARENTHESIS            {cor_expr++;} // function call with no parameters
+    | var OPEN_PARENTHESIS var CLOSE_PARENTHESIS        {printf("Valid function call"); cor_expr++;} // function call with a variable as a parameter
+    | var OPEN_PARENTHESIS num CLOSE_PARENTHESIS        {printf("Valid function call"); cor_expr++;} // function call with 1 num parameter
+    | var OPEN_PARENTHESIS str CLOSE_PARENTHESIS        {printf("Valid function call"); cor_expr++;} // function call with 1 str parameter
+    | var OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {printf("Valid function call"); cor_expr++;} // function call with 2 parameters
+    | var OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS {printf("Valid function call"); cor_expr++;} // function call with 3 parameters or more
+    | var OPEN_PARENTHESIS CLOSE_PARENTHESIS            {printf("Valid function call"); cor_expr++;} // function call with no parameters
     ;
 
 // Rule for the arguments of a function.
@@ -534,11 +534,18 @@ if_while_grammar:
     
     // $$ = $1. Here it's basically checking for an if statement, in order to know if there should be an else statement.
     // If there is a while statement for example, it shouldn't check for an else because the while loop can't have an else condition.
-    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); else cor_expr++; $$ = $1;} 
+    keyword_val OPEN_PARENTHESIS num CLOSE_PARENTHESIS cond_body {
+    if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); 
+    else if ($1 == 8){printf("Valid if statement\n"); cor_expr++;} 
+    else if ($1 == 10){printf("Valid while statement\n"); cor_expr++;} $$ = $1;} 
 
-    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); else cor_expr++; $$ = $1;}
-    | if_while_grammar keyword_val cond_body {if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); else cor_expr++;}
-    | if_while_grammar END keyword_val cond_body {if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); else cor_expr++;}
+    | keyword_val OPEN_PARENTHESIS var_oper CLOSE_PARENTHESIS cond_body {
+    if ($1 != 8 && $1 != 10) yyerror("Invalid if/while statement"); 
+    else if ($1 == 8){printf("Valid if statement\n"); cor_expr++;} 
+    else if ($1 == 10){printf("Valid while statement\n"); cor_expr++;} $$ = $1;}
+
+    | if_while_grammar keyword_val cond_body {if ($2 != 9 || $1 != 8) yyerror("Invalid if/while statement"); else {printf("Valid if-else statement\n"); cor_expr++;}}
+    | if_while_grammar END keyword_val cond_body {if ($3 != 9 || $1 != 8) yyerror("Invalid if/while statement"); else {printf("Valid if-else statement\n");cor_expr++;}}
     ;
 
 // Assisting rule for the for loop that identifies the first and third part of the condition.

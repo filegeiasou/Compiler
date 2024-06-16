@@ -82,7 +82,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 71 "syntax_analyzer.y"
+#line 70 "syntax_analyzer.y"
 {
     int ival;
     double dval;
