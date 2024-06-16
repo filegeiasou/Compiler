@@ -90,6 +90,8 @@ WHITESPACE        [ \t]+
 
 %%
 
+/* The yyerror function is used for the reporting of any errors. It is called by yyparse
+   whenever there is a syntax error. It prints an error message to the terminal and then exits. */
 int yyerror (const char *msg)
 {
     fprintf(yyout, "\tLine %d at lexeme '%s' : %s\n",line, yytext, msg); 

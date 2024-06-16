@@ -564,8 +564,6 @@ for_grammar:
 
 %%
 
-/* The yyerror function is used for the reporting of any errors. It is called by yyparse
-   whenever there is a syntax error. It prints an error message to the terminal and then exits. */
 /* void yyerror(char *s) {
     fprintf(stderr, "Error: %s\n", s);
     exit(1);
