@@ -32,7 +32,8 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
     int line = 1; // Current line counter
     int lex_warn = 0; // Counter for the number of characters ignored
     int cor_words = 0; // Counter for the number of correct words
-    int inc_words=0; // Counter for the number of incorrect words
+    int inc_words = 0; // Counter for the number of incorrect words
+
 %}
 
 /* Below are the names and the corresponding regular expression for each token.
@@ -63,14 +64,14 @@ WHITESPACE        [ \t]+
 %%
 "/*"                { handle_comment(); }
 {LINE_COMMENT}      { /* ignore line comments */ }
-{DELIMITER}         {cor_words++; return DELIMITER; }
-{INTEGER}           {cor_words++; return INTEGER;}
-{FLOAT}             {cor_words++; return FLOAT;}
-{STRINGS}           {cor_words++; return STRINGS;}
+{DELIMITER}         { cor_words++; return DELIMITER; }
+{INTEGER}           { cor_words++; return INTEGER;}
+{FLOAT}             { cor_words++; return FLOAT;}
+{STRINGS}           { cor_words++; return STRINGS;}
 {WHITESPACE}        { /* don't return anything */ }
-{OPERATORS}         {cor_words++; return OPERATORS;}
-{KEYWORDS}          {cor_words++; return KEYWORD;}
-{IDENTIFIERS}       {cor_words++; return IDENTIFIERS;}
+{OPERATORS}         { cor_words++; return OPERATORS;}
+{KEYWORDS}          { cor_words++; return KEYWORD;}
+{IDENTIFIERS}       { cor_words++; return IDENTIFIERS;}
 {OPEN_BRACKET}      { return OPEN_BRACKET; }
 {CLOSE_BRACKET}     { return CLOSE_BRACKET; }
 {OPEN_PARENTHESIS}  { return OPEN_PARENTHESIS; }
@@ -78,16 +79,21 @@ WHITESPACE        [ \t]+
 {OPEN_BRACE}        { return OPEN_BRACE; }
 {CLOSE_BRACE}       { return CLOSE_BRACE; }
 {SYMBOL}            { return SYMBOL; }
-\n                  {  line++; return END; }
-.                   {inc_words++ ;printf ("Unrecognized character(s) encountered!"); lex_warn++; BEGIN(error); return UNKNOWN_TOKEN;}
-<error>[ \t]+       {BEGIN(0);printf("\t\t%d character(s) ignored so far \n",lex_warn); }
-<error>.            {lex_warn++;}
-<error>\n           {BEGIN(0); printf("\t\t%d character(s) ignored so far \n",lex_warn );   return END; }
+\n                  { line++; return END; }
+.                   { inc_words++ ;printf ("Unrecognized character(s) encountered!"); lex_warn++; BEGIN(error); return UNKNOWN_TOKEN;}
+<error>[ \t]+       { BEGIN(0); printf("\t\t%d character(s) ignored so far \n",lex_warn); }
+<error>.            { lex_warn++;}
+<error>\n           { BEGIN(0); printf("\t\t%d character(s) ignored so far \n",lex_warn ); line++;  return END; }
 
-<INITIAL><<EOF>>  { BEGIN(REALLYEND); printf("#END-OF-FILE#\n"); return EOP; }
-<REALLYEND><<EOF>> {yyterminate();}
+<INITIAL><<EOF>>    { BEGIN(REALLYEND); printf("#END-OF-FILE#\n"); return EOP; }
+<REALLYEND><<EOF>>  { yyterminate();}
 
 %%
+
+int yyerror (const char *msg)
+{
+    fprintf(yyout, "\tLine %d at lexeme '%s' : %s\n",line, yytext, msg); 
+}
 
 // Implementation of function that handles multi-line comments
 void handle_comment()
@@ -115,10 +121,4 @@ void handle_comment()
             break;
         }
     }
-}
-
-int yyerror (const char *msg)
-{
-    fprintf(yyout, "\tLine %d at lexeme \'%s\' : %s\n",line, yytext, msg); 
-    return 1;
 }
