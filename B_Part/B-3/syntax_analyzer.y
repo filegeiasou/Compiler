@@ -429,33 +429,34 @@ help_2args:
 // The function scan and len, by themselves, only need 1 argument. So the rules below cover that case.
 // So they enable us to do scan(x), len("this is a test string") and print("Hello World") etc.
 scan_len_print: 
-    keyword_val   OPEN_PARENTHESIS var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");}
+    keyword_val   OPEN_PARENTHESIS var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");else cor_expr++;}
     | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  { 
         if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); 
-        if ($1 == 4 && $3 == 3) yyerror("Invalid function call");
-        if ($1 == 6 && $3 != 3) yyerror("Invalid function call");
+        else if ($1 == 4 && $3 == 3) yyerror("Invalid function call");
+        else if ($1 == 6 && $3 != 3) yyerror("Invalid function call"); 
+        else cor_expr++;
     } 
-    | keyword_val OPEN_PARENTHESIS str CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call");}
+    | keyword_val OPEN_PARENTHESIS str CLOSE_PARENTHESIS  { if ($1 != 4 && $1 != 6) yyerror("Invalid function call"); else cor_expr++;}
     ;
 // Rule for the functions cmp and print, when the number of parameters given is 2.
 // Function cmp only accepts 2 parameters anyway like cmp(str1, str2). This also covers the case of
 // print(a, b) for example.
 cmp_print: 
-    keyword_val OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call");}
+    keyword_val OPEN_PARENTHESIS help_2args CLOSE_PARENTHESIS {if ($1 != 5 && $1 != 6) yyerror("Invalid function call"); else cor_expr++;}
     ;
 
 // Rules for the print function when the nubmer of parameters is 3.
 print: 
-    keyword_val   OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS      {if ($1 != 6 && $3 == 5) yyerror("Invalid function call");}
-    | keyword_val OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS     {if ($1 != 6) yyerror("Invalid function call");} 
+    keyword_val   OPEN_PARENTHESIS scan_len_print CLOSE_PARENTHESIS {if ($1 != 6 && $3 == 4) yyerror("Invalid function call"); else cor_expr++;}
+    | keyword_val OPEN_PARENTHESIS cmp_print CLOSE_PARENTHESIS      {if ($1 != 6 && $3 == 5) yyerror("Invalid function call"); else cor_expr++;}
+    | keyword_val OPEN_PARENTHESIS help_3args CLOSE_PARENTHESIS     {if ($1 != 6) yyerror("Invalid function call"); else cor_expr++;} 
     ;
 
 // Set of rules for function calls.
 func_call:
-    scan_len_print {cor_expr++;}
-    | cmp_print    {cor_expr++;}
-    | print        {cor_expr++;}
+    scan_len_print {}
+    | cmp_print    {}
+    | print        {}
 
     // The rules below regard the calls for the user defined functions.
     // For example myFunc(params).
@@ -480,15 +481,15 @@ arguments:
 // This is done using the group of rules uner the label body:
 // that is described below.
 func_decl:
-    keyword_val   var   OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER   {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++; func_arg = $2;}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body          {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++; func_arg = $2;}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body      {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++; func_arg = $2;}
-    | keyword_val num var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER {if ($1 != 7) yyerror("Invalid function definition"); else {par_warn++; cor_expr++; printf("Warning: Unknown token found in func declaration\n");} func_arg = $3; }
+    keyword_val   var   OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER   {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body          {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body      {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++;}
+    | keyword_val num var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER {if ($1 != 7) yyerror("Invalid function definition"); else {par_warn++; cor_expr++; printf("Warning: Unknown token found in func declaration\n");} }
 
     // This is for the parameter void (myFunc(void))
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++; func_arg = $2;}
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body      {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++; func_arg = $2;}
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body  {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++; func_arg = $2;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body      {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++;}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body  {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++;}
     ;
 
 // These rules below regards every possible pattern of the brackets.
