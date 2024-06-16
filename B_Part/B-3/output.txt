@@ -1,7 +1,23 @@
+	Line 1 at lexeme ';' : Invalid function definition
+Valid function declaration
+Warning: Unknown token found in func declaration
+Valid function declaration
+Unrecognized character(s) encountered!	Line 3 at lexeme '#' : syntax error
+		1 character(s) ignored so far 
+Valid declaration
+Unrecognized character(s) encountered!		2 character(s) ignored so far 
+Warning: Unknown token found in expression
+Valid assignment
+Valid declaration
+Warning: Unknown token found in expression
+Valid declaration
+Unrecognized character(s) encountered!	Line 7 at lexeme '|' : syntax error
+		3 character(s) ignored so far 
+Valid assignment
+Valid assignment
 #END-OF-FILE#
-1CValid if/while statement
 -------Report:-------
-Correct Words: 7
-Correct Expressions: 2
-Incorrect Words: 0
-Incorrect Expressions: 0
+Correct Words: 50
+Correct Expressions: 10
+Incorrect Words: 3
+Incorrect Expressions: 2

@@ -2317,51 +2317,6 @@ yyreduce:
     {if ((yyvsp[(1) - (7)].ival) != 7 || (yyvsp[(4) - (7)].ival) != 12) yyerror("Invalid function definition"); else cor_expr++;;}
     break;
 
-  case 137:
-#line 500 "syntax_analyzer.y"
-    {printf("1C");;}
-    break;
-
-  case 138:
-#line 501 "syntax_analyzer.y"
-    {printf("2C");;}
-    break;
-
-  case 139:
-#line 502 "syntax_analyzer.y"
-    {printf("3C");;}
-    break;
-
-  case 143:
-#line 510 "syntax_analyzer.y"
-    {printf("111111");;}
-    break;
-
-  case 144:
-#line 511 "syntax_analyzer.y"
-    {printf("222222");;}
-    break;
-
-  case 148:
-#line 516 "syntax_analyzer.y"
-    {printf("33333");;}
-    break;
-
-  case 149:
-#line 517 "syntax_analyzer.y"
-    {printf("44444");;}
-    break;
-
-  case 153:
-#line 522 "syntax_analyzer.y"
-    {printf("55555");;}
-    break;
-
-  case 154:
-#line 523 "syntax_analyzer.y"
-    {printf("66666");;}
-    break;
-
   case 155:
 #line 532 "syntax_analyzer.y"
     {if ((yyvsp[(1) - (5)].ival) != 8 && (yyvsp[(1) - (5)].ival) != 10) yyerror("Invalid if/while statement");else cor_expr++; (yyval.ival) = (yyvsp[(1) - (5)].ival);;}
@@ -2404,7 +2359,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2408 "syntax_analyzer.tab.c"
+#line 2363 "syntax_analyzer.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
