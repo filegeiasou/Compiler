@@ -1,0 +1,15 @@
+
+x1 > x2;
+a <= b;
+myvar == 52;
+var != 100;
+
+flag1 && flag2;
+flag2 || flag1;
+!flag;
+
+x2 < x1 && x3 > 4;
+
+flag = x > 0 && x < 100;
+
+condition = !flag1 || !flag2;
