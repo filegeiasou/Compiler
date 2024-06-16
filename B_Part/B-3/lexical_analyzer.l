@@ -72,13 +72,13 @@ WHITESPACE        [ \t]+
 {OPERATORS}         { cor_words++; return OPERATORS;}
 {KEYWORDS}          { cor_words++; return KEYWORD;}
 {IDENTIFIERS}       { cor_words++; return IDENTIFIERS;}
-{OPEN_BRACKET}      { return OPEN_BRACKET; }
-{CLOSE_BRACKET}     { return CLOSE_BRACKET; }
-{OPEN_PARENTHESIS}  { return OPEN_PARENTHESIS; }
-{CLOSE_PARENTHESIS} { return CLOSE_PARENTHESIS; }
-{OPEN_BRACE}        { return OPEN_BRACE; }
-{CLOSE_BRACE}       { return CLOSE_BRACE; }
-{SYMBOL}            { return SYMBOL; }
+{OPEN_BRACKET}      { cor_words++; return OPEN_BRACKET; }
+{CLOSE_BRACKET}     { cor_words++; return CLOSE_BRACKET; }
+{OPEN_PARENTHESIS}  { cor_words++; return OPEN_PARENTHESIS; }
+{CLOSE_PARENTHESIS} { cor_words++; return CLOSE_PARENTHESIS; }
+{OPEN_BRACE}        { cor_words++; return OPEN_BRACE; }
+{CLOSE_BRACE}       { cor_words++; return CLOSE_BRACE; }
+{SYMBOL}            { cor_words++; return SYMBOL; }
 \n                  { line++; return END; }
 .                   { inc_words++ ;printf ("Unrecognized character(s) encountered!"); lex_warn++; BEGIN(error); return UNKNOWN_TOKEN;}
 <error>[ \t]+       { BEGIN(0); printf("\t\t%d character(s) ignored so far \n",lex_warn); }
