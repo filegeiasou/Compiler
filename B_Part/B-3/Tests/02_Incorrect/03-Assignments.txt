@@ -1,0 +1,13 @@
+x1, x2 = 0;
+f1, arr = 0.1, ["test", 5];
+
+x = 0, 0.5, "HELLO";
+int sum = x + ;
+
+flag = x > ;
+k = 5 @ - 1;
+
+avg = (x1 + x2) / ;
+
+list_of_nums = [1, 2, , 4];
+comp = a < > b;
