@@ -1,5 +1,5 @@
 
-#line 2 "lex.yy.c"
+#line 3 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -638,7 +638,7 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
     int cor_words = 0; // Counter for the number of correct words
     int inc_words = 0; // Counter for the number of incorrect words
 
-#line 641 "lex.yy.c"
+#line 642 "lex.yy.c"
 /* Below are the names and the corresponding regular expression for each token.
    With the use of names we can make it easier to use these regular expressions,
    instead of having to write them all the time, making the program confusing. */
@@ -646,7 +646,7 @@ Execution instructions: Give "make" without quotes in the current directory. Alt
 /* For each pattern on the left that matches, the corresponding code inside the braces is executed.
    The return command allows the return of a numerical value through the yylex() function,
    allowing us to return numerican values that we have defined in the token.h file. */
-#line 649 "lex.yy.c"
+#line 650 "lex.yy.c"
 
 #define INITIAL 0
 #define REALLYEND 1
@@ -867,7 +867,7 @@ YY_DECL
 	{
 #line 64 "lexical_analyzer.l"
 
-#line 870 "lex.yy.c"
+#line 871 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -977,37 +977,37 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 #line 75 "lexical_analyzer.l"
-{ return OPEN_BRACKET; }
+{ cor_words++; return OPEN_BRACKET; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 76 "lexical_analyzer.l"
-{ return CLOSE_BRACKET; }
+{ cor_words++; return CLOSE_BRACKET; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 77 "lexical_analyzer.l"
-{ return OPEN_PARENTHESIS; }
+{ cor_words++; return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 78 "lexical_analyzer.l"
-{ return CLOSE_PARENTHESIS; }
+{ cor_words++; return CLOSE_PARENTHESIS; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 79 "lexical_analyzer.l"
-{ return OPEN_BRACE; }
+{ cor_words++; return OPEN_BRACE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 80 "lexical_analyzer.l"
-{ return CLOSE_BRACE; }
+{ cor_words++; return CLOSE_BRACE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 81 "lexical_analyzer.l"
-{ return SYMBOL; }
+{ cor_words++; return SYMBOL; }
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
@@ -1049,7 +1049,7 @@ YY_RULE_SETUP
 #line 91 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 1052 "lex.yy.c"
+#line 1053 "lex.yy.c"
 case YY_STATE_EOF(error):
 	yyterminate();
 
@@ -2057,6 +2057,8 @@ void yyfree (void * ptr )
 #line 91 "lexical_analyzer.l"
 
 
+/* The yyerror function is used for the reporting of any errors. It is called by yyparse
+   whenever there is a syntax error. It prints an error message to the terminal and then exits. */
 int yyerror (const char *msg)
 {
     fprintf(yyout, "\tLine %d at lexeme '%s' : %s\n",line, yytext, msg); 

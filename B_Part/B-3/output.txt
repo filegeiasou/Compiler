@@ -1,21 +1,19 @@
-Warning: Unknown token found in func declaration
+Warning: Number found in func declaration
 Valid function declaration
-Unrecognized character(s) encountered!	Line 2 at lexeme '#' : syntax error
-		1 character(s) ignored so far 
-Valid declaration
-Unrecognized character(s) encountered!		2 character(s) ignored so far 
+Warning: Keyword found in print/scan/len
+Valid function call
+Unrecognized character(s) encountered!		1 character(s) ignored so far 
 Warning: Unknown token found in expression
 Valid assignment
-Valid declaration
 Warning: Unknown token found in expression
+Valid declaration
+Valid declaration
 Valid declaration
 	Line 7 at lexeme ';' : syntax error
-Valid assignment
-Unrecognized character(s) encountered!	Line 10 at lexeme '@' : syntax error
-		4 character(s) ignored so far 
 #END-OF-FILE#
+Valid assignment
 -------Report:-------
-Correct Words: 53
-Correct Expressions: 10
-Incorrect Words: 3
-Incorrect Expressions: 3
+Correct Words: 47
+Correct Expressions: 8
+Incorrect Words: 1
+Incorrect Expressions: 1

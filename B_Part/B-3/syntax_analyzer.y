@@ -101,7 +101,7 @@ valid:
     END
     | declaration DELIMITER END {printf("Valid declaration\n");}
     | assignment  DELIMITER END {printf("Valid assignment\n");}
-    | func_call   DELIMITER END 
+    | func_call   DELIMITER END {printf("Valid function call\n");}
     | declaration DELIMITER     {printf("Valid declaration\n");}
     | assignment  DELIMITER     {printf("Valid assignment\n");}
     | func_decl                 {printf("Valid function declaration\n");}
@@ -429,6 +429,7 @@ help_2args:
 // So they enable us to do scan(x), len("this is a test string") and print("Hello World") etc.
 scan_len_print: 
     keyword_val   OPEN_PARENTHESIS var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call");else {printf("Valid function call\n"); cor_expr++;}}
+    | keyword_val OPEN_PARENTHESIS keyword_val var CLOSE_PARENTHESIS  { if ($1 != 3 && $1 != 4 && $1 != 6) yyerror("Invalid function call"); else {printf("Warning: Keyword found in print/scan/len\n"); par_warn++;cor_expr++;}}
     | keyword_val OPEN_PARENTHESIS arr CLOSE_PARENTHESIS  { 
         if ($1 != 4 && $1 != 6) yyerror("Invalid function call\n"); 
         else if ($1 == 4 && $3 == 3) yyerror("Invalid function call\n");
@@ -483,7 +484,7 @@ func_decl:
     keyword_val   var   OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER   {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++;}
     | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body          {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++;}
     | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body      {if ($1 != 7) yyerror("Invalid function definition"); else cor_expr++;}
-    | keyword_val num var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER {if ($1 != 7) yyerror("Invalid function definition"); else {par_warn++; cor_expr++; printf("Warning: Unknown token found in func declaration\n");} }
+    | keyword_val num var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER {if ($1 != 7) yyerror("Invalid function definition"); else {par_warn++; cor_expr++; printf("Warning: Number found in func declaration\n");} }
 
     // This is for the parameter void (myFunc(void))
     | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else cor_expr++;}
@@ -559,7 +560,6 @@ help_for:
 for_grammar:
     keyword_val   OPEN_PARENTHESIS help_for DELIMITER expr     DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else cor_expr++;}
     | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else cor_expr++;}
-    | keyword_val OPEN_PARENTHESIS help_for DELIMITER expr DELIMITER help_for UNKNOWN_TOKEN CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement");else {cor_expr++; par_warn++; printf("Warning: Unknown token found in for statement\n");}}
     ;
 
 %%
