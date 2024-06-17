@@ -10,3 +10,6 @@ for (i = 0; i < 10; i++) {
     print(i);
     a + "agg";
 }
+cmp(5, "a");
+int a= 1.1;
+x = [1, "a"];
