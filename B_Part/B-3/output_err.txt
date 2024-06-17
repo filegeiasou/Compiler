@@ -1,7 +1,7 @@
 Valid Declaration
 Warning: Number found in func declaration
 Warning: Invalid Keyword found in print
-Warning: Unknown token found in expression
+Warning: Operator found in declaration
 Warning: Len/cmp not used correctly 
 Unrecognized character(s) encountered!
 Valid Declaration
@@ -13,10 +13,13 @@ Valid assignment
 	Line 8 at lexeme '"agg"' : syntax error
 Valid function call
 	Line 11 at lexeme ';' : Invalid assignment
-#END-OF-FILE#
 Valid for statement
+	Line 13 at lexeme ')' : Invalid function call
+	Line 14 at lexeme ';' : Invalid declaration type
+	Line 15 at lexeme '"a"' : syntax error
+#END-OF-FILE#
 -------Report:-------
-Correct Words: 90
+Correct Words: 110
 Correct Expressions: 7
 Incorrect Words: 1
-Incorrect Expressions: 9
+Incorrect Expressions: 12
