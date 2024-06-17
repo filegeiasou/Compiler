@@ -3,15 +3,18 @@ func myfunc(int a, int b)
     int a = 0;
     for(i = 0; i < 10; i++)
     {
-        print(i);
+        if(i == 1)
+        {
+            print("Correct", i);
+        }
+        else
+        {
+            print("Error");
+        }
     }
     print("\n");
-    if(a == 1)
+    while(a >= 0)
     {
-       print("Correct", a);
-    }
-    else
-    {
-        print("Error");
+        print("unend");
     }
 }

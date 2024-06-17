@@ -11,9 +11,12 @@ Warning: Remaining elements not assigned
 Warning:Concat failed keeping first array
 Valid assignment
 	Line 8 at lexeme '"agg"' : syntax error
+Valid function call
+	Line 11 at lexeme ';' : Invalid assignment
 #END-OF-FILE#
+Valid for statement
 -------Report:-------
-Correct Words: 66
-Correct Expressions: 3
+Correct Words: 90
+Correct Expressions: 7
 Incorrect Words: 1
 Incorrect Expressions: 8

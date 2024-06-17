@@ -50,7 +50,8 @@ Execution Instructions: Type make into the console. Alternatively you can type t
         
         // Definition of function and variables required for the program.
         extern char *yytext;
-        extern void yyerror(char *);
+        extern FILE *yyout;
+        extern int yyerror(const char *);
         extern int yylex(void);
         void print_report(void);
         extern FILE *yyin;
@@ -95,7 +96,7 @@ Execution Instructions: Type make into the console. Alternatively you can type t
         name : grammar rule { C code } */
 program:
     | program valid
-| program error END{inc_expr++; errflag++; yyerrok;}  // If there is error on the program
+    | program error END{inc_expr++; yyerrok;}  // If there is error on the program
     ;
 valid:
     END
@@ -574,11 +575,6 @@ for_grammar:
 
 %%
 
-/* void yyerror(char *s) {
-    fprintf(stderr, "Error: %s\n", s);
-    exit(1);
-} */
-
 // Function that prints a report containing several details about the result of the syntax analyzer
 // and what it identified.
 void print_report() {
@@ -587,6 +583,15 @@ void print_report() {
     printf("Correct Expressions: %d\n", cor_expr);
     printf("Incorrect Words: %d\n", inc_words);
     printf("Incorrect Expressions: %d\n", inc_expr);
+}
+
+/* The yyerror function is used for the reporting of any errors. It is called by yyparse
+   whenever there is a syntax error. It prints an error message to the terminal and then exits. */
+int yyerror (const char *msg)
+{
+    fprintf(yyout, "\tLine %d at lexeme '%s' : %s\n",line, yytext, msg); 
+    errflag++;
+    return 0;
 }
 
 // The main function checks if the arguments given are correct.

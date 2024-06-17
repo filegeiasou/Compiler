@@ -2066,14 +2066,6 @@ void yyfree (void * ptr )
 /* by calling yyterminate() (hence the REALLYEND label). So, after printing the report, */
 /* we are completely terminating the program. */
 
-/* The yyerror function is used for the reporting of any errors. It is called by yyparse
-   whenever there is a syntax error. It prints an error message to the terminal and then exits. */
-int yyerror (const char *msg)
-{
-    fprintf(yyout, "\tLine %d at lexeme '%s' : %s\n",line, yytext, msg); 
-    return 0;
-}
-
 // Implementation of function that handles multi-line comments
 void handle_comment()
 {
