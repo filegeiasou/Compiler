@@ -96,7 +96,7 @@ Execution Instructions: Type make into the console. Alternatively you can type t
         name : grammar rule { C code } */
 program:
     | program valid
-    | program error END{inc_expr++; yyerrok;}  // If there is error on the program
+    | program error END{yyerrok;}  // If there is error on the program
     ;
 valid:
     END
@@ -591,6 +591,7 @@ int yyerror (const char *msg)
 {
     fprintf(yyout, "\tLine %d at lexeme '%s' : %s\n",line, yytext, msg); 
     errflag++;
+    inc_expr++;
     return 0;
 }
 
