@@ -568,8 +568,8 @@ help_for:
 
 // Main grammar rules for the for loop.
 for_grammar:
-    | keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else {cor_expr++;printf("Valid for statement\n");}}
-    keyword_val   OPEN_PARENTHESIS help_for DELIMITER expr     DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else {cor_expr++;printf("Valid for statement\n");}}
+    keyword_val OPEN_PARENTHESIS help_for DELIMITER var_oper DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else {cor_expr++;printf("Valid for statement\n");}}
+    | keyword_val   OPEN_PARENTHESIS help_for DELIMITER expr     DELIMITER help_for CLOSE_PARENTHESIS cond_body {if($1 != 11) yyerror("Invalid for statement"); else {cor_expr++;printf("Valid for statement\n");}}
     ;
 
 %%
@@ -602,7 +602,7 @@ int main(int argc, char **argv) {
         yyin = stdin; // get input from the user's terminal
 
     int parse = yyparse();
-    if (errflag = 0 && parse == 0)
+    if (errflag == 0 && parse == 0)
     {
         fprintf(stderr, "Successful parsing.\n");
         if (par_warn>0)

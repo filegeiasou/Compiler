@@ -1,8 +1,16 @@
 func myfunc(int a, int b){ 
     int a = 0;
-    while(a != 100)
+    for(i = 0; i < 10; i++)
     {
-        print(a);
-        int a = a + 1;
+        int a = 1;
+    }
+    for(i = 0; i < 10; i++)
+    {
+        int a = 1;
+    }
+    int a = 1;
+    if(a == 1)
+    {
+       print(a);
     }
 }
