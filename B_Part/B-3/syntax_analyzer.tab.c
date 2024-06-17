@@ -1406,7 +1406,7 @@ yyreduce:
     {
   case 4: /* program: program error END  */
 #line 98 "syntax_analyzer.y"
-                   {inc_expr++; errflag=1; yyerrok;}
+                       {inc_expr++; errflag=1; yyerrok;}
 #line 1411 "syntax_analyzer.tab.c"
     break;
 

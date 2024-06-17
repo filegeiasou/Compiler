@@ -7,8 +7,13 @@ Unrecognized character(s) encountered!
 Valid Declaration
 	Line 5 at lexeme '@' : syntax error
 		1 character(s) ignored so far 
-	Line 6 at lexeme ';' : Invalid assignment
+Warning: Remaining elements not assigned
 Warning:Concat failed keeping first array
-	Line 7 at lexeme ';' : Invalid declaration type
+Valid assignment
 	Line 8 at lexeme '"agg"' : syntax error
 #END-OF-FILE#
+-------Report:-------
+Correct Words: 66
+Correct Expressions: 3
+Incorrect Words: 1
+Incorrect Expressions: 8
