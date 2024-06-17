@@ -1,0 +1,12 @@
+Valid Declaration
+Valid Declaration
+Valid function call
+Valid function call
+Valid function call
+Valid function definition
+#END-OF-FILE#
+-------Report:-------
+Correct Words: 30
+Correct Expressions: 6
+Incorrect Words: 0
+Incorrect Expressions: 0

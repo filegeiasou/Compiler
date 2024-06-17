@@ -1,0 +1,18 @@
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid function call
+Valid if statement
+Valid function call
+Valid else statement
+Valid for statement
+Valid function call
+Valid function call
+Valid while statement
+Valid function definition
+#END-OF-FILE#
+-------Report:-------
+Correct Words: 72
+Correct Expressions: 14
+Incorrect Words: 0
+Incorrect Expressions: 0

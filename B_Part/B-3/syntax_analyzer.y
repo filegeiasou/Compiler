@@ -104,7 +104,8 @@ valid:
     | assignment  DELIMITER END 
     | func_call   DELIMITER END 
     | declaration DELIMITER     
-    | assignment  DELIMITER     
+    | assignment  DELIMITER  
+    | func_call   DELIMITER    
     | func_decl                 
     | if_while_grammar          
     | for_grammar               
@@ -355,7 +356,7 @@ declaration:
     | keyword_val keyword_val var { if ($1 != 2 || $2 != 1 && $2 != 13) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
     | keyword_val keyword_val var oper_val INTEGER { if ($1 != 2 || $2 != 1 && $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
     | keyword_val keyword_val var oper_val FLOAT { if ($1 != 2 || $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
-    | keyword_val keyword_val var oper_val var { if ($1 != 2 || $2 != 1 && $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
+    | keyword_val keyword_val var oper_val var { if ($1 != 2 || $2 != 1 && $2 != 13) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
     
     // this rule identifies the assignation of a variable with an array (e.g int a = [1,2])
     // It also checks that the elements, inside the array, are the correct type.
@@ -369,6 +370,7 @@ declaration:
     // this enables us to declare and assign a variable to an operation of other variables or numbers.
     // For example we can do this: int a = a + b or a + 1, 1 + a etc.
     | keyword_val var oper_val var_oper {if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
+    | keyword_val keyword_val var oper_val var_oper {if ($1 != 2 || $2 != 13 || $4 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}
     ;
 
 // Rules for value assignment

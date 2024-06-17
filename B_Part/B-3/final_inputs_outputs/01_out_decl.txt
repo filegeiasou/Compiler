@@ -1,0 +1,31 @@
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+Valid Declaration
+	Line 23 at lexeme ';' : syntax error
+	Line 24 at lexeme ';' : Invalid declaration type
+	Line 26 at lexeme ';' : Invalid declaration type
+	Line 28 at lexeme '5.4' : syntax error
+	Line 29 at lexeme '2.5' : syntax error
+	Line 30 at lexeme '"var"' : syntax error
+	Line 32 at lexeme ';' : syntax error
+	Line 33 at lexeme ';' : Invalid declaration type
+	Line 35 at lexeme 'var' : syntax error
+	Line 37 at lexeme ';' : Invalid declaration type
+#END-OF-FILE#
+-------Report:-------
+Correct Words: 154
+Correct Expressions: 15
+Incorrect Words: 0
+Incorrect Expressions: 10

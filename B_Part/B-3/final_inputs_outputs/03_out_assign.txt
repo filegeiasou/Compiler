@@ -1,0 +1,18 @@
+Valid assignment
+Valid assignment
+Valid assignment
+Valid assignment
+Valid assignment
+Valid assignment
+Valid assignment
+	Line 12 at lexeme ';' : Invalid assignment
+	Line 13 at lexeme '5' : syntax error
+	Line 15 at lexeme '"HELLO"' : syntax error
+	Line 17 at lexeme ',' : syntax error
+	Line 18 at lexeme 'b' : syntax error
+#END-OF-FILE#
+-------Report:-------
+Correct Words: 128
+Correct Expressions: 7
+Incorrect Words: 0
+Incorrect Expressions: 5

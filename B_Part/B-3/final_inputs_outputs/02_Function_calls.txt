@@ -1,0 +1,48 @@
+/* Correct Built in functions */
+scan(x);
+scan(var);
+
+len([10, 20, 30, 40, 50]);
+len("This is a test string");
+len(arr);
+
+cmp("test", "strings");
+cmp(string1, string2);
+
+print("Hello World");
+print(myVar, "-", 50);
+
+print(cmp(str1, str2));
+print(len("Test string"));
+print(len([10, 20]));
+print(pin[0]);
+
+/* Correct User defined function calls */
+myfunc(10, 20, 30); 
+myfunc(1, a, "a");
+myfunc();
+
+/* Incorrect Built in functions */
+scan(5);
+scan(if);
+
+len();
+len(47);
+len(str1, str2);
+len(pin[0]);
+cmp(1);
+cmp(str1);
+cmp(str1, str2, str3);
+cmp(5, "a");
+
+print(5);
+print(len());
+print(len(5));
+print(len(10, 20));
+
+print(cmp());
+print(cmp, len);
+print([1, 2, 3]);
+
+/* Incorrect User defined function calls */
+myfunc([1,2]);

@@ -1,0 +1,8 @@
+func main(void) 
+{ 
+ int a; 
+ int b; 
+ scan(a); 
+ scan(b); 
+ myAdd(a,b); 
+}

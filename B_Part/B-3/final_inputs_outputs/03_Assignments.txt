@@ -1,0 +1,18 @@
+/* Correct Assignments */
+x1 = 0;
+x1, x2 = 0, 1;
+x1, arr = 0, [1, 2, 3];
+x1, arr, string = 0, [1, 2, 3], "HELLO";
+
+f1, f2 = 0.1, 0.2;
+f1, arr2 = 0.5, [0.2, 0.4, 0.6];
+f1, arr2, str2 = 0.5, [0.3, 0.5, 0.7], "HELLO";
+
+/* Incorrect Assignments*/
+x1, x2 = 0;
+f1, arr = 0.1, ["test", 5];
+
+x = 0, 0.5, "HELLO";
+
+list_of_nums = [1, 2, , 4];
+comp = a < > b;
