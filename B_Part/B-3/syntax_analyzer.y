@@ -95,7 +95,7 @@ Execution Instructions: Type make into the console. Alternatively you can type t
         name : grammar rule { C code } */
 program:
     | program valid
-| program error END{inc_expr++; errflag=1; yyerrok;}  // If there is error on the program
+| program error END{inc_expr++; errflag++; yyerrok;}  // If there is error on the program
     ;
 valid:
     END

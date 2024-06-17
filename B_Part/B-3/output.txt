@@ -1,17 +1,19 @@
 Valid Declaration
+Warning: Number found in func declaration
+Warning: Invalid Keyword found in print
+Warning: Unknown token found in expression
+Warning: Len/cmp not used correctly 
+Unrecognized character(s) encountered!
 Valid Declaration
-Valid Declaration
-Valid Declaration
-Valid for statement
-Valid Declaration
-Valid for statement
-Valid Declaration
-Valid function call
-Valid if statement
-Valid function definition
+	Line 5 at lexeme '@' : syntax error
+		1 character(s) ignored so far 
+Warning: Remaining elements not assigned
+Warning:Concat failed keeping first array
+Valid assignment
+	Line 8 at lexeme '"agg"' : syntax error
 #END-OF-FILE#
 -------Report:-------
-Correct Words: 74
-Correct Expressions: 15
-Incorrect Words: 0
-Incorrect Expressions: 0
+Correct Words: 66
+Correct Expressions: 3
+Incorrect Words: 1
+Incorrect Expressions: 8
