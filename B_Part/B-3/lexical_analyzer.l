@@ -85,19 +85,19 @@ WHITESPACE        [ \t]+
 <error>.            { lex_warn++;}
 <error>\n           { BEGIN(0); printf("\t\t%d character(s) ignored so far \n",lex_warn ); line++;  return END; }
 
-
-/* Inside the brackets of the <<INITIAL>> label, we are executing some code
-   by giving a specific token to Bison. That way we don't actually end the program,
-   instead, we manage to return the EOP token to Bison, that we are later going to use
-   in the syntax analyzer to print a report regarding correct/incorrect words and expressions. */
 <INITIAL><<EOF>>    { BEGIN(REALLYEND); printf("#END-OF-FILE#\n"); return EOP; }
-
-/* After the above block of code has been executed, we really end the program
-   by calling yyterminate() (hence the REALLYEND label). So, after printing the report,
-   we are completely terminating the program. */
 <REALLYEND><<EOF>>  { yyterminate();}
 
 %%
+
+/* Inside the brackets of the <<INITIAL>> label, we are executing some code */
+/*   by giving a specific token to Bison. That way we don't actually end the program, */
+/*   instead, we manage to return the EOP token to Bison, that we are later going to use */
+/*  in the syntax analyzer to print a report regarding correct/incorrect words and expressions. */
+   
+/* After the above block of code has been executed, we really end the program */
+/* by calling yyterminate() (hence the REALLYEND label). So, after printing the report, */
+/* we are completely terminating the program. */
 
 /* The yyerror function is used for the reporting of any errors. It is called by yyparse
    whenever there is a syntax error. It prints an error message to the terminal and then exits. */
