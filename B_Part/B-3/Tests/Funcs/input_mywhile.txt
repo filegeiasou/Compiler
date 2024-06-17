@@ -1,0 +1,9 @@
+func mywhile(int num1, int num2)
+{ 
+    int a = 0;
+    while(a != 100)
+    {
+        print(a);
+        int a = a + 1;
+    }
+}
