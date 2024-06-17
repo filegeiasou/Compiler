@@ -346,7 +346,7 @@ declaration:
     | keyword_val var oper_val INTEGER { if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}} // int a = 1
     | keyword_val var oper_val FLOAT { if ($1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}} // float a = 1.1
     | keyword_val var oper_val var { if ($1 != 1 && $1 != 13 || $3 != 12) yyerror("Invalid declaration type"); else {cor_expr++;printf("Valid Declaration\n");}}// int a = b
-    | keyword_val var oper_val var operator { if ($1 != 1 && $1 != 13 || $3 != 12 ) yyerror("Invalid declaration type"); else {par_warn++; inc_expr++; printf("Warning: Unknown token found in expression\n");}} // WARNING
+    | keyword_val var oper_val var operator { if ($1 != 1 && $1 != 13 || $3 != 12 ) yyerror("Invalid declaration type"); else {par_warn++; inc_expr++; printf("Warning: Operator found in declaration\n");}} // WARNING
 
     // Long int a = 1 or a = b
     // The rules below identify the keyword long or contt, so we can write const int or long int.
