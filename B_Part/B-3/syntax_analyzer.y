@@ -95,7 +95,7 @@ Execution Instructions: Type make into the console. Alternatively you can type t
         name : grammar rule { C code } */
 program:
     | program valid
-| program error END{inc_expr++; yyerrok;}  // If there is error on the program
+| program error END{inc_expr++; errflag=1; yyerrok;}  // If there is error on the program
     ;
 valid:
     END
@@ -373,7 +373,7 @@ declaration:
 // Rules for value assignment
 assignment:
     
-    help_var oper_val help_num        {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment");} var_com = 0; val_com = 0; }
+    help_var oper_val help_num        {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment\n");} var_com = 0; val_com = 0; }
     | help_var oper_val help_arr      {
         if($2 == 12 && var_com < val_arr_com) 
         {
@@ -385,13 +385,13 @@ assignment:
         else 
         {
             cor_expr++;
-            printf("Valid assignment");
+            printf("Valid assignment\n");
         }
         var_com = 0; val_arr_com = 0; }
-    | help_var oper_val help_var      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment");} var_com = 0; val_com = 0; }
-    | help_var oper_val help_str      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment");} var_com = 0; val_com = 0; }
-    | help_var oper_val help_var_oper {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment");} var_com = 0; val_com = 0; }
-    | help_var oper_val help_assign   {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment");} var_com = 0; val_ass_com = 0; }
+    | help_var oper_val help_var      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment\n");} var_com = 0; val_com = 0; }
+    | help_var oper_val help_str      {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment\n");} var_com = 0; val_com = 0; }
+    | help_var oper_val help_var_oper {if($2 != 12 || var_com != val_com)     yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment\n");} var_com = 0; val_com = 0; }
+    | help_var oper_val help_assign   {if($2 != 12 || var_com != val_ass_com) yyerror("Invalid assignment"); else {cor_expr++;printf("Valid assignment\n");} var_com = 0; val_ass_com = 0; }
     ;
  
 // Assisting rules for the built-in print function. It can identify multiple, either same of different,
@@ -491,15 +491,15 @@ arguments:
 // This is done using the group of rules uner the label body:
 // that is described below.
 func_decl:
-    keyword_val   var   OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER   {if ($1 != 7) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body          {if ($1 != 7) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
-    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body      {if ($1 != 7) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
+    keyword_val   var   OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER   {if ($1 != 7) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition\n");}}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS body          {if ($1 != 7) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition\n");}}
+    | keyword_val var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS END body      {if ($1 != 7) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition\n");}}
     | keyword_val num var OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS DELIMITER {if ($1 != 7) yyerror("Invalid function definition"); else {par_warn++; inc_expr++; printf("Warning: Number found in func declaration\n");} }
 
     // This is for the parameter void (myFunc(void))
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body      {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
-    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body  {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition");}}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS DELIMITER {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition\n");}}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS body      {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition\n");}}
+    | keyword_val var OPEN_PARENTHESIS keyword_val CLOSE_PARENTHESIS END body  {if ($1 != 7 || $4 != 12) yyerror("Invalid function definition"); else {cor_expr++;printf("Valid function definition\n");}}
     ;
 
 // These rules below regards every possible pattern of the brackets.
@@ -602,7 +602,7 @@ int main(int argc, char **argv) {
         yyin = stdin; // get input from the user's terminal
 
     int parse = yyparse();
-    if (parse == 0)
+    if (errflag = 0 && parse == 0)
     {
         fprintf(stderr, "Successful parsing.\n");
         if (par_warn>0)
@@ -610,7 +610,7 @@ int main(int argc, char **argv) {
     }
     else
     {
-        fprintf(stderr, "Error found.\n");
+        fprintf(stderr, "\t\tBison -> PARSING FAILED with (%d syntax error(s) and %d warning(s)).\n",errflag,par_warn);
     }
     return 0;
 }

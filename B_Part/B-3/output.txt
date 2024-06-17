@@ -10,9 +10,5 @@ Valid Declaration
 	Line 6 at lexeme ';' : Invalid assignment
 Warning:Concat failed keeping first array
 	Line 7 at lexeme ';' : Invalid declaration type
+	Line 8 at lexeme '"agg"' : syntax error
 #END-OF-FILE#
--------Report:-------
-Correct Words: 58
-Correct Expressions: 2
-Incorrect Words: 1
-Incorrect Expressions: 6

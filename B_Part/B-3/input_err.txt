@@ -5,3 +5,4 @@ print (len a);
 int a = a @ + 1;
 x1 , x2 = [1,2];
 int a = [1,2] - [3,4];
+int k = "agg";
